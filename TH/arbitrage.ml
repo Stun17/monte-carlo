@@ -39,7 +39,7 @@ let rec myWorkFun cs predicat title nextFun =
   let (k, rez1) = mfind predicat cs
   in if 0 < List.length rez1
      then (mprn rez1 title ; myWorkFun (List.drop (k + 1) cs) predicat title nextFun)
-     else nextFun cs
+     else print_newline () (* nextFun cs *)
 ;;
   
 let isSomeHaveHigh  = fun _  -> print_string            "high\n"                ;;
@@ -51,7 +51,9 @@ let isSomeHaveFlush = fun cs -> myWorkFun cs isFlush    "flush" isSomeHaveStr   
 let isSomeHaveFull  = fun cs -> myWorkFun cs isFull     "full"  isSomeHaveStr   ;;
 let isSomeHaveCare  = fun cs -> myWorkFun cs isCare     "care"  isSomeHaveFull  ;;
 
-(1 -- 100) |>
+let n = int_of_string (Sys.argv.(1)) ;;
+  
+(1 -- n) |>
     Enum.iter (fun _ ->
         shuffle () |>
           prepare |>
