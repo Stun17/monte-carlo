@@ -5,6 +5,15 @@ open Decisions ;;
 open Batteries ;;
 open Printf ;;
 
+let convert (r, s) =
+  let suit = match s with | 0 -> "s" | 1 -> "c" | 2 -> "d" | _ -> "h"
+  and rank = match r with | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 -> string_of_int (r + 2)
+                          | 8 -> "T" | 9 -> "J" | 10 -> "Q" | 11 -> "K" | _ -> "A"
+  in rank ^ suit ;;
+
+let mprn rez name =
+  printf "%-10s" name ; List.iter (fun z -> printf "%s " (convert z)) rez ; printf "\n" ;;
+  
 let prepare cs =
      let pl1 = List.drop  5 cs |> List.take 2
      and pl2 = List.drop  7 cs |> List.take 2
@@ -26,20 +35,11 @@ let mfind predicat cs =
     fun (k,_) -> (k, List.nth cs k)
   with _ -> (12, [])
 
-let convert (r, s) =
-  let suit = match s with | 0 -> "s" | 1 -> "c" | 2 -> "d" | _ -> "h"
-  and rank = match r with | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 -> string_of_int (r + 2)
-                          | 8 -> "T" | 9 -> "J" | 10 -> "Q" | 11 -> "K" | _ -> "A"
-  in rank ^ suit ;;
-
-let mprn rez name =
-  printf "%-10s" name ; List.iter (fun z -> printf "%s " (convert z)) rez ; printf "\n" ;;
-
 let rec myWorkFun cs predicat title nextFun =
   let (k, rez1) = mfind predicat cs
   in if 0 < List.length rez1
-     then mprn rez1 title
-     else myWorkFun (List.drop (k + 1) cs) predicat title nextFun
+     then (mprn rez1 title ; myWorkFun (List.drop (k + 1) cs) predicat title nextFun)
+     else nextFun cs
 ;;
   
 let isSomeHaveHigh  = fun _  -> print_string            "high\n"                ;;
@@ -51,7 +51,7 @@ let isSomeHaveFlush = fun cs -> myWorkFun cs isFlush    "flush" isSomeHaveStr   
 let isSomeHaveFull  = fun cs -> myWorkFun cs isFull     "full"  isSomeHaveStr   ;;
 let isSomeHaveCare  = fun cs -> myWorkFun cs isCare     "care"  isSomeHaveFull  ;;
 
-(1 -- 10) |>
+(1 -- 100) |>
     Enum.iter (fun _ ->
         shuffle () |>
           prepare |>
