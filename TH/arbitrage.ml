@@ -37,10 +37,9 @@ let mprn rez name =
 
 let rec myWorkFun cs predicat title nextFun =
   let (k, rez1) = mfind predicat cs
-  in match List.length rez1 with
-     | 10 -> mprn rez1 title
-     | 0 -> nextFun cs
-     | _ -> mprn rez1 title ; myWorkFun (List.drop (k + 1) cs) predicat title nextFun
+  in if 0 < List.length rez1
+     then mprn rez1 title
+     else myWorkFun (List.drop (k + 1) cs) predicat title nextFun
 ;;
   
 let isSomeHaveHigh  = fun _  -> print_string            "high\n"                ;;
