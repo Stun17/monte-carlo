@@ -20,21 +20,27 @@ let prepare cs =
 ;;
 
 let mfind predicat cs =
-  List.map predicat cs |> List.exists (fun x -> x == true) ;;
+  try
+    List.map predicat cs |>
+    List.findi (fun i x -> x == true) |>
+    fun (k,_) -> (k, List.nth cs k)
+  with _ -> (12, [])
 
-let mindex predicat cs =
-  List.map predicat cs |> List.findi (fun i x -> x == true) |> fun (k,_) -> List.nth cs k ;;
+let convert (r, s) =
+  let suit = match s with | 0 -> "s" | 1 -> "c" | 2 -> "d" | _ -> "h"
+  and rank = match r with | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 -> string_of_int (r + 2)
+                          | 8 -> "T" | 9 -> "J" | 10 -> "Q" | 11 -> "K" | _ -> "A"
+  in rank ^ suit ;;
 
 let mprn rez name =
-  printf "%-10s " name ;
-  List.iter (fun (r, s) -> printf "%i-%i\t" r s) rez ;
-  printf "\n"
-;;
+  printf "%-10s" name ; List.iter (fun z -> printf "%s " (convert z)) rez ; printf "\n" ;;
 
-let myWorkFun cs predicat title nextFun =
-  if mfind predicat cs
-  then mprn (mindex predicat cs) title
-  else nextFun cs
+let rec myWorkFun cs predicat title nextFun =
+  let (k, rez1) = mfind predicat cs
+  in match List.length rez1 with
+     | 10 -> mprn rez1 title
+     | 0 -> nextFun cs
+     | _ -> mprn rez1 title ; myWorkFun (List.drop (k + 1) cs) predicat title nextFun
 ;;
   
 let isSomeHaveHigh  = fun _  -> print_string            "high\n"                ;;
@@ -46,7 +52,7 @@ let isSomeHaveFlush = fun cs -> myWorkFun cs isFlush    "flush" isSomeHaveStr   
 let isSomeHaveFull  = fun cs -> myWorkFun cs isFull     "full"  isSomeHaveStr   ;;
 let isSomeHaveCare  = fun cs -> myWorkFun cs isCare     "care"  isSomeHaveFull  ;;
 
-(1 -- 100) |>
+(1 -- 10) |>
     Enum.iter (fun _ ->
         shuffle () |>
           prepare |>
@@ -54,4 +60,3 @@ let isSomeHaveCare  = fun cs -> myWorkFun cs isCare     "care"  isSomeHaveFull  
              let cs = (List.map (fun c -> c @ bs) ps)
              in if isPair bs && not (isColored bs) then isSomeHaveCare cs else
                   if isColored bs then isSomeHaveFlush cs else isSomeHaveStr cs)
-               
