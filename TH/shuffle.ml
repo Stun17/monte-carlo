@@ -20,10 +20,10 @@ struct
       fun () -> Random.self_init () ; genDeck (25, []) |> rangeIt
 end ;;
 
-let testIt =
-  fun () ->  
-  Shuffle.shuffle () |> List.sort (fun (r1, s1) (r2, s2) ->
-                            if s1 < s2 then -1 else
-                              if s1 == s2 then if r1 < r2 then -1 else 1
-                                else 1 )
-  |> List.iter (fun (r, s) -> printf "%i, " r) 
+(* let testIt = *)
+(*   fun () ->   *)
+(*   Shuffle.shuffle () |> List.sort (fun (r1, s1) (r2, s2) -> *)
+(*                             if s1 < s2 then -1 else *)
+(*                               if s1 == s2 then if r1 < r2 then -1 else 1 *)
+(*                                 else 1 ) *)
+(*   |> List.iter (fun (r, s) -> printf "%i, " r)  *)
