@@ -1,65 +1,34 @@
 module Decisions =
   struct
-    (*  [(r,s)] 
-
-    если есть флеш то не может быть ни фула ни каре
-
-1. Создаем масив S размером в 13 элементов: от 0(двойка) до 12 (туз)
-2. Инициализируем его нулями - это счётчики
-3. Для каждой карты увеличиваем счётчик соответствующего номинала
-4. Далее сортируем массив S по убыванию и проверяем результат:
-      1. если S[0] == 4                    :  "каре"
-      2. если S[0] == 3
-         2а. если S[1] == 2                :  "фул"
-         2б. если S[1] < 2                 :  "тройка"
-     3. если S[0] ==  2
-         3а. если S[1] == 2                :  "две пары"
-         3б. если S[1] < 2                 :  "пара"
-
-проверку на Straight можно делать уже после определения всех остальных комбинаций
-Проверяем на наличие Straight таким образом: 
-   если S[i] = S[i+1] = S[i+2] =S[i+3] = S[i+4], то у нас Straight  
-    
-    spades = [ 0; 1; 2; 3; 4; 5; 6; 7; 8; 9;10;11;12;] 
-    clubs  = [13;14;15;16;17;18;19;20;21;22;23;24;25;] 
-    diams  = [26;27;28;29;30;31;32;33;34;35;36;37;38;] 
-    hearts = [39;40;41;42;43;44;45;46;47;48;49;50;51;]             
- 
-
-флеш-ройал - 40100
-флеш-стрит - 40010
-каре       - 40000
-фул        - 20000 + 10000
-флеш       - 10000
-страйт     - 8000 + 7000
-сет        - 3000 + 2000 + 1000
-дупал      - 700 + 200 + 100   
-пара       - 7F + 3F + 1F + F
-high       - F
-
-
-
-    *)
-
     type cards = (int * int) list
-               
+
+    let isSmth k cs =
+      let ranks = Array.make 13 0
+      in let _ = List.map fst cs |>
+                   List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
+         in Array.exists (fun x -> x == k) ranks 
+    ;;
+
+    let isPair = isSmth 2
+    let isSet  = isSmth 3
+    let isCare = isSmth 4
+      
     let isFlush cs =
-      let sres =
-        List.map (fun (x,y) -> y) cs |>
-          List.fold_left (fun acc x -> match x with | 0 -> acc + 1
-                                                    | 1 -> acc + 10
-                                                    | 2 -> acc + 100
-                                                    | _ -> acc + 1000
-                         ) 0 
-      in let res1 = sres / 4
-         and res2 = sres / 50
-         and res3 = sres / 500
-         and res4 = sres / 5000
-         in List.exists (fun x -> x > 1) [res1; res2; res3; res4] ;;
+        List.map snd cs |>
+        List.fold_left
+            (fun (s,c,d,h) x ->
+              match x with
+              | 0 -> (s+1,c,d,h)
+              | 1 -> (s,c+1,d,h)
+              | 2 -> (s,c,d+1,h)
+              | _ -> (s,c,d,h+1)
+            ) (0,0,0,0) |>
+       fun (s,c,d,h) -> s>4 || c>4 || d>4 || h>4 
+    ;;
                    
     let isCare cs = true
     let isSet  cs = true
-    let isPair cs = true
+
     let isFull cs = true
     let isStraight cs = true
 end 
