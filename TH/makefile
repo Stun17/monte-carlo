@@ -1,5 +1,5 @@
 doit:
-	ocamlc -open Shuffle -open Decisions -c arbitrage.ml
+	ocamlfind ocamlc -open Batteries -open Shuffle -open Decisions -package batteries -c arbitrage.ml
 
 clear:
 	rm *.cm[io]
