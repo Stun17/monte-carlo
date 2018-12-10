@@ -2,16 +2,32 @@ module Decisions =
   struct
     type cards = (int * int) list
 
-    let isSmth k cs =
+    let isTimes k cs =
       let ranks = Array.make 13 0
       in let _ = List.map fst cs |>
                    List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
          in Array.exists (fun x -> x == k) ranks 
     ;;
 
-    let isPair = isSmth 2
-    let isSet  = isSmth 3
-    let isCare = isSmth 4
+    let isDry cs =
+      let ranks = Array.make 13 0
+      in let _ = List.map fst cs |>
+                   List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
+         in Array.for_all (fun x -> x < 2) ranks 
+    ;;
+
+    let isColored cs =
+      let suits = Array.make 4 0
+      in let _ = List.map snd cs |>
+                   List.iter (fun x -> Array.set suits x ((Array.get suits x) + 1) ; ())
+         in Array.exists (fun x -> x > 2) suits
+    ;;
+
+      
+    let isCare cs = isTimes 4 cs
+    let isPair cs = isTimes 2 cs
+    let isSet  cs = isTimes 3 cs
+    let isFull cs = isPair cs && isSet cs
       
     let isFlush cs =
         List.map snd cs |>
