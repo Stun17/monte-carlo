@@ -29,13 +29,11 @@ struct
     let isFull cs = isPair cs && isSet cs
 
     let isFlush cs =
-      List.map snd cs |>
-        List.fold_left
+      List.map snd cs |> List.fold_left
           (fun (s,c,d,h) x ->
             match x with
             | 0 -> (s+1,c,d,h) | 1 -> (s,c+1,d,h) | 2 -> (s,c,d+1,h) | _ -> (s,c,d,h+1)
-          ) (0,0,0,0) |>
-        fun (s,c,d,h) -> s>4 || c>4 || d>4 || h>4
+          ) (0,0,0,0) |> fun (s,c,d,h) -> s>4 || c>4 || d>4 || h>4
     ;;
 
     let isStraight cs =
