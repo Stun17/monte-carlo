@@ -2,27 +2,23 @@ open Printf  ;;
   
 module Shuffle =
 struct
-
-  (* input:    total num of cards generated ,  accumulator 
-     output:   shuffled deck     *)
-    let rec gendeck ((num : int), (acc : int list)) : int list = 
+  (* input: num of cards,  accum ;   output: shuffled deck *)
+    let rec genDeck ((num : int), (acc : int list)) : int list = 
       match num with
       | 0 -> acc 
       | t -> let newval = Random.int 52
              in if List.mem newval acc
-                then gendeck (num, acc)
+                then genDeck (num, acc)
                 else let acc2 = newval :: acc
-                     in gendeck (t - 1, acc2)
+                     in genDeck (t - 1, acc2)
     ;;
 
-    let showCards (deck : int list) : (int * int) list =
+    let rangeIt (deck : int list) : (int * int) list =
       List.map (fun x -> (x mod 13, x / 13)) deck ;;
       
-    let shuffle = fun () -> gendeck (25, []) |> showCards
-  
+    let shuffle =
+      fun () -> Random.self_init () ; genDeck (25, []) |> rangeIt
 end ;;
-
-Random.self_init () ;;
 
 let testIt =
   fun () ->  
