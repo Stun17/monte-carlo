@@ -63,4 +63,6 @@ struct
                     Array.fold_left (fun acc x -> acc + x) 0
          in ds > 1
     ;;
+
+    let isHight cs = true
 end

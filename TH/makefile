@@ -4,3 +4,9 @@ doit:
 clear:
 	rm *.cm[io]
 
+prep: 
+	ocamlc -c shuffle.mli ; ocamlc -c shuffle.ml
+	ocamlc -c decisions.mli ; ocamlc -c decisions.ml
+
+teit:
+	ocamlfind ocamlc shuffle.cmo decisions.cmo -open Batteries -open Shuffle -open Decisions -package batteries -linkpkg arbitrage.ml

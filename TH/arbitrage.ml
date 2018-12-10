@@ -34,16 +34,16 @@ let mfind predicat cs =
     List.findi (fun i x -> x == true) |>
     fun (k,_) -> (k, List.nth cs k)
   with _ -> (12, [])
-
+          
 let rec myWorkFun cs predicat title nextFun =
   let (k, rez1) = mfind predicat cs
-  in if 0 < List.length rez1
+  in if 0 < List.length rez1 && k < 10
      then (mprn rez1 title ; myWorkFun (List.drop (k + 1) cs) predicat title nextFun)
-     else print_newline () (* nextFun cs *)
+     else nextFun cs  
 ;;
-  
-let isSomeHaveHigh  = fun _  -> print_string            "high\n"                ;;
-let isSomeHavePair  = fun cs -> myWorkFun cs isPair     "pair"  isSomeHaveHigh  ;;
+
+let isSomeHaveHight = fun cs -> myWorkFun cs isHight    "high"  (fun cs -> ())  ;;
+let isSomeHavePair  = fun cs -> myWorkFun cs isPair     "pair"  isSomeHaveHight ;;
 let isSomeHaveDupal = fun cs -> myWorkFun cs isDupal    "dupal" isSomeHavePair  ;;
 let isSomeHaveSet   = fun cs -> myWorkFun cs isSet      "set"   isSomeHaveDupal ;;
 let isSomeHaveStr   = fun cs -> myWorkFun cs isStraight "str8"  isSomeHaveSet   ;;

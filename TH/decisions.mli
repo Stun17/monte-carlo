@@ -9,5 +9,6 @@ sig
     val isPair     : cards -> bool
     val isFlush    : cards -> bool
     val isStraight : cards -> bool
-    val isDupal    : cards -> bool      
+    val isDupal    : cards -> bool
+    val isHight    : cards -> bool 
 end
