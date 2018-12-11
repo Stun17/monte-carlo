@@ -1,5 +1,12 @@
+module type Convert =
+  sig
+    
+    val myConvi : int * int -> string
+      
+  end  ;;
+
 module Convert =
-struct
+  struct
 
   let myConvi (r, s) =
     let suit =
@@ -10,4 +17,4 @@ struct
     in rank ^ suit
   ;;
       
-end ;;
+  end ;;
