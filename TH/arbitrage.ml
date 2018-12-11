@@ -44,22 +44,21 @@ let rec myWorkFun cs predicat title nextFun =
      else if (10 == List.length cs) then nextFun cs else print_newline () 
 ;;
 
-let isSomeHaveHight = fun cs -> myWorkFun cs isHight    "high"  (fun cs -> ())  ;;
-let isSomeHavePair  = fun cs -> myWorkFun cs isPair     "pair"  isSomeHaveHight ;;
-let isSomeHaveDupal = fun cs -> myWorkFun cs isDupal    "dupal" isSomeHavePair  ;;
-let isSomeHaveSet   = fun cs -> myWorkFun cs isSet      "set"   isSomeHaveDupal ;;
-let isSomeHaveStr   = fun cs -> myWorkFun cs isStraight "str8"  isSomeHaveSet   ;;
-let isSomeHaveFlush = fun cs -> myWorkFun cs isFlush    "flush" isSomeHaveStr   ;;
-let isSomeHaveFull  = fun cs -> myWorkFun cs isFull     "full"  isSomeHaveStr   ;;
-let isSomeHaveCare  = fun cs -> myWorkFun cs isCare     "care"  isSomeHaveFull  ;;
-
+let isSomeHaveHight = fun cs -> myWorkFun cs isHight     "high"  (fun cs -> ())  ;;
+let isSomeHavePair  = fun cs -> myWorkFun cs isPair      "pair"  isSomeHaveHight ;;
+let isSomeHaveDupal = fun cs -> myWorkFun cs isDupal     "dupal" isSomeHavePair  ;;
+let isSomeHaveSet   = fun cs -> myWorkFun cs isSet       "set"   isSomeHaveDupal ;;
+let isSomeHaveStr   = fun cs -> myWorkFun cs isStraight  "str8"  isSomeHaveSet   ;;
+let isSomeHaveFlush = fun cs -> myWorkFun cs isFlush     "flush" isSomeHaveStr   ;;
+let isSomeHaveFlSt  = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isSomeHaveFlush ;;  
+let isSomeHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isSomeHaveFlSt  ;;
+let isSomeHaveCare  = fun cs -> myWorkFun cs isCare      "care"  isSomeHaveFull  ;;
+ 
 let n = int_of_string (Sys.argv.(1)) ;;
   
-(1 -- n) |>
-    Enum.iter (fun _ ->
-        shuffle () |>
-          prepare |>
-             fun (ps, bs) ->
-             let cs = (List.map (fun c -> c @ bs) ps)
-             in if isPair bs && not (isColored bs) then isSomeHaveCare cs else
-                  if isColored bs then isSomeHaveFlush cs else isSomeHaveStr cs)
+(1 -- n) |> Enum.iter (
+  fun _ -> shuffle () |> prepare |>
+    fun (ps, bs) ->
+    let cs = (List.map (fun c -> c @ bs) ps)
+    in if isPair bs && not (isColored bs) then isSomeHaveCare cs else
+       if isColored bs then isSomeHaveFlSt cs else isSomeHaveStr cs)

@@ -49,10 +49,24 @@ struct
             and str8 = Array.sub ranks 6 5 |> Array.for_all (fun x -> x > 0)
             and str9 = Array.sub ranks 7 5 |> Array.for_all (fun x -> x > 0)
             and strT = Array.sub ranks 8 5 |> Array.for_all (fun x -> x > 0)
+            (* wheel stright *)
             and strW = Array.append
                          (Array.sub ranks 12 1)
                          (Array.sub ranks 0 4) |> Array.for_all (fun x -> x > 0) 
             in str2 || str3 || str4 || str5 || str6 || str7 || str8 || str9 || strT || strW
+    ;;
+
+    let isFlushStr8 cs =
+      if isFlush cs && isStraight cs then 
+        let (rez, _, _, _) = List.fold_left
+                             (fun (z, c, ra, sa) (r, s) ->
+                               if z then (z, c, r, s)
+                               else if c == 5 then (true, c, ra, sa)
+                               else if sa == s && 1 + ra == r && c < 5 then (z, c + 1, r, s)
+                               else (z, r, r, s)
+                             ) (false, 0, -1, List.hd cs |> snd) (List.sort compare cs)
+        in rez
+      else false
     ;;
 
     let isDupal cs =
@@ -64,5 +78,9 @@ struct
          in ds > 1
     ;;
 
-    let isHight cs = true
+    let isHight _cs = true
 end
+
+(* let te1 = Decisions.isFlushStr8 [(0,1);(1,1);(2,1);(3,1);(4,1);(5,1)];;   *)
+(* let te2 = Decisions.isFlushStr8 [(5,1);(4,1);(3,1);(2,1);(1,1);(0,1)];;   *)
+(* let te3 = Decisions.isFlushStr8 [(10,3);(6,1);(5,1);(5,0);(4,1);(3,1);(2,1);(1,1);(0,2)];;   *)
