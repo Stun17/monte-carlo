@@ -1,7 +1,7 @@
-open Printf ;;
   
 module Shuffle =
 struct
+
   (* input: num of cards,  accum ;   output: shuffled deck *)
     let rec genDeck ((num : int), (acc : int list)) : int list = 
       match num with
@@ -18,8 +18,10 @@ struct
       
     let shuffle =
       fun () -> Random.self_init () ; genDeck (25, []) |> rangeIt
+
 end ;;
 
+(* open Printf ;; *)
 (* let testIt = *)
 (*   fun () ->   *)
 (*   Shuffle.shuffle () |> List.sort (fun (r1, s1) (r2, s2) -> *)

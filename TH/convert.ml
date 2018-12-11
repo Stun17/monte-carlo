@@ -1,13 +1,10 @@
 module type Convert =
-  sig
-    
+sig
     val myConvi : int * int -> string
-      
-  end  ;;
+end  ;;
 
 module Convert =
-  struct
-
+struct
   let myConvi (r, s) =
     let suit =
       match s with | 0 -> "♠" | 1 -> "♣" | 2 -> "♦" | _ -> "♥"
@@ -16,5 +13,4 @@ module Convert =
                    | 8 -> "T" | 9 -> "J" | 10 -> "Q" | 11 -> "K" | _ -> "A"
     in rank ^ suit
   ;;
-      
-  end ;;
+end ;;

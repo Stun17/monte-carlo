@@ -16,7 +16,7 @@ let prepare m cs =
      in (List.take m [pl1; pl2; pl3; pl4; pl5; pl6; pl7; pl8; pl9; plA] , List.take 5 cs)
 ;;
 
-let n = int_of_string (Sys.argv.(1)) ;;
-let m = int_of_string (Sys.argv.(2)) ;;
+let n = int_of_string (Sys.argv.(1)) ;; (* num of hands   *)
+let m = int_of_string (Sys.argv.(2)) ;; (* num of players *)
   
 (1 -- n) |> Enum.iter (fun _ -> shuffle () |> prepare m |> arbitIt m) ;;

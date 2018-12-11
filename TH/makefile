@@ -10,7 +10,7 @@ arbitrage.cmo: $(FST) $(DER)
 %.cmo: $(ORG) 
 	ocamlc -c $^
 
-a.out: arbitrage.cmo main.ml
+a.out: $(FST) arbitrage.cmo main.ml
 	ocamlfind ocamlc \
 	convert.cmo shuffle.cmo decisions.cmo arbitrage.cmo \
 	-open Batteries -open Shuffle -open Decisions -open Arbitrage \
