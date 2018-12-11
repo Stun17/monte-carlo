@@ -1,13 +1,9 @@
 module Arbitrage =
 struct
-    
+     
 type cards = (int * int) list ;;
 
-open Shuffle ;;
-open Decisions ;;
-open Batteries ;;
-open Printf ;;
-open Convert ;;
+open Shuffle ;; open Decisions ;; open Batteries ;; open Printf ;; open Convert ;;
 
 let myPrn rez name =
   printf "%-10s" name ;
@@ -22,28 +18,28 @@ let myFind predicat cs =
     fun (k,_) -> (k, List.nth cs k)
   with _ -> (12, [])
           
-let rec myWorkFun cs predicat title nextFun =
+let rec myWorkFun m cs predicat title nextFun =
   let (k, rez1) = myFind predicat cs
   in if 0 < List.length rez1
-     then (myPrn rez1 title ; myWorkFun (List.drop (k + 1) cs) predicat title nextFun)
-     else if (10 == List.length cs) then nextFun cs else print_newline () 
+     then (myPrn rez1 title ; myWorkFun m (List.drop (k + 1) cs) predicat title nextFun)
+     else if (m == List.length cs) then nextFun m cs else print_newline () 
 ;;
 
-let isSomeHaveHight = fun cs -> myWorkFun cs isHight     "high"  (fun cs -> ())  ;;
-let isSomeHavePair  = fun cs -> myWorkFun cs isPair      "pair"  isSomeHaveHight ;;
-let isSomeHaveDupal = fun cs -> myWorkFun cs isDupal     "dupal" isSomeHavePair  ;;
-let isSomeHaveSet   = fun cs -> myWorkFun cs isSet       "set"   isSomeHaveDupal ;;
-let isSomeHaveStr   = fun cs -> myWorkFun cs isStraight  "str8"  isSomeHaveSet   ;;
-let isSomeHaveFlush = fun cs -> myWorkFun cs isFlush     "flush" isSomeHaveStr   ;;
-let isSomeHaveFlSt  = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isSomeHaveFlush ;;  
-let isSomeHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isSomeHaveFlSt  ;;
-let isSomeHaveCare  = fun cs -> myWorkFun cs isCare      "care"  isSomeHaveFull  ;;
+let isSomeHaveHight = fun m cs -> myWorkFun m cs isHight     "high"  (fun m cs -> ());;
+let isSomeHavePair  = fun m cs -> myWorkFun m cs isPair      "pair"  isSomeHaveHight ;;
+let isSomeHaveDupal = fun m cs -> myWorkFun m cs isDupal     "dupal" isSomeHavePair  ;;
+let isSomeHaveSet   = fun m cs -> myWorkFun m cs isSet       "set"   isSomeHaveDupal ;;
+let isSomeHaveStr   = fun m cs -> myWorkFun m cs isStraight  "str8"  isSomeHaveSet   ;;
+let isSomeHaveFlush = fun m cs -> myWorkFun m cs isFlush     "flush" isSomeHaveStr   ;;
+let isSomeHaveFlSt  = fun m cs -> myWorkFun m cs isFlushStr8 "fl-st" isSomeHaveFlush ;;  
+let isSomeHaveFull  = fun m cs -> myWorkFun m cs isFull      "full"  isSomeHaveFlSt  ;;
+let isSomeHaveCare  = fun m cs -> myWorkFun m cs isCare      "care"  isSomeHaveFull  ;;
 
-let arbitit =
-  fun (ps, bs) ->
+let arbitIt =
+  fun m (ps, bs) ->
   let cs = List.map (fun c -> c @ bs) ps
-  in if isPair bs && not (isColored bs) then isSomeHaveCare cs else
-       if isColored bs then isSomeHaveFlSt cs else isSomeHaveStr cs
+  in if isPair bs && not (isColored bs) then isSomeHaveCare m cs else
+       if isColored bs then isSomeHaveFlSt m cs else isSomeHaveStr m cs
 ;;
   
 end 
