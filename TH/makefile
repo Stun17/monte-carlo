@@ -2,12 +2,12 @@ ORG  = convert.ml decisions.mli decisions.ml shuffle.mli shuffle.ml
 FST = shuffle.cmo decisions.cmo
 DER = arbitrage.mli arbitrage.ml
 
-arbitrage.cmo: $(FST)  $(DER) 
+arbitrage.cmo: $(FST) $(DER) 
 	ocamlfind ocamlc -c \
 	-open Batteries -open Shuffle -open Decisions -open Convert \
 	-package batteries $(DER)
 
-$(FST): $(ORG) 
+%.cmo: $(ORG) 
 	ocamlc -c $^
 
 a.out: arbitrage.cmo main.ml

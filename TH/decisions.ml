@@ -1,5 +1,6 @@
 module Decisions =
 struct
+
     type cards = (int * int) list
 
     let isTimes k cs =
@@ -83,6 +84,7 @@ struct
     ;;
 
     let isHight _cs = true
+
 end
 
 
