@@ -57,16 +57,18 @@ struct
     ;;
 
     let isFlushStr8 cs =
-      if isFlush cs && isStraight cs then 
-        let (rez, _, _, _) =
-          List.fold_left
+      if isFlush cs && isStraight cs then
+        let cs2 = List.sort compare cs
+        in let (rez, _, _, _) = List.fold_left
             (fun (zer, count, ra, sa) (ru, su) ->
               if zer then (zer, 0, 0, 0)
               else if count == 5 then (true, 0, 0, 0)
               else if sa == su && (1 + ra) == ru && count < 5 then (zer, count + 1, ru, su)
               else if sa == su && ra == 3 && ru == 12 && count == 4 then (true, 0, 0, 0)
+              else if sa != su && (1 + ra) == ru && count < 5 then (zer, count, ra, sa)
+              else if sa == su && (2 + ra) == ru && count < 5 then (zer, 0, ru, su)              
               else (zer, ru, ru, su)
-            ) (false, 0, -1, List.hd cs |> snd) (List.sort compare cs)
+            ) (false, 0, (List.hd cs2 |> fst) - 1, List.hd cs2 |> snd) cs2
         in rez
       else false
     ;;
@@ -84,17 +86,17 @@ struct
 end
 
 
-(* test suite  *)
-  (* good one *)
-let te1 = Decisions.isFlushStr8 [(1,1);(2,1);(0,1);(3,1);(4,1);(5,1);(9,1)]
-let te2 = Decisions.isFlushStr8 [(5,1);(4,1);(0,1);(2,1);(1,1);(3,1);(7,1)]
-let te3 = Decisions.isFlushStr8 [(7,1);(6,1);(5,0);(5,1);(4,1);(3,1);(2,1)]
-let te4 = Decisions.isFlushStr8 [(6,1);(5,1);(4,1);(3,1);(2,1);(7,1);(5,0)]
-let teW = Decisions.isFlushStr8 [(12,1);(1,1);(10,3);(5,0);(3,1);(2,1);(0,1)]
-  (* bad one *)
-let tb1 = Decisions.isFlushStr8 [(1,1);(2,1);(7,1);(3,1);(4,1);(6,1);(9,1)]
-let tb2 = Decisions.isFlushStr8 [(6,1);(4,1);(11,1);(2,1);(1,1);(3,1);(7,1)]
-let tb3 = Decisions.isFlushStr8 [(10,3);(6,4);(5,0);(7,4);(10,4);(3,4);(8,4)]
-let tb4 = Decisions.isFlushStr8 [(10,3);(7,1);(5,1);(1,1);(3,1);(11,1);(9,1)]  
-let tb5 = Decisions.isFlushStr8 [(11,1);(1,1);(10,3);(5,1);(3,1);(2,1);(0,1)]
-let tb6 = Decisions.isFlushStr8 [(11,1);(1,1);(4,2);(5,1);(3,1);(2,1);(0,1)]
+(* (\* test suite  *\) *)
+(*   (\* good one *\) *)
+(* let te1 = Decisions.isFlushStr8 [(1,1);(2,1);(0,1);(3,1);(4,1);(5,1);(9,1)] *)
+(* let te2 = Decisions.isFlushStr8 [(5,1);(4,1);(0,1);(2,1);(1,1);(3,1);(7,1)] *)
+(* let te3 = Decisions.isFlushStr8 [(7,1);(6,1);(5,0);(5,1);(4,1);(3,1);(2,1)] *)
+(* let te4 = Decisions.isFlushStr8 [(6,1);(5,1);(4,1);(3,1);(2,1);(7,1);(5,0)] *)
+(* let teW = Decisions.isFlushStr8 [(12,1);(1,1);(10,3);(5,0);(3,1);(2,1);(0,1)] *)
+(*   (\* bad one *\) *)
+(* let tb1 = Decisions.isFlushStr8 [(1,1);(2,1);(7,1);(3,1);(4,1);(6,1);(9,1)] *)
+(* let tb2 = Decisions.isFlushStr8 [(6,1);(4,1);(11,1);(2,1);(1,1);(3,1);(7,1)] *)
+(* let tb3 = Decisions.isFlushStr8 [(10,3);(6,4);(5,0);(7,4);(10,4);(3,4);(8,4)] *)
+(* let tb4 = Decisions.isFlushStr8 [(10,3);(7,1);(5,1);(1,1);(3,1);(11,1);(9,1)]   *)
+(* let tb5 = Decisions.isFlushStr8 [(11,1);(1,1);(10,3);(5,1);(3,1);(2,1);(0,1)] *)
+(* let tb6 = Decisions.isFlushStr8 [(0,1);(1,1);(2,1);(3,1);(4,2);(5,1);(11,1)] *)

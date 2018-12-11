@@ -4,12 +4,7 @@ open Shuffle ;;
 open Decisions ;;
 open Batteries ;;
 open Printf ;;
-
-let myConvi (r, s) =
-  let suit = match s with | 0 -> "♠" | 1 -> "♣" | 2 -> "♦" | _ -> "♥"
-  and rank = match r with | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 -> string_of_int (r + 2)
-                          | 8 -> "T" | 9 -> "J" | 10 -> "Q" | 11 -> "K" | _ -> "A"
-  in rank ^ suit ;;
+open Convert ;;
 
 let myPrn rez name =
   printf "%-10s" name ; List.iter (fun z -> printf "%s " (myConvi z)) rez ; printf "\n" ;;

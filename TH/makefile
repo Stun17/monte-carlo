@@ -9,4 +9,4 @@ prep:
 	ocamlc -c decisions.mli ; ocamlc -c decisions.ml
 
 teit:
-	ocamlfind ocamlc shuffle.cmo decisions.cmo -open Batteries -open Shuffle -open Decisions -package batteries -linkpkg arbitrage.ml
+	ocamlfind ocamlc convert.cmo shuffle.cmo decisions.cmo -open Batteries -open Shuffle -open Decisions -open Convert -package batteries -linkpkg arbitrage.ml
