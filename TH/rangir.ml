@@ -33,21 +33,18 @@ module Rangir =
             
     let rangePairs =
       fun css ->
-      (* if List.length css == 1 then List.take 1 css |> List.take 2 *)
-      (* else *)
-        let rez1 = List.map (List.sort cRank) css
-        in let rez2 = List.map (fun cs ->
-               List.fold_left
-                    (fun (ra, st) (ru, _) -> if ra == ru then (ru, ru) else (ru, st))
-                    (-1, -1) cs
-             ) rez1 |> List.map snd 
-              in let maxV = List.max rez2
-                 in let (k,_) = List.findi (fun i x -> x == maxV) rez2
-                    in List.nth css k |> List.take 2
+      let ranks = List.map (fun cs ->
+                    List.fold_left (fun (ra, st) (ru, _) ->
+                        if ra == ru
+                        then (ru, ru)
+                        else (ru, st)
+                      )
+                                   (-1, -1) cs)
+                         (List.map (List.sort cRank) css) |> List.map snd
+      in let maxV = List.max ranks 
+         in List.mapi (fun i x -> if x == maxV then i else -1) ranks |>
+              List.filter (fun x -> x > -1) |> List.map (List.nth css) |> List.map (List.take 2)
 
-                                  (* in if List.length rez1 == 1 then rez1 else rez1 *)
-                 
-                       
   end ;;
 
 
@@ -56,6 +53,6 @@ let board = [(3,1);(7,3);(0,1);(5,1);(2,1)] ;;
 let tu2 = Rangir.rangePairs
             [
               [( 4, 1); ( 1, 1)]   @ board ;
-              [( 5, 0); ( 6, 1)]   @ board ;
-              [( 8, 3); ( 3, 3)]   @ board ;
+              [( 2, 0); ( 6, 1)]   @ board ;
+              [( 4, 3); ( 11, 3)]   @ board ;
             ]
