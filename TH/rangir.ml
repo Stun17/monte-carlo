@@ -57,15 +57,25 @@ module Rangir =
                 if 2 == List.length xs && maxVV == List.hd xs then i else -1) ranks |>
               List.filter (fun x -> x > -1) |> List.map (List.nth css) |> 
               List.map (List.take 2) |> List.sort dRank |> List.rev |> List.hd 
-      
+
+    let rangeSet = fun css ->
+       List.map (fun cs ->
+                      List.fold_left
+                        (fun (ra, st) (ru,_) ->
+                          if ra == ru then (ru, ru :: st) else (ru, st)
+                        ) (-1, []) cs)
+                (List.map (List.sort cRank) css)
+       (* |> *)
+       (*              List.map snd |> List.map (fun xs -> (List.sort compare xs |> List.rev))  *)     
+
   end ;;
 
 
   (* test suite *)
 let board = [(3,1);(6,3);(4,1);(11,3);(3,2)] ;;
-let tu2 = Rangir.rangeDupal
+let tu2 = Rangir.rangeSet
             [
-              [(11, 1); ( 1, 1)] @ board ;
+              [(11, 1); (11, 2)] @ board ;
               [(10, 2); (10, 1)] @ board ;
               [( 7, 2); ( 7, 1)] @ board ;
             ]
