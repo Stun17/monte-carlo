@@ -38,7 +38,7 @@ struct
          in ds > 1
     ;;
 
-    let isHight _cs = true
+    let isHigh _cs = true
                   
     let isFlush cs =
       List.map snd cs |> List.fold_left

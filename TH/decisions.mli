@@ -13,5 +13,5 @@ sig
     val isSet       : cards -> bool
     val isPair      : cards -> bool
     val isDupal     : cards -> bool
-    val isHight     : cards -> bool 
+    val isHigh      : cards -> bool 
 end
