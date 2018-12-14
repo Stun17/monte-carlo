@@ -5,7 +5,7 @@ sig
     val isDry       : cards -> bool               
     val isColored   : cards -> bool
       
-    val isFlushStr8 : cards -> bool      
+    val isFluStr8   : cards -> bool      
     val isCare      : cards -> bool
     val isFull      : cards -> bool
     val isFlush     : cards -> bool

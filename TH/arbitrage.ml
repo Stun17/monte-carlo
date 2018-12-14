@@ -1,9 +1,9 @@
 module Arbitrage =
 struct
      
-type cards = (int * int) list ;;
-
 open Shuffle ;; open Decisions ;; open Batteries ;; open Printf ;; open Convert ;;
+
+type cards = (int * int) list ;;
 
 let myPrn rez name =
   printf "%-10s" name ;
@@ -25,21 +25,21 @@ let rec myWorkFun m cs predicat title nextFun =
      else if (m == List.length cs) then nextFun m cs else print_newline () 
 ;;
 
-let isSomeHaveHight = fun m cs -> myWorkFun m cs isHight     "high"  (fun m cs -> ());;
-let isSomeHavePair  = fun m cs -> myWorkFun m cs isPair      "pair"  isSomeHaveHight ;;
-let isSomeHaveDupal = fun m cs -> myWorkFun m cs isDupal     "dupal" isSomeHavePair  ;;
-let isSomeHaveSet   = fun m cs -> myWorkFun m cs isSet       "set"   isSomeHaveDupal ;;
-let isSomeHaveStr   = fun m cs -> myWorkFun m cs isStraight  "str8"  isSomeHaveSet   ;;
-let isSomeHaveFlush = fun m cs -> myWorkFun m cs isFlush     "flush" isSomeHaveStr   ;;
-let isSomeHaveFlSt  = fun m cs -> myWorkFun m cs isFlushStr8 "fl-st" isSomeHaveFlush ;;  
-let isSomeHaveFull  = fun m cs -> myWorkFun m cs isFull      "full"  isSomeHaveFlSt  ;;
-let isSomeHaveCare  = fun m cs -> myWorkFun m cs isCare      "care"  isSomeHaveFull  ;;
+let isAnyHaveHight = fun m cs -> myWorkFun m cs isHight     "high"  (fun m cs -> ())  ;;
+let isAnyHavePair  = fun m cs -> myWorkFun m cs isPair      "pair"  isAnyHaveHight    ;;
+let isAnyHaveDupal = fun m cs -> myWorkFun m cs isDupal     "dupal" isAnyHavePair     ;;
+let isAnyHaveSet   = fun m cs -> myWorkFun m cs isSet       "set"   isAnyHaveDupal    ;;
+let isAnyHaveStr   = fun m cs -> myWorkFun m cs isStraight  "str8"  isAnyHaveSet      ;;
+let isAnyHaveFlush = fun m cs -> myWorkFun m cs isFlush     "flush" isAnyHaveStr      ;;
+let isAnyHaveFlSt  = fun m cs -> myWorkFun m cs isFluStr8   "fl-st" isAnyHaveFlush    ;;  
+let isAnyHaveFull  = fun m cs -> myWorkFun m cs isFull      "full"  isAnyHaveStr      ;;
+let isAnyHaveCare  = fun m cs -> myWorkFun m cs isCare      "care"  isAnyHaveFull     ;;
 
 let arbitIt =
   fun m (ps, bs) ->
-  let cs = List.map (fun c -> c @ bs) ps
-  in if isPair bs && not (isColored bs) then isSomeHaveCare m cs else
-       if isColored bs then isSomeHaveFlSt m cs else isSomeHaveStr m cs
+  let cs = List.map (fun p -> p @ bs) ps
+  in if isPair bs && not (isColored bs) then isAnyHaveCare m cs else
+       if isColored bs then isAnyHaveFlSt m cs else isAnyHaveStr m cs
 ;;
   
 end 
