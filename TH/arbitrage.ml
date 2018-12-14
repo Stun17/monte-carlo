@@ -7,22 +7,26 @@ type cards = (int * int) list ;;
 
 let myPrn rez name =
   printf "%-10s" name ;
-  List.iter (fun z -> printf "%s " (myConvi z)) rez ;
+  List.iter (fun zs ->
+      List.iter (fun z -> printf "%s " (myConvi z)) zs ;
+      printf "\t" ) rez ;
   printf "\n"
 ;;  
   
 let myFind predicat cs =
-  try
+  let (_, rez) =
     List.map predicat cs |>
-    List.findi (fun i x -> x == true) |>
-    fun (k,_) -> (k, List.nth cs k)
-  with _ -> (12, [])
+      List.fold_left (
+          fun (count, acc) c ->
+          if c then (count + 1, (List.nth cs count) :: acc)
+          else      (count + 1,                        acc)
+        ) (0, [])
+  in rez
+;;
           
 let rec myWorkFun m cs predicat title nextFun =
-  let (k, rez1) = myFind predicat cs
-  in if 0 < List.length rez1
-     then (myPrn rez1 title ; myWorkFun m (List.drop (k + 1) cs) predicat title nextFun)
-     else if (m == List.length cs) then nextFun m cs else print_newline () 
+  let rez = myFind predicat cs
+  in if List.is_empty rez then nextFun m cs else myPrn rez title
 ;;
 
 let isAnyHaveHigh  = fun m cs -> myWorkFun m cs isHigh      "high"  (fun m cs -> ())  ;;
