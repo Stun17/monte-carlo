@@ -77,7 +77,7 @@ module Rangir =
                 in let _ = List.iter
                      (fun (ru, _) -> Array.set sta ru ((Array.get sta ru) + 1)) xs
                    in Array.to_list sta |> (fun xs ->
-                        try List.findi (fun i x -> x == 3) xs with _ -> (-1,3)) |> fst
+                        try List.findi (fun i x -> x == 3) xs with _ -> (-1, 3)) |> fst
                 ) ord)
         in let maxSet = List.max ranks
            in let (k,_) = List.findi (fun i x -> maxSet == x) ranks
@@ -122,10 +122,7 @@ module Rangir =
       let rez3 = rangeSet css
       in rez3
 
-        
-    let rangeCare xss = xss
-
-    let rangeCare1 xss =
+    let rangeCare xss =
       let ord = List.map (List.sort compareRank) xss 
      (* здесь мы существенно полагаемся на то, что в списках нет каре! *)
       in let ranks = (List.map
@@ -134,7 +131,7 @@ module Rangir =
                 in let _ = List.iter
                      (fun (ru, _) -> Array.set sta ru ((Array.get sta ru) + 1)) xs
                    in Array.to_list sta |> (fun xs ->
-                        try List.findi (fun i x -> x == 3) xs with _ -> (-1,3)) |> fst
+                        try List.findi (fun i x -> x == 4) xs with _ -> (-1, 4)) |> fst
                 ) ord)
         in let maxSet = List.max ranks
            in let (k,_) = List.findi (fun i x -> maxSet == x) ranks
@@ -148,10 +145,10 @@ module Rangir =
 
   (* test suite *)
 let te  =
-  let board = [(2,0) ; (5,1) ; (6,1) ; (8,1) ; (10,0)] in
-  Rangir.rangeSet [
+  let board = [(2,0) ; (2,1) ; (2,2) ; (8,1) ; (2,3)] in
+  Rangir.rangeCare [
       [( 5, 3); ( 5, 2)] @ board ;
       [( 7, 1); ( 9, 1)] @ board ;
-      [( 4, 2); ( 7, 1)] @ board ;
+      [( 4, 3); ( 7, 1)] @ board ;
     ]
 

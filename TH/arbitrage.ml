@@ -1,14 +1,14 @@
 module Arbitrage =
 struct
      
-open Shuffle ;; open Decisions ;; open Convert ;; open Rangir ;;
+open Decisions ;; open Rangir ;;
 open Batteries ;; open Printf ;;
 
 type cards = (int * int) list ;;
 
 let myPrn rez name =
   printf "%-10s" name ;
-  let rez2 = (*    (int * int) list list      *)
+  let rez2 = 
     match name with  
     | "high"   -> rangeHigh   rez
     | "pair"   -> rangePair   rez
@@ -48,11 +48,11 @@ let isAnyHaveFull  = fun m cs -> myWorkFun m cs isFull      "full"  isAnyHaveFlu
 let isAnyHaveCare  = fun m cs -> myWorkFun m cs isCare      "care"  isAnyHaveFull     ;;
 let isAnyHaveFlSt  = fun m cs -> myWorkFun m cs isFluStr8   "fl-st" isAnyHaveFull     ;;
   
-let arbitIt =
-  fun m (ps, bs) ->
+let arbitIt = fun num_of_players (ps, bs) ->
   let cs = List.map (fun p -> p @ bs) ps
-  in if isColored bs then isAnyHaveFlSt m cs else 
-       if isPair bs then isAnyHaveCare m cs else isAnyHaveStr m cs
+  in if isColored bs then isAnyHaveFlSt num_of_players cs else 
+       if isPair bs then isAnyHaveCare num_of_players cs else
+         isAnyHaveStr num_of_players cs
 ;;
   
 end 
