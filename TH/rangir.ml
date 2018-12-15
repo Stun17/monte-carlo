@@ -12,7 +12,9 @@ module Rangir =
             if r1 == t1 && r2 < t2 then -1 else 0
     ;;
                   
-    let compareRank = fun (r1,s1) (r2,s2) -> if r1 >= r2 then 1 else -1 ;;
+    let compareRank = fun (r1, _) (r2, _) -> if r1 >= r2 then 1 else -1 ;;
+
+    let compareSuit = fun (_, s1) (_, s2) -> if s1 >= s2 then 1 else -1 ;;      
                
     let pocketRank = fun xs ->
       match xs with
@@ -101,8 +103,24 @@ module Rangir =
                  List.map (List.take 2) |> List.sort dRank |> List.rev
     ;;
       
-                     
-    let rangeFlush xss = xss
+    let rangeFlush xss =
+      let ord =
+        List.map (fun xs -> List.sort compareSuit xs |> List.rev |> List.map snd) xss
+      in let rez =
+           List.map
+             (fun xs ->
+               let xs2 = 0 :: xs and xs1 = xs @ [0] and suit = Array.make 4 0
+               in List.combine xs1 xs2 |> List.tl |> List.filter (fun (x,y) -> y == x) |>
+                    List.map fst |>
+                    List.iter (fun x -> Array.set suit x ((Array.get suit x) + 1)) ;
+                  List.map (fun x -> x > 3) (Array.to_list suit) |>
+                    List.exists (fun x -> x == true)
+             ) ord
+         in let (k,_) = List.findi (fun i x -> x == true) rez
+            in  [List.nth xss k] |> List.map (List.take 2)
+    ;;
+      
+
     let rangeFull xss = xss
     let rangeCare xss = xss
     let rangeFuSt xss = xss
@@ -110,12 +128,12 @@ module Rangir =
   end ;;
 
   (* test suite *)
-let board = [(2,1) ; (5,3) ; (6,1) ; (8,3) ; (10,2)] ;;
+let board = [(2,0) ; (5,1) ; (6,1) ; (8,1) ; (10,0)] ;;
 
-let tuStr = Rangir.rangeStr
+let tuFlush = Rangir.rangeFlush
               [
-              [( 4, 1); ( 7, 0)] @ board ;
-              [( 7, 2); ( 9, 1)] @ board ;
+              [( 4, 1); ( 9, 3)] @ board ;
+              [( 7, 1); ( 9, 1)] @ board ;
               [( 4, 2); ( 7, 1)] @ board ;
             ]
         
