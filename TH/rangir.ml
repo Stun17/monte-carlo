@@ -35,6 +35,7 @@ module Rangir =
     ;;
             
     let rangePairs = fun css ->
+      (* здесь мы существенно полагаемся на то что в списках нет пар! *)
       let ranks = List.map (fun cs ->
                       List.fold_left
                         (fun (ra, st) (ru, _) ->
@@ -59,15 +60,18 @@ module Rangir =
               List.map (List.take 2) |> List.sort dRank |> List.rev |> List.hd 
 
     let rangeSet = fun css ->
-       List.map (fun cs ->
-                      List.fold_left
-                        (fun (ra, st) (ru,_) ->
-                          if ra == ru then (ru, ru :: st) else (ru, st)
-                        ) (-1, []) cs)
-                (List.map (List.sort cRank) css)
-       (* |> *)
-       (*              List.map snd |> List.map (fun xs -> (List.sort compare xs |> List.rev))  *)     
-
+     (* здесь мы существенно полагаемся на то, что в списках нет каре! *)
+     let ranks = List.map (fun cs -> List.fold_left
+                        (fun (flag, state) (ru, _) ->
+                          if List.is_empty state then (1, ru :: state) else
+                            if ru == List.hd state then (flag + 1, state) else
+                              if ru != List.hd state && flag != 3 then (0, [])
+                              else (flag, state)
+                        ) (0, []) cs)
+                (List.map (List.sort cRank) css) |> List.map snd 
+     in let maxVVV = List.concat ranks |> List.max
+        in maxVVV
+      
   end ;;
 
 
