@@ -20,9 +20,9 @@ module Rangir =
       | _ -> xs
     ;;
 
+    let rangeHigh = fun xss ->
         (* здесь мы существенно полагаемся на то что в списках нет пар! *)
-    let rangeHigh = fun css ->
-      let pockets = List.map (List.take 2) css |>
+      let pockets = List.map (List.take 2) xss |>
                       List.map pocketRank |>
                       List.sort compare |> List.rev
       in let maxRank = List.max pockets |> List.hd |> fst
@@ -37,90 +37,85 @@ module Rangir =
                  ) (0, []) goodPockets |> snd
     ;;
             
-    let rangePair = fun css ->
+    let rangePair = fun xss ->
          (* здесь мы существенно полагаемся на то, что в списках нет сетов! *)
-      let ranks = List.map (fun cs ->
+      let ranks = List.map (fun xs ->
                       List.fold_left
-                        (fun (ra, st) (ru, _) ->
-                          if ra == ru then (ru, ru) else (ru, st)
-                        ) (-1, -1) cs
-                    ) (List.map (List.sort compareRank) css) |> List.map snd
-      in let maxV = List.max ranks 
-         in List.mapi (fun i x -> if x == maxV then i else -1) ranks |>
-              List.filter (fun x -> x > -1) |> List.map (List.nth css) |> List.map (List.take 2)
+                        (fun (ra, state) (ru, _) ->
+                          if ra == ru then (ru, ru) else (ru, state)
+                        ) (-1, -1) xs
+                    ) (List.map (List.sort compareRank) xss) |> List.map snd
+      in let maxPar = List.max ranks 
+         in List.mapi (fun i x -> if x == maxPar then i else -1) ranks |>
+              List.filter (fun x -> x > -1) |> List.map (List.nth xss) |>
+              List.map (List.take 2)
+    ;;
 
-    let rangeDupal = fun css ->
+    let rangeDupal = fun xss ->
         (* здесь мы существенно полагаемся на то, что в списках нет сетов! *)
-      let ranks = List.map (fun cs -> 
+      let ranks = List.map (fun xs -> 
                       List.fold_left 
                         (fun (ra, st) (ru,_) -> 
                           if ra == ru then (ru, ru :: st) else (ru, st) 
-                        ) (-1, []) cs
-                    ) (List.map (List.sort compareRank) css) |>
+                        ) (-1, []) xs
+                    ) (List.map (List.sort compareRank) xss) |>
                     List.map snd |> List.map (fun xs -> (List.sort compare xs |> List.rev))
-      in let maxVV = List.concat ranks |> List.max 
+      in let maxDup = List.concat ranks |> List.max 
          in List.mapi (fun i xs ->
-                if 2 == List.length xs && maxVV == List.hd xs then i else -1) ranks |>
-              List.filter (fun x -> x > -1) |> List.map (List.nth css) |> 
-              List.map (List.take 2) |> List.sort dRank |> List.rev (* |> List.hd  *)
+                if 2 == List.length xs && maxDup == List.hd xs then i else -1) ranks |>
+              List.filter (fun x -> x > -1) |> List.map (List.nth xss) |> 
+              List.map (List.take 2) |> List.sort dRank |> List.rev
+    ;;
 
-    let rangeSet = fun css ->
+    let rangeSet = fun xss ->
      (* здесь мы существенно полагаемся на то, что в списках нет каре! *)
-      let ranks = List.map (fun cs ->
+      let ranks = List.map (fun xs ->
                       List.fold_left
                         (fun (flag, state) (ru, _) ->
                           if List.is_empty state then (1, ru :: state) else
                             if ru == List.hd state then (flag + 1, state) else
                               if ru != List.hd state && flag != 3 then (0, [])
                               else (flag, state)
-                        ) (0, []) cs
-                    ) (List.map (List.sort compareRank) css) |> List.map snd 
-     in let maxVVV = List.concat ranks |> List.max
+                        ) (0, []) xs
+                    ) (List.map (List.sort compareRank) xss) |> List.map snd 
+     in let maxSet = List.concat ranks |> List.max
         in List.mapi (fun i xs ->
-               if not (List.is_empty xs) && maxVVV == List.hd xs then i else -1) ranks |>
-             List.filter (fun x -> x > -1) |> List.map (List.nth css) |> 
-              List.map (List.take 2) |> List.sort dRank |> List.rev (* |> List.hd  *)
-
-    let rangeStr css = css
-    let rangeFlush css = css
-    let rangeFull css = css
-    let rangeCare css = css
-    let rangeFuSt css = css
+               if not (List.is_empty xs) && maxSet == List.hd xs then i else -1) ranks |>
+             List.filter (fun x -> x > -1) |> List.map (List.nth xss) |> 
+             List.map (List.take 2) |> List.sort dRank |> List.rev
+    ;;
+      
+    let rangeStr xss =
+      let ord =
+        List.map (fun xs -> List.sort compareRank xs |> List.rev |> List.map fst) xss
+        (* здесь мы существенно полагаемся на то, что стрит в списках есть! *)
+      in let ranks =
+           (List.map (fun xs ->
+                let xs2 = 0 :: xs and xs1 = xs @ [0] in
+                List.combine xs1 xs2 |> List.tl |> List.filter (fun (x,y) -> y - x < 2) |> List.hd
+              ) ord
+           ) |> List.map snd
+         in let maxStr = List.max ranks
+            in List.mapi (fun i xs -> if maxStr == xs then i else -1) ranks |>
+                 List.filter (fun x -> x > -1) |> List.map (List.nth xss) |> 
+                 List.map (List.take 2) |> List.sort dRank |> List.rev
+    ;;
+      
+                     
+    let rangeFlush xss = xss
+    let rangeFull xss = xss
+    let rangeCare xss = xss
+    let rangeFuSt xss = xss
 
   end ;;
 
-
-                   
-
   (* test suite *)
-let board = [(3,1);(12,3);(12,1);(11,3);(3,2)] ;;
+let board = [(2,1) ; (5,3) ; (6,1) ; (8,3) ; (10,2)] ;;
 
-let tu1= Rangir.rangeHigh
-            [
-              [(11, 1); (11, 2)] @ board ;
-              [(10, 2); (10, 1)] @ board ;
-              [( 12, 2); ( 7, 1)] @ board ;
-            ]
-
-let tu2 = Rangir.rangePair
-            [
-              [(11, 1); (11, 2)] @ board ;
-              [(10, 2); (10, 1)] @ board ;
-              [( 12, 2); ( 7, 1)] @ board ;
-            ]
-        
-let tu3 = Rangir.rangeDupal
-            [
-              [(11, 1); (11, 2)] @ board ;
-              [(10, 2); (10, 1)] @ board ;
-              [( 12, 2); ( 7, 1)] @ board ;
-            ]
-
-        
-let tu4= Rangir.rangeSet
-            [
-              [(11, 1); (11, 2)] @ board ;
-              [(10, 2); (10, 1)] @ board ;
-              [( 12, 2); ( 7, 1)] @ board ;
+let tuStr = Rangir.rangeStr
+              [
+              [( 4, 1); ( 7, 0)] @ board ;
+              [( 7, 2); ( 9, 1)] @ board ;
+              [( 4, 2); ( 7, 1)] @ board ;
             ]
         
