@@ -1,4 +1,4 @@
-open Shuffle ;; open Arbitrage ;;
+open Shuffle ;; open Arbitrage ;; open Rangir ;;
 
 let mySort = fun (r1, s1) (r2, s2) -> if r1 < r2 then 1 else -1 ;;
   

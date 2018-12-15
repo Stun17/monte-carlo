@@ -1,19 +1,24 @@
-ORG  = convert.ml decisions.mli decisions.ml shuffle.mli shuffle.ml 
-FST = shuffle.cmo decisions.cmo
+ORG = convert.ml decisions.mli decisions.ml shuffle.mli shuffle.ml 
+FST = shuffle.cmo decisions.cmo rangir.cmo
+SND = rangir.cmo
+BER = rangir.mli rangir.ml
 DER = arbitrage.mli arbitrage.ml
 
-arbitrage.cmo: $(FST) $(DER) 
+rangir.cmo: $(BER)
+	ocamlfind ocamlc -package batteries -c $^
+
+arbitrage.cmo: $(FST)  $(SND) $(DER)
 	ocamlfind ocamlc -c \
-	-open Batteries -open Shuffle -open Decisions -open Convert \
+	-open Batteries -open Shuffle -open Decisions -open Convert -open Rangir \
 	-package batteries $(DER)
 
-%.cmo: $(ORG) 
-	ocamlc -c $^
+%.cmo: $(ORG)
+	ocamlfind ocamlc -package batteries -c $^
 
-a.out: $(FST) arbitrage.cmo main.ml
+a.out: $(FST) rangir.cmo arbitrage.cmo main.ml
 	ocamlfind ocamlc \
-	convert.cmo shuffle.cmo decisions.cmo arbitrage.cmo \
-	-open Batteries -open Shuffle -open Decisions -open Arbitrage \
+	convert.cmo shuffle.cmo decisions.cmo rangir.cmo arbitrage.cmo \
+	-open Batteries -open Shuffle -open Decisions -open Rangir -open Arbitrage \
 	-package batteries -linkpkg main.ml
 
 clean:

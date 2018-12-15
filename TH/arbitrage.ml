@@ -1,31 +1,40 @@
 module Arbitrage =
 struct
      
-open Shuffle ;; open Decisions ;; open Batteries ;; open Printf ;; open Convert ;;
+open Shuffle ;; open Decisions ;; open Convert ;; open Rangir ;;
+open Batteries ;; open Printf ;;
 
 type cards = (int * int) list ;;
 
 let myPrn rez name =
   printf "%-10s" name ;
-  List.iter (fun zs ->
-      List.iter (fun z -> printf "%s " (myConvi z)) zs ;
-      printf "\t" ) rez ;
+  let rez2 = (*    (int * int) list list      *)
+    match name with  
+    | "high"   -> rangeHigh   rez
+    | "pair"   -> rangePair   rez
+    | "dupal"  -> rangeDupal  rez
+    | "set"    -> rangeSet    rez
+    | "str8"   -> rangeStr    rez
+    | "flush"  -> rangeFlush  rez
+    | "full"   -> rangeFull   rez
+    | "care"   -> rangeCare   rez
+    | "fl-st"  -> rangeFuSt   rez
+ in List.iter (fun p -> List.iter (fun (r, s) -> printf " %i %i " r s) p) rez2 ;
   printf "\n"
 ;;  
   
-let myFind predicat cs =
-  let (_, rez) =
-    List.map predicat cs |>
-      List.fold_left (
-          fun (count, acc) c ->
+let myFoundOut predicat cs =
+  let (_, rezultList) =
+    List.map predicat cs |> List.fold_left
+        ( fun (count, acc) c ->
           if c then (count + 1, (List.nth cs count) :: acc)
           else      (count + 1,                        acc)
         ) (0, [])
-  in rez
+  in rezultList
 ;;
           
 let rec myWorkFun m cs predicat title nextFun =
-  let rez = myFind predicat cs
+  let rez = myFoundOut predicat cs
   in if List.is_empty rez then nextFun m cs else myPrn rez title
 ;;
 
