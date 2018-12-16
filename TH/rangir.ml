@@ -101,10 +101,8 @@ module Rangir =
     ;;
 
     let rangeFlush xss =
-      let ord =
-        List.map (fun xs -> List.sort compareSuit xs |> List.rev |> List.map snd) xss
-      in let rez =
-           List.map
+      let ord = List.map (fun xs -> List.sort compareSuit xs |> List.rev |> List.map snd) xss
+      in let rez = List.map
              (fun xs ->
                let xs2 = 0 :: xs and xs1 = xs @ [0] and suit = Array.make 4 0
                  (* мы существенно полагаемся на то, что флеш в листах есть! *)
@@ -118,10 +116,13 @@ module Rangir =
             in  [List.nth xss k] |> List.map (List.take 2)
     ;;
 
-    let rangeFull css =
-      let rez3 = rangeSet css
+    let rangeFull xss = xss
+      
+    let rangeFull3 xss =
+      let rez3 = rangeSet xss |> List.hd
       in rez3
-
+      (* List.map (fun xs -> List.take 2 xs) xss (\* |> List.map (List.take 2) *\) *)
+       
     let rangeCare xss =
       let ord = List.map (List.sort compareRank) xss 
      (* здесь мы существенно полагаемся на то, что в списках нет каре! *)
@@ -145,10 +146,10 @@ module Rangir =
 
   (* test suite *)
 let te  =
-  let board = [(2,0) ; (2,1) ; (2,2) ; (8,1) ; (2,3)] in
-  Rangir.rangeCare [
+  let board = [(2,0) ; (2,1) ; (7,1) ; (8,1) ; (12,3)] in
+  Rangir.rangeFull3 [
       [( 5, 3); ( 5, 2)] @ board ;
-      [( 7, 1); ( 9, 1)] @ board ;
+      [( 2, 2); ( 9, 1)] @ board ;
       [( 4, 3); ( 7, 1)] @ board ;
     ]
 
