@@ -10,15 +10,15 @@ let myPrn rez name =
   printf "%-10s" name ;
   let rez2 = 
     match name with  
-    | "high"   -> rangeHigh   rez
-    | "pair"   -> rangePair   rez
-    | "dupal"  -> rangeDupal  rez
-    | "set"    -> rangeSet    rez
-    | "str8"   -> rangeStr    rez
-    | "flush"  -> rangeFlush  rez
-    | "full"   -> rangeFull   rez
-    | "care"   -> rangeCare   rez
-    | "fl-st"  -> rangeFuSt   rez
+    | "high"   -> Rangir.rangeHigh   rez
+    | "pair"   -> Rangir.rangePair   rez
+    | "dupal"  -> Rangir.rangeDupal  rez
+    | "set"    -> Rangir.rangeSet    rez
+    | "str8"   -> Rangir.rangeStr    rez
+    | "flush"  -> Rangir.rangeFlush  rez
+    | "full"   -> Rangir.rangeFull   rez
+    | "care"   -> Rangir.rangeCare   rez
+    | "fl-st"  -> Rangir.rangeFuSt   rez
  in List.iter (fun p -> List.iter (fun (r, s) -> printf " %i %i " r s) p) rez2 ;
   printf "\n"
 ;;  
@@ -38,20 +38,20 @@ let rec myWorkFun m cs predicat title nextFun =
   in if List.is_empty rez then nextFun m cs else myPrn rez title
 ;;
 
-let isAnyHaveHigh  = fun m cs -> myWorkFun m cs isHigh      "high"  (fun m cs -> ())  ;;
-let isAnyHavePair  = fun m cs -> myWorkFun m cs isPair      "pair"  isAnyHaveHigh     ;;
-let isAnyHaveDupal = fun m cs -> myWorkFun m cs isDupal     "dupal" isAnyHavePair     ;;
-let isAnyHaveSet   = fun m cs -> myWorkFun m cs isSet       "set"   isAnyHaveDupal    ;;
-let isAnyHaveStr   = fun m cs -> myWorkFun m cs isStraight  "str8"  isAnyHaveSet      ;;
-let isAnyHaveFlush = fun m cs -> myWorkFun m cs isFlush     "flush" isAnyHaveStr      ;;
-let isAnyHaveFull  = fun m cs -> myWorkFun m cs isFull      "full"  isAnyHaveFlush    ;;
-let isAnyHaveCare  = fun m cs -> myWorkFun m cs isCare      "care"  isAnyHaveFull     ;;
-let isAnyHaveFlSt  = fun m cs -> myWorkFun m cs isFluStr8   "fl-st" isAnyHaveFull     ;;
+let isAnyHaveHigh  = fun m cs -> myWorkFun m cs Decisions.isHigh      "high"  (fun m cs -> ())  ;;
+let isAnyHavePair  = fun m cs -> myWorkFun m cs Decisions.isPair      "pair"  isAnyHaveHigh     ;;
+let isAnyHaveDupal = fun m cs -> myWorkFun m cs Decisions.isDupal     "dupal" isAnyHavePair     ;;
+let isAnyHaveSet   = fun m cs -> myWorkFun m cs Decisions.isSet       "set"   isAnyHaveDupal    ;;
+let isAnyHaveStr   = fun m cs -> myWorkFun m cs Decisions.isStraight  "str8"  isAnyHaveSet      ;;
+let isAnyHaveFlush = fun m cs -> myWorkFun m cs Decisions.isFlush     "flush" isAnyHaveStr      ;;
+let isAnyHaveFull  = fun m cs -> myWorkFun m cs Decisions.isFull      "full"  isAnyHaveFlush    ;;
+let isAnyHaveCare  = fun m cs -> myWorkFun m cs Decisions.isCare      "care"  isAnyHaveFull     ;;
+let isAnyHaveFlSt  = fun m cs -> myWorkFun m cs Decisions.isFluStr8   "fl-st" isAnyHaveFull     ;;
   
 let arbitIt = fun num_of_players (ps, bs) ->
   let cs = List.map (fun p -> p @ bs) ps
-  in if isColored bs then isAnyHaveFlSt num_of_players cs else 
-       if isPair bs then isAnyHaveCare num_of_players cs else
+  in if Decisions.isColored bs then isAnyHaveFlSt num_of_players cs else 
+       if Decisions.isPair bs then isAnyHaveCare num_of_players cs else
          isAnyHaveStr num_of_players cs
 ;;
   

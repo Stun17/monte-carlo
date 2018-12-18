@@ -12,7 +12,7 @@ arbitrage.cmo: $(FST) $(SND) $(DER)
 	-open Batteries -open Decisions -open Rangir \
 	-package batteries $(DER)
 
-%.cmo: $(ORG)
+decisions.cmo shuffle.cmo: $(ORG)
 	ocamlfind ocamlc -package batteries -c $^
 
 a.out: $(ORG) rangir.cmo arbitrage.cmo main.ml
@@ -23,4 +23,7 @@ a.out: $(ORG) rangir.cmo arbitrage.cmo main.ml
 
 clean:
 	@rm *.cm[io] 
-	@if [ -e a.out ] ; then rm a.out ; fi
+	@test -z "a.out" || rm -f a.out 
+
+build:
+	ocamlbuild -use-ocamlfind -no-hygiene -pkg batteries *.cmo main.native

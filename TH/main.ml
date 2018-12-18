@@ -1,4 +1,4 @@
-open Shuffle ;; open Arbitrage ;; open Rangir ;;
+open Shuffle ;; open Arbitrage ;; open Rangir ;; open Batteries ;;
 
 let mySort = fun (r1, s1) (r2, s2) -> if r1 < r2 then 1 else -1 ;;
   
@@ -19,4 +19,4 @@ let prepare m cs =
 let n = int_of_string (Sys.argv.(1)) ;; (* num of hands   *)
 let m = int_of_string (Sys.argv.(2)) ;; (* num of players *)
   
-(1 -- n) |> Enum.iter (fun _ -> shuffle () |> prepare m |> arbitIt m) ;;
+(1 -- n) |> Enum.iter (fun _ -> Shuffle.shuffle () |> prepare m |> Arbitrage.arbitIt m) ;;
