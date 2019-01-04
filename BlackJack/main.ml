@@ -16,8 +16,10 @@ let prepare m cs =
 
 let m = int_of_string (Sys.argv.(1)) ;; (* num of players *)
 let print_card = fun x -> print_int x, print_char ' ' ;;
+
+(* let testIt = Shuffle.shuffle () |> List.sort compare |> List.map (fun x -> print_int x, print_char ' ') *)
   
-Shuffle.shuffle () |> prepare m |> fun (players, dealer, deck) -> 
+Shuffle.shuffle () |> prepare m |> fun (players, dealer, deck) ->
      List.map print_card deck, print_newline () ,
-     List.map (fun xs -> List.map print_card xs) players, print_newline () ,
+     List.map (fun xs -> List.map print_card xs, print_newline ()) players ,
      List.map print_card dealer, print_newline () ;;
