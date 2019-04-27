@@ -1,3 +1,9 @@
+(*   texas holdem game 
+    input params: num of hands
+                  num of gamers
+    ouput : win-poket(rank/suit)
+ *)
+
 open Shuffle ;; open Arbitrage ;; open Rangir ;; open Batteries ;;
 
 let mySort = fun (r1, s1) (r2, s2) -> if r1 < r2 then 1 else -1 ;;
