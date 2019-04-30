@@ -32,6 +32,6 @@ stat1: acesstat.ml
 	ocamlfind ocamlc shuffle.cmo -open Batteries -open Shuffle \
          -package batteries -linkpkg $^ -o $@
 
-stat2: poketstat.ml
+stat2: preflop.ml
 	ocamlfind ocamlc shuffle.cmo -open Batteries -open Shuffle \
          -package batteries -linkpkg $^ -o $@
