@@ -1,6 +1,8 @@
 module Decisions =
 struct
 
+  open Batteries ;;
+    
   type hand = (int * int) list
 
             
@@ -30,7 +32,7 @@ struct
   ;;
     
   let isStraight cs =
-    if (List.split cs |> fst |> List.sort compare |> fun zs ->
+    if (List.split cs |> fst |> List.sort compare |> List.rev |> fun zs ->
                     ((List.nth zs 0) - (List.nth zs 4) = 4)
                  || ((List.nth zs 1) - (List.nth zs 5) = 4)
                  || ((List.nth zs 2) - (List.nth zs 6) = 4)
@@ -45,14 +47,25 @@ struct
   ;;
 
   let isFlushStr8 cs =
-    match isFlush cs with
-    | [] -> []
-    | cs -> match isStraight cs with
-            | [] -> []
-            | cs -> isStraight (List.filter (fun (r,s) -> s = 0) cs) @
-                    isStraight (List.filter (fun (r,s) -> s = 1) cs) @
-                    isStraight (List.filter (fun (r,s) -> s = 2) cs) @
-                    isStraight (List.filter (fun (r,s) -> s = 3) cs) 
+    let proc n = List.filter (fun (_,s) -> s = n) cs |>
+                   List.split |> fst |> List.sort compare |> List.rev |>
+                   fun zs ->
+                   match List.length zs with
+                   | 5 ->    ((List.nth zs 0) - (List.nth zs 4) = 4)
+                          || ([0;1;2;3;12] = List.rev zs)
+                   | 6 ->    ((List.nth zs 0) - (List.nth zs 4) = 4)
+                          || ((List.nth zs 1) - (List.nth zs 5) = 4)
+                          || ([0;1;2;3] = (List.rev zs |> List.take 4) && (12 = List.nth zs 0))
+                   | 7 ->    ((List.nth zs 0) - (List.nth zs 4) = 4)
+                          || ((List.nth zs 1) - (List.nth zs 5) = 4)
+                          || ((List.nth zs 2) - (List.nth zs 6) = 4)
+                          || ([0;1;2;3] = (List.rev zs |> List.take 4) && (12 = List.nth zs 0))
+                   | _ -> false
+    in match isFlush cs with
+       | [] -> []
+       | _ -> match isStraight cs with
+              | [] -> []
+              | _ -> if List.map proc [0;1;2;3] |> List.exists (fun x -> x = true) then cs else []
     ;;
     
   let isSet cs =
