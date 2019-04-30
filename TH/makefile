@@ -28,10 +28,10 @@ clean:
 build:
 	ocamlbuild -use-ocamlfind -no-hygiene -pkg batteries *.cmo main.native
 
-stat:
+stat1: acesstat.ml
 	ocamlfind ocamlc shuffle.cmo -open Batteries -open Shuffle \
-         -package batteries -linkpkg acesstat.ml -o statistics
+         -package batteries -linkpkg $^ -o $@
 
-stat2:
+stat2: poketstat.ml
 	ocamlfind ocamlc shuffle.cmo -open Batteries -open Shuffle \
-         -package batteries -linkpkg poketstat.ml -o stat
+         -package batteries -linkpkg $^ -o $@
