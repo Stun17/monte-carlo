@@ -1,15 +1,16 @@
 open Shuffle ;; open Batteries ;; open Printf ;;
 
-let (r1, r2) = (read_int (), read_int ()) ;;
+let r1 = int_of_string (Sys.argv.(1)) ;;
+let r2 = int_of_string (Sys.argv.(2)) ;;
            
 let mysort (x1,_) (x2,_) = if x1 > x2 then 1 else if x2 > x1 then -1 else 0 ;;
 
-let myfilter (x, y) = (x != r1 && y != 0) && (x != r2 && y != 1)  
+let myfilter (x, y) = (if x = r1 then y != 0 else true) && (if x = r2 then y != 1 else true)  
   
 let func = fun _ -> 
-  let cs = shuffle () |> List.filter myfilter |> List.take 4 
-  in let [(p1,_);(p2,_)] = List.take 2 cs |> List.sort mysort
-     and [(q1,_);(q2,_)] = List.drop 2 cs |> List.sort mysort
+  let cs = shuffle () |> List.filter myfilter 
+  in let [ (p1,_) ; (p2,_) ] = List.take 2 cs |> List.sort mysort
+     and [ (q1,_) ; (q2,_) ] = List.drop 2 cs |> List.take 2 |> List.sort mysort
      in
      if (r1 > p1 && r1 > q1 && r1 = r2) then true
      else
