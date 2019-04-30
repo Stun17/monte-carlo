@@ -7,16 +7,23 @@ type hand = (int * int) list
 type cards = hand list ;;
 
 let myWorkFun cs predicat title continuation =
-  let r = List.map predicat cs
-  in  if List.exists ( fun x -> x = true) r
-      then List.combine r cs |> List.iter (fun (flag, xs) ->
-                 if flag then
-                   ( printf "%5s\t" title ;
-                     List.iter (fun (x1, x2) -> printf "%2i %1i\t\t" x1 x2) (List.take 2 xs) ;
-                     printf "\n"
-                   )
-                 else ()
-               )
+  let rezult = List.map predicat cs
+  in  if List.exists (fun x -> x = true) rezult
+      then
+        let qty = List.filter (fun x -> x = true) rezult |> List.length
+        in if qty = 1
+           then
+             List.combine rezult cs |>
+               List.iter
+                 (fun (flag, xs) -> 
+                   if flag
+                   then ( printf "%5s\t" title ;
+                          List.iter (fun (x1, x2) -> printf "%2i %1i\t" x1 x2) xs ;
+                          printf "\n"
+                        )
+                   else ()
+                 )
+           else printf "%s\t two results\n" title 
       else continuation cs
 ;;
 
