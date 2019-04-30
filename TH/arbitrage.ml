@@ -27,4 +27,14 @@ let isAnyHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isAnyHaveFlush  
 let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull     ;;
 let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree    ;;
   
-end ;;
+let start cs =
+  let ts = List.hd cs |> List.drop 2 
+  in if isColor ts
+     then isAnyHaveFlStr cs
+     else
+       if isDry ts
+       then isAnyHaveCaree cs
+       else isAnyHaveStr cs ;;
+       
+end ;;                                    
+    

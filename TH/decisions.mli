@@ -12,5 +12,7 @@ sig
     val isPair      : hand -> hand
     val isDupal     : hand -> hand
     val isHigh      : hand -> hand
-      
+
+    val isColor     : hand -> bool
+    val isDry       : hand -> bool
 end

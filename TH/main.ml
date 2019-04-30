@@ -37,4 +37,4 @@ let prepare numGamers deck =
 let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* number of hands   *)
 let numOfGamers = int_of_string (Sys.argv.(2)) ;; (* number of players *)
   
-(1 -- numOfHands) |> Enum.iter (fun _ -> shuffle () |> prepare numOfGamers |> isAnyHaveFlStr) ;;
+(1 -- numOfHands) |> Enum.iter (fun _ -> shuffle () |> prepare numOfGamers |> start) ;;

@@ -13,5 +13,7 @@ sig
   val isAnyHaveFull  : cards -> unit              
   val isAnyHaveCaree : cards -> unit
   val isAnyHaveFlStr : cards -> unit
+
+  val start : cards -> unit
     
 end

@@ -10,7 +10,16 @@ struct
 
   let countRank cs k = List.filter (fun (r,_) -> r = k) cs |> List.length ;;
 
-    
+  let isColor xs =
+    List.map (countSuit xs) [0;1;2;3] |>
+      List.filter (fun x -> x > 2) |> List.length |> fun x -> x > 0
+  ;;
+
+  let isDry xs =
+    List.map (countRank xs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+      List.filter (fun x -> x > 2) |> List.length |> fun x -> x > 0
+  ;;
+
   let isFlush cs =
     if (List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x >= 5))
     then cs
