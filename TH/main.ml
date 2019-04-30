@@ -1,28 +1,42 @@
-(*   texas holdem game 
-    input params: num of hands
+(* texas holdem poker game emulator
+    input params: number of hands
                   num of gamers
     ouput : win-poket(rank/suit)
  *)
 
 open Shuffle ;; open Arbitrage ;; open Rangir ;; open Batteries ;;
 
-let mySort = fun (r1, s1) (r2, s2) -> if r1 < r2 then 1 else -1 ;;
+let cardSort =
+  fun (rank1, suit1) (rank2, suit2) ->
+  if rank1 < rank2 then 1 else -1 ;;
   
-let prepare m cs =
-     let pl1 = List.drop  5 cs |> List.take 2 |> List.sort mySort 
-     and pl2 = List.drop  7 cs |> List.take 2 |> List.sort mySort 
-     and pl3 = List.drop  9 cs |> List.take 2 |> List.sort mySort 
-     and pl4 = List.drop 11 cs |> List.take 2 |> List.sort mySort 
-     and pl5 = List.drop 13 cs |> List.take 2 |> List.sort mySort 
-     and pl6 = List.drop 15 cs |> List.take 2 |> List.sort mySort 
-     and pl7 = List.drop 17 cs |> List.take 2 |> List.sort mySort 
-     and pl8 = List.drop 19 cs |> List.take 2 |> List.sort mySort 
-     and pl9 = List.drop 21 cs |> List.take 2 |> List.sort mySort 
-     and plA = List.drop 23 cs |> List.take 2 |> List.sort mySort 
-     in (List.take m [pl1; pl2; pl3; pl4; pl5; pl6; pl7; pl8; pl9; plA] , List.take 5 cs)
+let prepare numgamers deck =
+     let player1 = List.drop  5 deck |> List.take 2 |> List.sort cardSort 
+     and player2 = List.drop  7 deck |> List.take 2 |> List.sort cardSort 
+     and player3 = List.drop  9 deck |> List.take 2 |> List.sort cardSort 
+     and player4 = List.drop 11 deck |> List.take 2 |> List.sort cardSort 
+     and player5 = List.drop 13 deck |> List.take 2 |> List.sort cardSort 
+     and player6 = List.drop 15 deck |> List.take 2 |> List.sort cardSort 
+     and player7 = List.drop 17 deck |> List.take 2 |> List.sort cardSort 
+     and player8 = List.drop 19 deck |> List.take 2 |> List.sort cardSort 
+     and player9 = List.drop 21 deck |> List.take 2 |> List.sort cardSort 
+     and playerA = List.drop 23 deck |> List.take 2 |> List.sort cardSort 
+     in ( List.take numgamers [player1
+                              ; player2
+                              ; player3
+                              ; player4
+                              ; player5
+                              ; player6
+                              ; player7
+                              ; player8
+                              ; player9
+                              ; playerA
+                              ]
+        , List.take 5 deck
+        )
 ;;
 
-let n = int_of_string (Sys.argv.(1)) ;; (* num of hands   *)
-let m = int_of_string (Sys.argv.(2)) ;; (* num of players *)
+let nhands  = int_of_string (Sys.argv.(1)) ;; (* number of hands   *)
+let ngamers = int_of_string (Sys.argv.(2)) ;; (* number of players *)
   
-(1 -- n) |> Enum.iter (fun _ -> Shuffle.shuffle () |> prepare m |> Arbitrage.arbitIt m) ;;
+(1 -- nhands) |> Enum.iter (fun _ -> shuffle () |> prepare ngamers |> arbitIt ngamers) ;;

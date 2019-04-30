@@ -10,7 +10,7 @@ module Rangir :
     val rangeStr   : cards list -> cards list  
     val rangeFlush : cards list -> cards list  
     val rangeFull  : cards list -> cards list  
-    val rangeCare  : cards list -> cards list  
-    val rangeFuSt  : cards list -> cards list  
+    val rangeCaree : cards list -> cards list  
+    val rangeFlSt  : cards list -> cards list  
 
   end ;;

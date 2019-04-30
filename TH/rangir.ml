@@ -5,30 +5,26 @@ module Rangir =
 
     type cards = (int * int) list
 
-    (* получаем информацию о максимальном ранге смежных карт в xs  *)
-    let adjacentRanks = fun xs ->
-             (* список xs должнен быть отранжирован в нисходящем порядке *)
-     let xs2 = 0 :: xs
-     and xs1 = xs @ [0]
-             (* собираем инфо где в руке ранги совпадают или смежны *)
-     in List.combine xs1 xs2 |> List.tl |> List.filter (fun (x, y) -> y - x <= 1) |> List.hd
-   ;;
 
-   let twoPocketsCompare = fun [(r1,_); (r2,_)] [(t1,_); (t2,_)] ->
+    let compareRank = fun (r1, _) (r2, _) -> if r1 >= r2 then 1 else -1 ;;               
+
+
+    let twoPocketsCompare =
+      fun [(r1,_); (r2,_)] [(t1,_); (t2,_)] ->
       if r1 > t1 then 1 else
         if r1 == t1 && r2 > t2 then 1 else
           if r1 < t1 then -1 else
             if r1 == t1 && r2 < t2 then -1 else 0
     ;;
 
-    let compareRank = fun (r1, _) (r2, _) -> if r1 >= r2 then 1 else -1 ;;
 
-    let compareSuit = fun (_, s1) (_, s2) -> if s1 >= s2 then 1 else -1 ;;
-
-    let listPocketSort = fun xs -> match xs with
+    let listPocketSort =
+      fun xs ->
+      match xs with
       | [(r1, _); (r2, _)] -> if r1 > r2 then xs else List.rev xs
       | _ -> xs
     ;;
+
 
     let rangeHigh = fun xss ->
       let pockets = List.map (List.take 2) xss |> List.map listPocketSort |>
@@ -46,6 +42,7 @@ module Rangir =
                  ) (0, []) goodPockets |> snd
     ;;
 
+
     let rangePair = fun xss ->
       let ranks = List.map (fun xs ->
                       List.fold_left
@@ -60,10 +57,11 @@ module Rangir =
               List.map (List.take 2)
     ;;
 
+
     let rangeDupal = fun xss ->
       let ranks = List.map (fun xs ->
                       List.fold_left
-                        (fun (ra, sta) (ru,_) ->
+                        (fun (ra, sta) (ru, _) ->
                   (* здесь мы существенно полагаемся на то, что в списках нет сетов! *)
                           if ra == ru then (ru, ru :: sta) else (ru, sta)
                         ) (-1, []) xs
@@ -71,12 +69,15 @@ module Rangir =
                     List.map snd |> List.map (fun xs -> (List.sort compare xs |> List.rev))
       in let maxDup = List.concat ranks |> List.max
          in List.mapi (fun i xs ->
-                if 2 == List.length xs && maxDup == List.hd xs then i else -1) ranks |>
+                if 2 == List.length xs && maxDup == List.hd xs
+                then i
+                else -1) ranks |>
               List.filter (fun x -> x > -1) |> List.map (List.nth xss) |>
               List.map (List.take 2) |> List.sort twoPocketsCompare |> List.rev
     ;;
 
-      (* получаем информацию о совпадающих рангах руки *)
+
+    (* получаем информацию о совпадающих рангах руки *)
     let ranksEquality = fun n xs ->
               (* список xs должнен быть отранжирован в восходящем порядке *)
       let sta = Array.make 13 0
@@ -88,6 +89,7 @@ module Rangir =
             |> fst
     ;;
       
+
     let rangeSet = fun xss ->
       (* здесь мы существенно полагаемся на то, что в списках нет каре! *)
       let ranks = List.map (ranksEquality 3) @@ List.map (List.sort compareRank) xss 
@@ -95,6 +97,17 @@ module Rangir =
          in let (k, _) = List.findi (fun i x -> maxSet == x) ranks
             in [List.nth xss k] |> List.map (List.take 2) 
     ;;
+
+
+    (* получаем информацию о максимальном ранге смежных карт в xs  *)
+    let adjacentRanks =
+      fun xs -> (* список xs должнен быть отранжирован в нисходящем порядке *)
+      let xs2 = 0 :: xs
+      and xs1 = xs @ [0]
+             (* собираем инфо где в руке ранги совпадают или смежны *)
+      in List.combine xs1 xs2 |> List.tl |> List.filter (fun (x, y) -> y - x <= 1) |> List.hd
+    ;;
+
 
     let rangeStr xss =
       let ord =
@@ -106,6 +119,10 @@ module Rangir =
                  List.filter (fun x -> x > -1) |> List.map (List.nth xss) |>
                  List.map (List.take 2) |> List.sort twoPocketsCompare |> List.rev
     ;;
+
+
+    let compareSuit = fun (_, s1) (_, s2) -> if s1 >= s2 then 1 else -1 ;;
+      
 
     let rangeFlush xss =
       let ord = List.map (fun xs -> List.sort compareSuit xs |> List.rev |> List.map snd) xss
@@ -123,6 +140,7 @@ module Rangir =
             in  [List.nth xss k] |> List.map (List.take 2)
     ;;
 
+
     let rangeFull xss =
       let ord = List.map (List.sort compareRank) xss
       in let ranks3 = List.map (ranksEquality 3) ord
@@ -135,7 +153,8 @@ module Rangir =
                      else []
     ;;
                        
-    let rangeCare xss =
+
+    let rangeCaree xss =
      (* здесь мы существенно полагаемся на то, что в списках нет каре! *)
       let ranks = List.map (ranksEquality 4) @@ List.map (List.sort compareRank) xss
       in let maxSet = List.max ranks
@@ -143,11 +162,15 @@ module Rangir =
             in [List.nth xss k] |> List.map (List.take 2) 
     ;;
                       
-    let rangeFuSt xss = xss
+ 
+    let rangeFlSt xss = xss
 
   end ;;
 
-  (* test suite *)
+
+  
+(* test suite *)
+  
 let te  =
   let board = [(2,0) ; (2,1) ; (7,1) ; (8,1) ; (12,3)]
   in  Rangir.rangeFull [
