@@ -1,6 +1,7 @@
 module Arbitrage :
 sig
-  type cards = (int * int) list 
+  type hand = (int * int) list 
+  type cards = hand list
              
-  val arbitIt : int -> cards list * cards -> unit 
+  val isAnyHaveFlStr : cards -> unit 
 end

@@ -1,94 +1,48 @@
 module Decisions =
 struct
 
-    type cards = (int * int) list
+  type hand = (int * int) list
 
-    let isTimes k cs =
-      let ranks = Array.make 13 0
-      in let _ = List.map fst cs |>
-                   List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
-         in Array.exists (fun x -> x == k) ranks
-    ;;
+  let countSuit cs n =
+    List.filter (fun (_,s) -> s = n) cs |> List.length ;;
 
-    let isDry cs =
-      let ranks = Array.make 13 0
-      in let _ = List.map fst cs |>
-                   List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
-         in Array.for_all (fun x -> x < 2) ranks
-    ;;
+  let countRank cs k =
+    List.filter (fun (r,_) -> r = k) cs |> List.length ;;
+                                                                                  
+  let isFlush cs =
+    List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x >= 5) ;;
+       
+  let isCaree cs =
+    List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |> List.exists (fun x -> x = 4) ;;
 
-    let isColored cs =
-      let suits = Array.make 4 0
-      in let _ = List.map snd cs |>
-                   List.iter (fun x -> Array.set suits x ((Array.get suits x) + 1) ; ())
-         in Array.exists (fun x -> x > 2) suits
-    ;;
+  let isFull cs =
+    (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |> List.exists (fun x -> x = 3)) &&
+    (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |> List.exists (fun x -> x = 2))
+  ;;
+    
+  let isStraight cs =
+      List.split  cs |> fst |> List.sort compare |> fun zs ->
+                    ((List.nth zs 0) - (List.nth zs 4) = 4)
+                 || ((List.nth zs 1) - (List.nth zs 5) = 4)
+                 || ((List.nth zs 2) - (List.nth zs 6) = 4)
+                 || (  (List.nth zs 0) = 12 &&
+                         (List.nth zs 3) =  3 &&
+                           (List.nth zs 4) =  2 &&
+                             (List.nth zs 5) =  1 &&
+                               (List.nth zs 6) =  0 
+                         )
+  ;;
 
-    let isCare cs = isTimes 4 cs
-    let isPair cs = isTimes 2 cs
-    let isSet  cs = isTimes 3 cs
-    let isFull cs = isPair cs && isSet cs
+  let isFlushStr8 cs = (isFlush cs) && (isStraight cs) ;;
+    
+  let isSet cs =
+    (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |> List.exists (fun x -> x = 3)) ;;
 
-    let isDupal cs =
-      let ranks = Array.make 13 0
-      in let _ = List.map fst cs |>
-                   List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
-         and ds = Array.map (fun x -> if x == 2 then 1 else 0) ranks |>
-                    Array.fold_left (fun acc x -> acc + x) 0
-         in ds > 1
-    ;;
+  let isDupal     = fun cs -> true ;; 
+  let isPair      = fun cs -> true ;; 
 
-    let isHigh _cs = true
-                  
-    let isFlush cs =
-      List.map snd cs |> List.fold_left
-          (fun (s,c,d,h) x ->
-            match x with
-            | 0 -> (s+1,c,d,h) | 1 -> (s,c+1,d,h) | 2 -> (s,c,d+1,h) | _ -> (s,c,d,h+1)
-          ) (0,0,0,0) |> fun (s,c,d,h) -> s>4 || c>4 || d>4 || h>4
-    ;;
-
-    let isStraight cs =
-      let ranks = Array.make 13 0
-      in let _ = List.map fst cs |>
-                   List.iter (fun x -> Array.set ranks x ((Array.get ranks x) + 1) ; ())
-         in let str2 = Array.sub ranks 0 5 |> Array.for_all (fun x -> x > 0)
-            and str3 = Array.sub ranks 1 5 |> Array.for_all (fun x -> x > 0)
-            and str4 = Array.sub ranks 2 5 |> Array.for_all (fun x -> x > 0)
-            and str5 = Array.sub ranks 3 5 |> Array.for_all (fun x -> x > 0)
-            and str6 = Array.sub ranks 4 5 |> Array.for_all (fun x -> x > 0)
-            and str7 = Array.sub ranks 5 5 |> Array.for_all (fun x -> x > 0)
-            and str8 = Array.sub ranks 6 5 |> Array.for_all (fun x -> x > 0)
-            and str9 = Array.sub ranks 7 5 |> Array.for_all (fun x -> x > 0)
-            and strT = Array.sub ranks 8 5 |> Array.for_all (fun x -> x > 0)
-            (* wheel stright *)
-            and strW = Array.append
-                         (Array.sub ranks 12 1)
-                         (Array.sub ranks 0 4) |> Array.for_all (fun x -> x > 0) 
-            in str2 || str3 || str4 || str5 || str6 || str7 || str8 || str9 || strT || strW
-    ;;
-
-    let isFluStr8 cs =
-      if isFlush cs && isStraight cs then
-        let cs2 = List.sort compare cs
-        in let ra = (List.hd cs2 |> fst) - 1
-           and sa = List.hd cs2 |> snd
-           in let (rez, _, _, _) = List.fold_left
-            (fun (flag, count, ra, sa) (ru, su) ->
-              if flag then (flag, 0, 0, 0)
-              else if count >= 5 then (true, 0, 0, 0)
-              else if sa == su && ra == 3 && ru == 12 && count == 4 then (true, 0, 0, 0)
-              else if sa == su && (1 + ra) == ru then (flag, count + 1, ru, su)
-              else if sa == su && (1 + ra) != ru then (false, 0, ru, su)              
-              else if sa != su && (1 + ra) == ru then (flag, count, ra, sa)
-              else if sa != su && (ra == 3) && count == 4 then (flag, count, ra, sa)
-              else if sa != su && (1 + ra) != ru then (flag, 0, ra, sa)
-              else (flag, ru, ru, su)
-            ) (false, 0, ra, sa) cs2
-        in rez
-      else false
-    ;;
-
+  let isHigh      = fun cs -> true ;; 
+      
 end ;;
 
 (* (\* test suite  *\) *)
