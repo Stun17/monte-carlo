@@ -1,14 +1,16 @@
 module Decisions :
 sig
+
   type hand = (int * int) list
 
-    val isFlushStr8 : hand -> bool      
-    val isCaree     : hand -> bool
-    val isFull      : hand -> bool
-    val isFlush     : hand -> bool
-    val isStraight  : hand -> bool
-    val isSet       : hand -> bool
-    val isPair      : hand -> bool
-    val isDupal     : hand -> bool
-    val isHigh      : hand -> bool 
+    val isFlushStr8 : hand -> hand      
+    val isCaree     : hand -> hand
+    val isFull      : hand -> hand
+    val isFlush     : hand -> hand
+    val isStraight  : hand -> hand
+    val isSet       : hand -> hand
+    val isPair      : hand -> hand
+    val isDupal     : hand -> hand
+    val isHigh      : hand -> hand
+      
 end

@@ -9,7 +9,7 @@ open Shuffle ;; open Arbitrage ;; open Batteries ;;
 let cardSort = fun (rank1, suit1) (rank2, suit2) -> if rank1 < rank2 then 1 else -1 ;;
   
 let prepare numGamers deck =
-  let board   = List.take  5 deck
+  let board   =                      List.take 5 deck
   and player1 = List.drop  5 deck |> List.take 2 |> List.sort cardSort 
   and player2 = List.drop  7 deck |> List.take 2 |> List.sort cardSort 
   and player3 = List.drop  9 deck |> List.take 2 |> List.sort cardSort 

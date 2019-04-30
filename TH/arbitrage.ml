@@ -7,24 +7,14 @@ type hand = (int * int) list
 type cards = hand list ;;
 
 let myWorkFun cs predicat title continuation =
-  let rezult = List.map predicat cs
-  in  if List.exists (fun x -> x = true) rezult
-      then
-        let qty = List.filter (fun x -> x = true) rezult |> List.length
-        in if qty = 1
-           then
-             List.combine rezult cs |>
-               List.iter
-                 (fun (flag, xs) -> 
-                   if flag
-                   then ( printf "%5s\t" title ;
-                          List.iter (fun (x1, x2) -> printf "%2i %1i\t" x1 x2) xs ;
-                          printf "\n"
-                        )
-                   else ()
-                 )
-           else printf "%s\t two results\n" title 
-      else continuation cs
+  match (List.map predicat cs |> List.flatten) with
+  | [] ->
+     continuation cs
+  | xs ->
+     printf "%s\t" title ;
+     if (List.length xs = 7)
+     then (List.iter (fun (x,y) -> printf "%2i %i\t" x y) xs ; printf "\n")
+     else print_endline "several players" 
 ;;
 
 let isAnyHaveHigh  = fun cs -> myWorkFun cs isHigh      "high"  (fun cs -> ())    ;;
@@ -34,7 +24,7 @@ let isAnyHaveSet   = fun cs -> myWorkFun cs isSet       "set"   isAnyHaveDupal  
 let isAnyHaveStr   = fun cs -> myWorkFun cs isStraight  "str8"  isAnyHaveSet      ;;
 let isAnyHaveFlush = fun cs -> myWorkFun cs isFlush     "flush" isAnyHaveStr      ;;
 let isAnyHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isAnyHaveFlush    ;;
-let isAnyHaveCare  = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull     ;;
-let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveFull     ;;
+let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull     ;;
+let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree    ;;
   
-end 
+end ;;
