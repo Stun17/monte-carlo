@@ -13,60 +13,95 @@ let print_hand xs title =
 ;;
 
 let getHigh xs =
-  List.split xs |> fst |> List.hd
+  List.sort compare xs |> List.rev |> List.split |> fst |> List.hd
 ;;
   
 let getPair xs =
-  List.split xs |> fst |> List.fold_left (fun a x -> if x = a then a else x) 0
+  List.sort compare xs |> List.rev |> List.split |> fst |>
+    fun ys ->
+    List.fold_right (
+        fun x (a, b) ->
+        if x = b then (x,x) else (a,x))
+      (List.tl ys) (List.hd ys, 0) 
 ;;
 
 let getDupal xs =
-  List.split xs |> fst |> List.fold_left (fun (a,b) x ->
-                              if x <= a then (a,b) else
-                                if x = b then (a,b) else
-                                  if x > a && x > b then (x,b) else
-                                    if x < a && x > b then (a,x) else (a,b)) (0,0)
+  List.sort compare xs |> List.rev |> List.split |> fst |> fun ys ->
+    let ys1 = ys @ [0]
+    and ys2 = 0 :: ys
+    in List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) ys1 ys2
+         |> List.sort compare |> List.rev |> fun zs -> (List.hd zs, List.tl zs |> List.hd)
+;;
+
+let getSet xs =
+  List.split xs |> fst |> List.fold_left (fun a x -> if x != a then a else x) 0
 ;;
   
 let arbitThem xs title =
-  let one = List.take 7 xs |> List.sort compare |> List.rev 
-  and two = List.drop 7 xs |> List.take 7 |> List.sort compare |> List.rev
+  let one = List.take 7 xs 
+  and two = List.drop 7 xs |> List.take 7 
   in match title with
      | "high"   ->
-        (match compare (getHigh one) (getHigh two) with
+        (match compare (getHigh one)
+                       (getHigh two)
+         with
          | -1 -> print_hand two title | 1 -> print_hand one title 
-         | 0 -> (match compare (List.tl one |> getHigh) (List.tl two |> getHigh) with
-                 | -1 -> print_hand two title | 1 -> print_hand one title
-                 | 0 -> (match compare (List.drop 2 one |> getHigh) (List.drop 2 two |> getHigh) with
-                         | -1 -> print_hand two title | 1 -> print_hand one title 
-                         | 0  ->
-                            (match compare
-                                     (List.drop 3 one |> getHigh)
-                                     (List.drop 3 two |> getHigh)
+         | 0 ->
+            (match compare (List.tl one |> getHigh)
+                           (List.tl two |> getHigh)
+             with
+             | -1 -> print_hand two title | 1 -> print_hand one title
+             | 0 ->
+                (match compare (List.drop 2 one |> getHigh)
+                               (List.drop 2 two |> getHigh)
+                 with
+                 | -1 -> print_hand two title | 1 -> print_hand one title 
+                 | 0  ->
+                    (match compare (List.drop 3 one |> getHigh)
+                                   (List.drop 3 two |> getHigh)
+                     with
+                     | -1 -> print_hand two title | 1 -> print_hand one title
+                     | 0 ->
+                        (match compare (List.drop 4 one |> getHigh)
+                                       (List.drop 4 two |> getHigh)
+                         with
+                         | -1 -> print_hand two title | 1 -> print_hand one title
+                         | 0 ->
+                            (match compare (List.drop 5 one |> getHigh)
+                                           (List.drop 5 two |> getHigh)
                              with
                              | -1 -> print_hand two title | 1 -> print_hand one title
-                             | 0 -> (match compare
-                                             (List.drop 4 one |> getHigh)
-                                             (List.drop 4 two |> getHigh)
-                                     with
-                                     | -1 -> print_hand two title | 1 -> print_hand one title
-                                     | 0 -> print_hand one title ; print_hand two title
-        )))))
+                             | 0 ->
+                                (match compare (List.drop 6 one |> getHigh)
+                                               (List.drop 6 two |> getHigh)
+                                 with
+                                 | -1 -> print_hand two title | 1 -> print_hand one title
+                                 | 0 -> print_hand one title ; print_hand two title
+        )))))))
      | "pair" -> 
-        (match compare (getPair one) (getPair two) with
-         | -1 -> print_hand two title
-         | 1 -> print_hand one title 
-         | 0 -> print_hand one ; print_hand two
-        )
+        (match compare (getPair one)
+                       (getPair two)
+         with
+         | -1 -> print_hand two title | 1 -> print_hand one title 
+         | 0 ->
+            (match compare (getHigh one)
+                           (getHigh two)
+             with
+             | -1 -> print_hand two title | 1 -> print_hand one title
+             | 0 -> print_hand one title ; print_hand two title
+        ))
      | "dupal"  ->
-        (match compare (getDupal one |> fst) (getDupal two |> fst) with
+        (match compare (getDupal one)
+                       (getDupal two)
+         with
          | -1 -> print_hand two title | 1 -> print_hand one title
-         | 0 -> (match compare (getDupal one |> snd) (getDupal two |> snd) with
-                 | -1 -> print_hand two title | 1 -> print_hand one title
-                 | 0 -> (match compare (getHigh one) (getHight two) with
-                         | -1 -> print_hand two title | 1 -> print_hand one title
-                         | 0 -> print_hand one title ; print_hand two title
-        )))
+         | 0 ->
+            (match compare (getHigh one)
+                           (getHigh two)
+             with
+             | -1 -> print_hand two title | 1 -> print_hand one title
+             | 0 -> print_hand one title ; print_hand two title
+        ))
      | "set"    -> () 
      | "str8"   -> () 
      | "flush"  -> () 
@@ -107,4 +142,10 @@ let start cs =
        else isAnyHaveStr cs ;;
        
 end ;;                                    
-    
+
+
+(* test suite  *)
+let xs = [(12,1) ; (11,2) ; (11,0) ; (3,3) ; (3,2) ; (1,1) ] ;;
+let teHigh = Arbitrage.getHigh  xs ;;
+let tePair = Arbitrage.getPair xs ;;
+let teDupal = Arbitrage.getDupal xs ;;
