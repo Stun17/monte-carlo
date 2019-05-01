@@ -6,6 +6,38 @@ open Decisions ;; open Batteries ;; open Printf ;;
 type hand = (int * int) list  
 type cards = hand list ;;
 
+let print_hand xs =
+  List.iter (fun (x,y) -> printf "%2i %i\t" x y) xs ;
+  printf "\n"
+;;
+
+let getHigh xs =
+  List.split xs |> fst |> List.sort compare |> List.rev |> List.hd
+;;
+  
+let arbitThem xs title =
+  print_endline "several players" ;
+  let one = List.take 7 xs ;
+  and two = List.drop 7 xs |> List.take 7
+  in match title with
+     | "high"   ->
+        ( match compare (getHigh one) (getHigh two) with
+          | -1 -> print_hand two
+          |  0 -> print_hand one ; print_hand two
+          |  _ -> print_hand one
+        )
+     | "pair"   -> () 
+     | "dupal"  -> () 
+     | "set"    -> () 
+     | "str8"   -> () 
+     | "flush"  -> () 
+     | "full"   -> () 
+     | "caree"  -> ()   
+     | "fl-st"  -> ()
+     | _        -> ()
+;;
+  
+  
 let myWorkFun cs predicat title continuation =
   match (List.map predicat cs |> List.flatten) with
   | [] ->
@@ -13,19 +45,19 @@ let myWorkFun cs predicat title continuation =
   | xs ->
      printf "%s\t" title ;
      if (List.length xs = 7)
-     then (List.iter (fun (x,y) -> printf "%2i %i\t" x y) xs ; printf "\n")
-     else print_endline "several players" 
+     then print_hand xs
+     else arbitThem xs title
 ;;
 
-let isAnyHaveHigh  = fun cs -> myWorkFun cs isHigh      "high"  (fun cs -> ())    ;;
-let isAnyHavePair  = fun cs -> myWorkFun cs isPair      "pair"  isAnyHaveHigh     ;;
-let isAnyHaveDupal = fun cs -> myWorkFun cs isDupal     "dupal" isAnyHavePair     ;;
-let isAnyHaveSet   = fun cs -> myWorkFun cs isSet       "set"   isAnyHaveDupal    ;;
-let isAnyHaveStr   = fun cs -> myWorkFun cs isStraight  "str8"  isAnyHaveSet      ;;
-let isAnyHaveFlush = fun cs -> myWorkFun cs isFlush     "flush" isAnyHaveStr      ;;
-let isAnyHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isAnyHaveFlush    ;;
-let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull     ;;
-let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree    ;;
+let isAnyHaveHigh  = fun cs -> myWorkFun cs isHigh      "high"  (fun cs -> ()) ;;
+let isAnyHavePair  = fun cs -> myWorkFun cs isPair      "pair"  isAnyHaveHigh  ;;
+let isAnyHaveDupal = fun cs -> myWorkFun cs isDupal     "dupal" isAnyHavePair  ;;
+let isAnyHaveSet   = fun cs -> myWorkFun cs isSet       "set"   isAnyHaveDupal ;;
+let isAnyHaveStr   = fun cs -> myWorkFun cs isStraight  "str8"  isAnyHaveSet   ;;
+let isAnyHaveFlush = fun cs -> myWorkFun cs isFlush     "flush" isAnyHaveStr   ;;
+let isAnyHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isAnyHaveFlush ;;
+let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull  ;;
+let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree ;;
   
 let start cs =
   let ts = List.hd cs |> List.drop 2 
