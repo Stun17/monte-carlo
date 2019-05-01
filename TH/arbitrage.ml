@@ -6,27 +6,65 @@ open Decisions ;; open Batteries ;; open Printf ;;
 type hand = (int * int) list  
 type cards = hand list ;;
 
-let print_hand xs =
+let print_hand xs title =
+  printf "%s\t" title ;
   List.iter (fun (x,y) -> printf "%2i %i\t" x y) xs ;
   printf "\n"
 ;;
 
 let getHigh xs =
-  List.split xs |> fst |> List.sort compare |> List.rev |> List.hd
+  List.split xs |> fst |> List.hd
 ;;
   
-let arbitThem xs title =
-  print_endline "several players" ;
-  let one = List.take 7 xs ;
-  and two = List.drop 7 xs |> List.take 7
+let getPair xs =
+  List.split xs |> fst |> List.fold_left (fun a x -> if x = a then a else x) 0
+;;
+  
+let rec arbitThem xs title =
+  let one = List.take 7 xs |> List.sort compare |> List.rev 
+  and two = List.drop 7 xs |> List.take 7 |> List.sort compare |> List.rev
   in match title with
      | "high"   ->
-        ( match compare (getHigh one) (getHigh two) with
-          | -1 -> print_hand two
-          |  0 -> print_hand one ; print_hand two
-          |  _ -> print_hand one
+        (match compare
+                 (getHigh one)
+                 (getHigh two)
+         with
+         | -1 -> print_hand two title | 1 -> print_hand one title 
+         | 0 ->
+            (match compare
+                     (List.tl one |> getHigh)
+                     (List.tl two |> getHigh)
+             with
+             | -1 -> print_hand two title | 1 -> print_hand one title
+             | 0 ->
+                (match compare
+                         (List.drop 2 one |> getHigh)
+                         (List.drop 2 two |> getHigh)
+                 with
+                 | -1 -> print_hand two title | 1 -> print_hand one title 
+                 | 0  ->
+                    (match compare
+                             (List.drop 3 one |> getHigh)
+                             (List.drop 3 two |> getHigh)
+                     with
+                     | -1 -> print_hand two title | 1 -> print_hand one title
+                     | 0 -> (match compare
+                                     (List.drop 4 one |> getHigh)
+                                     (List.drop 4 two |> getHigh)
+                             with
+                             | -1 -> print_hand two title| 1 -> print_hand one title
+                             | 0 -> print_hand one title ; print_hand two title
+                            )
+                    )
+                )
+            )
         )
-     | "pair"   -> () 
+     | "pair" -> 
+        (match compare (getPair one) (getPair two) with
+         | -1 -> print_hand two title
+         | 1 -> print_hand one title 
+         | 0 -> arbitThem xs "high" 
+        )
      | "dupal"  -> () 
      | "set"    -> () 
      | "str8"   -> () 
@@ -43,9 +81,8 @@ let myWorkFun cs predicat title continuation =
   | [] ->
      continuation cs
   | xs ->
-     printf "%s\t" title ;
      if (List.length xs = 7)
-     then print_hand xs
+     then print_hand xs title
      else arbitThem xs title
 ;;
 
