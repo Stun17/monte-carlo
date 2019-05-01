@@ -34,8 +34,19 @@ let getDupal xs =
 ;;
 
 let getSet xs =
-  List.split xs |> fst |> List.fold_left (fun a x -> if x != a then a else x) 0
+  List.sort compare xs |> List.rev |> List.split |> fst |> fun ys ->
+    let ys1 = ys @ [0]
+    and ys2 = 0 :: ys
+    in List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) ys1 ys2 |>
+         List.sort compare |> List.rev |> List.hd
 ;;
+
+let getStr8 xs =
+  List.sort compare xs |> List.rev |> List.split |> fst |> fun ys ->
+    let ys1 = ys @ [0]
+    and ys2 = 0 :: ys
+    in List.map2 (fun s1 s2 -> if s2 - s1 = 1 then s2 else 0) ys1 ys2 |>
+         List.sort compare |> List.rev |> List.hd  
 
 let kicker xs ys title =
   let one = List.sort compare xs |> List.rev and two = List.sort compare ys |> List.rev in
@@ -60,16 +71,24 @@ let arbitThem xs title =
   let one = List.take 7 xs 
   and two = List.drop 7 xs |> List.take 7 
   in match title with
-     | "high" -> kicker one two title
-     | "pair" -> (match compare (getPair one) (getPair two) with
-                  | -1 -> print_hand two title | 1 -> print_hand one title 
-                  | 0 -> kicker one two title )
+     | "high" ->
+        kicker one two title
+     | "pair" ->
+        (match compare (getPair one) (getPair two) with
+         | -1 -> print_hand two title | 1 -> print_hand one title 
+         | 0 -> kicker one two title )
      | "dupal" ->
         (match compare (getDupal one) (getDupal two) with
          | -1 -> print_hand two title | 1 -> print_hand one title
          | 0 -> kicker one two title )
-     | "set"    -> () 
-     | "str8"   -> () 
+     | "set" ->
+        (match compare (getSet one) (getSet two) with
+         | -1 -> print_hand two title | 1 -> print_hand one title
+         | 0 -> kicker one two title )           
+     | "str8" ->
+        (match compare (getStr8 one) (getStr8 two) with
+         | -1 -> print_hand two title | 1 -> print_hand one title
+         | 0 -> kicker one two title )              
      | "flush"  -> () 
      | "full"   -> () 
      | "caree"  -> ()   
@@ -110,7 +129,10 @@ end ;;
 
 
 (* test suite  *)
-let xs = [(12,1) ; (11,2) ; (11,0) ; (3,3) ; (3,2) ; (1,1) ] ;;
-let teHigh = Arbitrage.getHigh  xs ;;
-let tePair = Arbitrage.getPair xs ;;
-let teDupal = Arbitrage.getDupal xs ;;
+  open Arbitrage ;;
+let xs = [(11,1) ; (9,2) ; (7,0) ; (5,3) ; (6,3) ; (4,1) ; (3,0) ] ;;
+(* let teHigh = getHigh  xs ;; *)
+(* let tePair = getPair xs ;; *)
+(* let teDupal = getDupal xs ;; *)
+(* let teSet = getSet xs *)
+(* let teStr = getStr8 xs *)
