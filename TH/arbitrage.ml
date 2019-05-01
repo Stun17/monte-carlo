@@ -19,53 +19,54 @@ let getHigh xs =
 let getPair xs =
   List.split xs |> fst |> List.fold_left (fun a x -> if x = a then a else x) 0
 ;;
+
+let getDupal xs =
+  List.split xs |> fst |> List.fold_left (fun (a,b) x ->
+                              if x <= a then (a,b) else
+                                if x = b then (a,b) else
+                                  if x > a && x > b then (x,b) else
+                                    if x < a && x > b then (a,x) else (a,b)) (0,0)
+;;
   
-let rec arbitThem xs title =
+let arbitThem xs title =
   let one = List.take 7 xs |> List.sort compare |> List.rev 
   and two = List.drop 7 xs |> List.take 7 |> List.sort compare |> List.rev
   in match title with
      | "high"   ->
-        (match compare
-                 (getHigh one)
-                 (getHigh two)
-         with
+        (match compare (getHigh one) (getHigh two) with
          | -1 -> print_hand two title | 1 -> print_hand one title 
-         | 0 ->
-            (match compare
-                     (List.tl one |> getHigh)
-                     (List.tl two |> getHigh)
-             with
-             | -1 -> print_hand two title | 1 -> print_hand one title
-             | 0 ->
-                (match compare
-                         (List.drop 2 one |> getHigh)
-                         (List.drop 2 two |> getHigh)
-                 with
-                 | -1 -> print_hand two title | 1 -> print_hand one title 
-                 | 0  ->
-                    (match compare
-                             (List.drop 3 one |> getHigh)
-                             (List.drop 3 two |> getHigh)
-                     with
-                     | -1 -> print_hand two title | 1 -> print_hand one title
-                     | 0 -> (match compare
-                                     (List.drop 4 one |> getHigh)
-                                     (List.drop 4 two |> getHigh)
+         | 0 -> (match compare (List.tl one |> getHigh) (List.tl two |> getHigh) with
+                 | -1 -> print_hand two title | 1 -> print_hand one title
+                 | 0 -> (match compare (List.drop 2 one |> getHigh) (List.drop 2 two |> getHigh) with
+                         | -1 -> print_hand two title | 1 -> print_hand one title 
+                         | 0  ->
+                            (match compare
+                                     (List.drop 3 one |> getHigh)
+                                     (List.drop 3 two |> getHigh)
                              with
-                             | -1 -> print_hand two title| 1 -> print_hand one title
-                             | 0 -> print_hand one title ; print_hand two title
-                            )
-                    )
-                )
-            )
-        )
+                             | -1 -> print_hand two title | 1 -> print_hand one title
+                             | 0 -> (match compare
+                                             (List.drop 4 one |> getHigh)
+                                             (List.drop 4 two |> getHigh)
+                                     with
+                                     | -1 -> print_hand two title | 1 -> print_hand one title
+                                     | 0 -> print_hand one title ; print_hand two title
+        )))))
      | "pair" -> 
         (match compare (getPair one) (getPair two) with
          | -1 -> print_hand two title
          | 1 -> print_hand one title 
-         | 0 -> arbitThem xs "high" 
+         | 0 -> print_hand one ; print_hand two
         )
-     | "dupal"  -> () 
+     | "dupal"  ->
+        (match compare (getDupal one |> fst) (getDupal two |> fst) with
+         | -1 -> print_hand two title | 1 -> print_hand one title
+         | 0 -> (match compare (getDupal one |> snd) (getDupal two |> snd) with
+                 | -1 -> print_hand two title | 1 -> print_hand one title
+                 | 0 -> (match compare (getHigh one) (getHight two) with
+                         | -1 -> print_hand two title | 1 -> print_hand one title
+                         | 0 -> print_hand one title ; print_hand two title
+        )))
      | "set"    -> () 
      | "str8"   -> () 
      | "flush"  -> () 
