@@ -36,72 +36,38 @@ let getDupal xs =
 let getSet xs =
   List.split xs |> fst |> List.fold_left (fun a x -> if x != a then a else x) 0
 ;;
-  
+
+let kicker xs ys title =
+  let one = List.sort compare xs |> List.rev and two = List.sort compare ys |> List.rev in
+  match compare (getHigh one) (getHigh two) with
+  | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
+     (match compare (List.tl one |> getHigh) (List.tl two |> getHigh) with
+      | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
+         (match compare (List.drop 2 one |> getHigh) (List.drop 2 two |> getHigh) with
+          | -1 -> print_hand ys title | 1 -> print_hand xs title | 0  ->
+             (match compare (List.drop 3 one |> getHigh) (List.drop 3 two |> getHigh) with
+              | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
+                 (match compare (List.drop 4 one |> getHigh) (List.drop 4 two |> getHigh) with
+                  | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
+                     (match compare (List.drop 5 one |> getHigh) (List.drop 5 two |> getHigh) with
+                      | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
+                         (match compare (List.drop 6 one |> getHigh) (List.drop 6 two |> getHigh) with
+                          | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
+                             print_hand xs title ; print_hand ys title ))))))
+;;
+
 let arbitThem xs title =
   let one = List.take 7 xs 
   and two = List.drop 7 xs |> List.take 7 
   in match title with
-     | "high"   ->
-        (match compare (getHigh one)
-                       (getHigh two)
-         with
-         | -1 -> print_hand two title | 1 -> print_hand one title 
-         | 0 ->
-            (match compare (List.tl one |> getHigh)
-                           (List.tl two |> getHigh)
-             with
-             | -1 -> print_hand two title | 1 -> print_hand one title
-             | 0 ->
-                (match compare (List.drop 2 one |> getHigh)
-                               (List.drop 2 two |> getHigh)
-                 with
-                 | -1 -> print_hand two title | 1 -> print_hand one title 
-                 | 0  ->
-                    (match compare (List.drop 3 one |> getHigh)
-                                   (List.drop 3 two |> getHigh)
-                     with
-                     | -1 -> print_hand two title | 1 -> print_hand one title
-                     | 0 ->
-                        (match compare (List.drop 4 one |> getHigh)
-                                       (List.drop 4 two |> getHigh)
-                         with
-                         | -1 -> print_hand two title | 1 -> print_hand one title
-                         | 0 ->
-                            (match compare (List.drop 5 one |> getHigh)
-                                           (List.drop 5 two |> getHigh)
-                             with
-                             | -1 -> print_hand two title | 1 -> print_hand one title
-                             | 0 ->
-                                (match compare (List.drop 6 one |> getHigh)
-                                               (List.drop 6 two |> getHigh)
-                                 with
-                                 | -1 -> print_hand two title | 1 -> print_hand one title
-                                 | 0 -> print_hand one title ; print_hand two title
-        )))))))
-     | "pair" -> 
-        (match compare (getPair one)
-                       (getPair two)
-         with
-         | -1 -> print_hand two title | 1 -> print_hand one title 
-         | 0 ->
-            (match compare (getHigh one)
-                           (getHigh two)
-             with
-             | -1 -> print_hand two title | 1 -> print_hand one title
-             | 0 -> print_hand one title ; print_hand two title
-        ))
-     | "dupal"  ->
-        (match compare (getDupal one)
-                       (getDupal two)
-         with
+     | "high" -> kicker one two title
+     | "pair" -> (match compare (getPair one) (getPair two) with
+                  | -1 -> print_hand two title | 1 -> print_hand one title 
+                  | 0 -> kicker one two title )
+     | "dupal" ->
+        (match compare (getDupal one) (getDupal two) with
          | -1 -> print_hand two title | 1 -> print_hand one title
-         | 0 ->
-            (match compare (getHigh one)
-                           (getHigh two)
-             with
-             | -1 -> print_hand two title | 1 -> print_hand one title
-             | 0 -> print_hand one title ; print_hand two title
-        ))
+         | 0 -> kicker one two title )
      | "set"    -> () 
      | "str8"   -> () 
      | "flush"  -> () 
@@ -110,7 +76,6 @@ let arbitThem xs title =
      | "fl-st"  -> ()
      | _        -> ()
 ;;
-  
   
 let myWorkFun cs predicat title continuation =
   match (List.map predicat cs |> List.flatten) with
