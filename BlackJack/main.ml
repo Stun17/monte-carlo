@@ -1,21 +1,45 @@
 open Shuffle ;; open List ;;
 
-let prepare [c1; c2; c3; c4; c5; c6; c7; c8; c9; c10; c11; c12; c13; c14; c15; c16; c17; c18; c19; c20; c21; c22; c23; c24; c25; c26; c27; c28; c29; c30; c31; c32; c33; c34; c35; c36; c37; c38; c39; c40; c41; c42; c43; c44; c45; c46; c47; c48; c49; c50; c51; c52] =
-  let deal = [c1; c2]
-  and pl1  = [c3; c4] 
-  and pl2  = [c5; c6]
-  and pl3  = [c7; c8]
-  and deck = [c9; c10; c11; c12; c13; c14; c15; c16; c17; c18; c19; c20; c21; c22; c23; c24; c25; c26; c27; c28; c29; c30; c31; c32; c33; c34; c35; c36; c37; c38; c39; c40; c41; c42; c43; c44; c45; c46; c47; c48; c49; c50; c51; c52] 
-  in ( [pl1; pl2; pl3], deal, deck )
+exception Empty ;;
+exception Negative ;;
+  
+let rec take' (n : int) (acc : 'a list) (xs : 'a list) : 'a list =
+  match n with 
+  | 0 -> rev acc 
+  | k -> if xs == []
+         then raise Empty
+         else take' (k - 1) ((hd xs) :: acc) (tl xs) 
 ;;
 
-let print_card = fun x -> print_int x, print_char ' ' ;;
-
-(* let testIt = Shuffle.shuffle () |> List.sort compare |> List.map (fun x -> print_int x, print_char ' ') *)
+let take : int -> 'a list -> 'a list =
+  fun n xs ->
+    if n < 0
+    then raise Negative
+    else take' n [] xs ;;
   
-shuffle () |> prepare |> fun (players, dealer, deck) ->
-     map print_card deck, print_newline () ,
-     map (fun xs -> map print_card xs, print_newline ()) players ,
-     map print_card dealer, print_newline () ;;
+let rec drop (n : int) (xs : 'a list) : 'a list =
+  if n < 0
+  then raise Negative
+  else match n with
+       | 0 -> xs
+       | k -> if xs == []
+              then raise Empty
+              else drop (k - 1) (tl xs) 
+;;
+  
+let prepare xs = 
+  let deal  = take 2 xs  
+  and pla1  = drop 2 xs |> take 2  
+  and pla2  = drop 4 xs |> take 2  
+  and pla3  = drop 6 xs |> take 2 
+  and deck  = drop 8 xs
+  in ( [pla1; pla2; pla3], deal, deck )
+;;
 
-print_newline () ;;
+let print_card (x : int) : unit * unit = print_int x , print_char ' ' ;;
+
+Shuffle.shuffle () |> prepare |> fun (players, dealer, deck) ->
+  print_newline () ,
+  map print_card deck   , print_newline () ,
+  map print_card dealer , print_newline () ,
+  map (fun xs -> map print_card xs , print_newline ()) players ;;
