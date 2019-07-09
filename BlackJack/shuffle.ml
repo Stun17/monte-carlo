@@ -14,11 +14,13 @@ struct
 
     let shuffle =
       fun () -> Random.self_init () ; genDeck (52, []) |>
-        List.map (fun x ->
-            let y = x mod 13 in match y with
-                                | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 -> y + 2
-                                | 8 | 9 | 10 | 11  -> 10
-                                | _ -> 11)
+        List.map (
+          fun x ->
+            let y = x mod 13 
+            in match y with
+               | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 -> y + 2
+               | 8 | 9 | 10 | 11  -> 10
+               | _ -> 11)
 
 end ;;
 
