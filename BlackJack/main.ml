@@ -43,3 +43,6 @@ Shuffle.shuffle () |> prepare |> fun (players, dealer, deck) ->
   map print_card deck   , print_newline () ,
   map print_card dealer , print_newline () ,
   map (fun xs -> map print_card xs , print_newline ()) players ;;
+
+
+  
