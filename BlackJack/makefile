@@ -13,5 +13,5 @@ clean:
 	@rm *.cm[io] 
 	@test -z "a.out" || rm -f a.out 
 
-build:
-	ocamlbuild -use-ocamlfind -no-hygiene -pkg batteries *.cmo main.native
+build: shuffle.cmo
+	ocamlbuild -use-ocamlfind -no-hygiene -pkg batteries shuffle.cmo main.native
