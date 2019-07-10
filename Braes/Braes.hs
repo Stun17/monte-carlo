@@ -30,8 +30,8 @@ doitnow k price33 (n, g@(st1, st2))
 -- price for path
 price11, price12, price21, price22 :: Traffic -> Double
 price11 _ = 10
-price12 (x, y) = (fromInteger x) / (fromInteger $ x + y)
-price21 (x, y) = (fromInteger y) / (fromInteger $ x + y)
+price12 (x, y) = 20 * (fromInteger x) / (fromInteger $ x + y)
+price21 (x, y) = 20 * (fromInteger y) / (fromInteger $ x + y)
 price22 _ = 10
 
 -- which path is cheaper

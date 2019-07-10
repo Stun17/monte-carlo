@@ -12,9 +12,6 @@ proc doit { } {
     .lans.l1 configure -text "распределение: $rez"
 }
 
-image create photo diag -file "diagram.png" 
-label .p -image diag
-
 labelframe .llim -text "пропускная способность" 
 listbox .llim.lb -yscrollcommand {.llim.s set} -height 5 
 for {set i 10} { $i < 101 } { incr i 5} {.llim.lb insert end $i} 
@@ -48,8 +45,11 @@ proc reset {} {
 labelframe .lans -text ответ 
 label .lans.l1 -text "нет результатов!" -width 25
 
-pack .p
-pack .llim -side left -padx 20 
+image create photo diag -file "diagram.png" 
+label .p -image diag
+
+pack .p -padx 20 -pady 30 
+pack .llim -side left -padx 25 
 pack .llim.lb -side left -padx 1 -pady 15
 pack .llim.s -side left -pady 15 -fill y
 pack .t1 .t2 .t3 -side left -padx 20
