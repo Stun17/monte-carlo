@@ -9,10 +9,13 @@ proc doit { } {
     global limit price init1 init2
 
     set rez [exec "./a.out" $price $limit $init1 $init2]
-    .lans.l1 configure -text "paths $rez"
+    .lans.l1 configure -text "распределение: $rez"
 }
 
-labelframe .llim -text limit
+image create photo diag -file "diagram.png" 
+label .p -image diag
+
+labelframe .llim -text "пропускная способность" 
 listbox .llim.lb -yscrollcommand {.llim.s set} -height 5 
 for {set i 10} { $i < 101 } { incr i 5} {.llim.lb insert end $i} 
 scrollbar .llim.s -orient vertical -command {.llim.lb yview}
@@ -24,13 +27,14 @@ proc setLimit { num } {
   set limit [.llim.lb get $num]
 }
 
-scale .f1 -label price -variable price -orient horizontal -from 0 -to 20  -length 100 -showvalue 1 
-scale .f2 -label init1 -variable init1 -orient horizontal -from 0 -to 100 -length 100 -showvalue 1 
-scale .f3 -label init2 -variable init2 -orient horizontal -from 0 -to 100 -length 100 -showvalue 1 
+scale .t1 -label цена -variable price -orient horizontal -from 0 -to 20  -length 100 -showvalue 1 
+scale .t2 -label старт1 -variable init1 -orient horizontal -from 0 -to 100 -length 100 -showvalue 1 
+scale .t3 -label старт2 -variable init2 -orient horizontal -from 0 -to 100 -length 100 -showvalue 1 
 
-button .b1 -command doit  -text "calc"  -width 10
-button .b2 -command reset -text "reset" -width 10
-button .b3 -command exit  -text "quit"  -width 10
+frame   .f0 
+button  .f0.b1 -command doit  -text "посчитать"  -width 10
+button  .f0.b2 -command reset -text "в исходное" -width 10
+button  .f0.b3 -command exit  -text "выйти"  -width 10
 
 proc reset {} {
   global limit init1 init2 price
@@ -42,13 +46,14 @@ proc reset {} {
 }
 
 labelframe .lans -text ответ 
-label .lans.l1 -text "no results!"
+label .lans.l1 -text "нет результатов!" -width 25
 
-pack .llim -side left 
-pack .llim.lb -side left -padx 15 -pady 15
-pack .llim.s -side left -fill y
-pack .f1 .f2 .f3 -side left -padx 20
-pack .f3 -side left -padx 10 
-pack .b1 .b2 .b3 -side left 
+pack .p
+pack .llim -side left -padx 20 
+pack .llim.lb -side left -padx 1 -pady 15
+pack .llim.s -side left -pady 15 -fill y
+pack .t1 .t2 .t3 -side left -padx 20
+pack .f0 -side left -padx 10 
+pack .f0.b1 .f0.b2 .f0.b3 -side top 
 pack .lans -side left -padx 20
 pack .lans.l1 -side bottom -padx 10 -pady 10  
