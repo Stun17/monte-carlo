@@ -12,26 +12,31 @@ proc doit { } {
     .lans.l1 configure -text "распределение: $rez"
 }
 
-labelframe .llim -text "пропускная способность" 
-listbox .llim.lb -yscrollcommand {.llim.s set} -height 5 
-for {set i 10} { $i < 101 } { incr i 5} {.llim.lb insert end $i} 
-scrollbar .llim.s -orient vertical -command {.llim.lb yview}
-bind .llim.lb <<ListboxSelect>> { setLimit [%W curselection] }
+frame .f9 
+
+labelframe .f9.llim -text "пропускная\nспособность" 
+listbox .f9.llim.lb -yscrollcommand {.f9.llim.s set} -height 5 -width 5
+for {set i 10} { $i < 101 } { incr i 5} {.f9.llim.lb insert end $i} 
+scrollbar .f9.llim.s -orient vertical -command {.f9.llim.lb yview}
+bind .f9.llim.lb <<ListboxSelect>> { setLimit [%W curselection] }
+
+scale .f9.t1 -label цена -variable price -orient horizontal -from 0 -to 20  -length 100 -showvalue 1 
+scale .f9.t2 -label стартХ -variable init1 -orient horizontal -from 0 -to [expr "$limit/2"] -length 100 -showvalue 1 
+scale .f9.t3 -label стартУ -variable init2 -orient horizontal -from 0 -to [expr "$limit/2"] -length 100 -showvalue 1 
 
 proc setLimit { num } {
   global limit 
 
-  set limit [.llim.lb get $num]
+  set limit [.f9.llim.lb get $num]
+  .f9.t2 configure -to [expr "$limit / 2 - 1"]
+  .f9.t3 configure -to [expr "$limit / 2 - 1"]
 }
 
-scale .t1 -label цена -variable price -orient horizontal -from 0 -to 20  -length 100 -showvalue 1 
-scale .t2 -label старт1 -variable init1 -orient horizontal -from 0 -to 100 -length 100 -showvalue 1 
-scale .t3 -label старт2 -variable init2 -orient horizontal -from 0 -to 100 -length 100 -showvalue 1 
 
-frame   .f0 
-button  .f0.b1 -command doit  -text "посчитать"  -width 10
-button  .f0.b2 -command reset -text "в исходное" -width 10
-button  .f0.b3 -command exit  -text "выйти"  -width 10
+frame   .f9.f0 
+button  .f9.f0.b1 -command doit  -text "посчитать"  -width 10
+button  .f9.f0.b2 -command reset -text "в исходное" -width 10
+button  .f9.f0.b3 -command exit  -text "выйти"  -width 10
 
 proc reset {} {
   global limit init1 init2 price
@@ -40,6 +45,8 @@ proc reset {} {
   set limit 30
   set init1 5
   set init2 5 
+  .f9.t2 configure -to 14 
+  .f9.t3 configure -to 14 
 }
 
 labelframe .lans -text ответ 
@@ -49,11 +56,12 @@ image create photo diag -file "diagram.png"
 label .p -image diag
 
 pack .p -padx 20 -pady 30 
-pack .llim -side left -padx 25 
-pack .llim.lb -side left -padx 1 -pady 15
-pack .llim.s -side left -pady 15 -fill y
-pack .t1 .t2 .t3 -side left -padx 20
-pack .f0 -side left -padx 10 
-pack .f0.b1 .f0.b2 .f0.b3 -side top 
-pack .lans -side left -padx 20
-pack .lans.l1 -side bottom -padx 10 -pady 10  
+pack .f9
+pack .f9.llim -side left -padx 25 
+pack .f9.llim.lb -side left -padx 1 -pady 15 -expand yes 
+pack .f9.llim.s -side left -padx 5 -pady 15 -fill y
+pack .f9.t1 .f9.t2 .f9.t3 -side left -padx 20
+pack .f9.f0 -side left -padx 10 
+pack .f9.f0.b1 .f9.f0.b2 .f9.f0.b3 -side top 
+pack .lans -padx 100 -pady 20 -fill x  
+pack .lans.l1 -padx 10 -pady 10 
