@@ -27,11 +27,11 @@ scrollbar .f.llim.sb -orient vertical -command {.f.llim.lb yview}
 
 frame .f.fc
 
-scale .f.fc.sc1 -label цена   -variable price -orient horizontal -from -2 -to 22 \
+scale .f.fc.sc1 -label цена   -variable price -orient horizontal -from -22 -to 22 \
   -length 120 -showvalue 1 
-scale .f.fc.sc2 -label стартХ -variable init1 -orient horizontal -from 0 -to [expr "$limit/2"] \
+scale .f.fc.sc2 -label "нач.условия Х" -variable init1 -orient horizontal -from 0 -to [expr "$limit/2"] \
   -length 120 -showvalue 1 
-scale .f.fc.sc3 -label стартУ -variable init2 -orient horizontal -from 0 -to [expr "$limit/2"] \
+scale .f.fc.sc3 -label "нач.условия Y" -variable init2 -orient horizontal -from 0 -to [expr "$limit/2"] \
   -length 120 -showvalue 1 
 
 proc setLimit { num } {
@@ -41,6 +41,10 @@ proc setLimit { num } {
   .f.fc.sc2 configure -to [expr "$limit / 2 - 1"]
   .f.fc.sc3 configure -to [expr "$limit / 2 - 1"]
 }
+
+frame .g
+
+label .g.lb2 -justify left -wraplength 590 -font myfont -text "есть две дороги из А в В - одна через пункт 1 и другая через пункт 2. цена за проезд из А в 1 постоянна и равна 10. такая же цена за проезд из 2 в В. цены за проезд из 1 в В и из А в 2 зависят от текущего количества машин, выбравших то или иное направление и расчитывается по формуле:\n price(1B) = 20 * x / (x + y) ; price(A2) = 20 * y / (x + y), \nгде x - число машин выбравших путь через 1, а у - число машин, выбравших путь через 2\n тут открыли дорогу из 1 в 2 и установили плату (от -22 до +22). как размер платы за новую дорогу повлияет на распределение потока машин?"
 
 frame .f.fb 
 
@@ -67,7 +71,7 @@ proc reset { } {
 #-----------------------------------------------------------------------
 
 labelframe .z -text ответ 
-label .z.l1 -text "нет результатов!" -width 40 
+label .z.l1 -text "нет результатов!" -width 30 
 
 image create photo diag -file "diagram.png" 
 label .p -image diag
@@ -76,15 +80,16 @@ button .b3 -command exit -text "выйти" -width 15
 
 #-----------------------------------------------------------------------
 
-pack .b3 -side top  -padx 180 -pady 30 -fill none -anchor nw 
+place .g -x 20 -y 20 ; pack .g.lb2 -padx 20 -pady 10 ; place .p -x 20 -y 250 
 
-pack .f  -side top  -padx 20  -pady 10            -anchor nw
-pack .z  -side left -padx 50  -pady 20 -fill x    -anchor nw 
-pack .p  -side top  -padx 20  -pady 10 
+pack .b3 -side right -padx 10 -pady 10 -fill none -anchor se 
+
+pack .f -side right -padx 20 -pady 80 -anchor nw
+pack .z -side bottom -padx 10 -pady 10 -expand no -anchor se
 
 pack .f.llim -side left -padx 25 -pady 15 
-pack .f.llim.lb -side left -padx 1 -pady 15 -expand yes 
-pack .f.llim.sb -side left -padx 5 -pady 15 -fill y
+pack .f.llim.lb -side left -padx 0 -pady 15 -expand yes 
+pack .f.llim.sb -side left -padx 0 -pady 15 -fill y -expand yes 
 
 pack .f.fc -side left 
 pack .f.fc.sc1 .f.fc.sc2 .f.fc.sc3 -side top -padx 20 -pady 5
@@ -92,4 +97,4 @@ pack .f.fc.sc1 .f.fc.sc2 .f.fc.sc3 -side top -padx 20 -pady 5
 pack .f.fb -side left -padx 20 
 pack .f.fb.b1 .f.fb.b2 -side top 
 
-pack .z.l1 -padx 10 -pady 10 
+pack .z.l1 -padx 0 -pady 10 -anchor sw 

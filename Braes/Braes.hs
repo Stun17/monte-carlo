@@ -28,10 +28,10 @@ calculate limit price3 (quantity, state@(state1, state2))
 
 -- prices for paths
 price_a1, price_1b, price_a2, price_2b :: Traffic -> Double
-price_a1 _ = 10
+price_a1 _      = 10
 price_1b (x, y) = 20 * (fromInteger x) / (fromInteger $ x + y)
 price_a2 (x, y) = 20 * (fromInteger y) / (fromInteger $ x + y)
-price_2b _ = 10
+price_2b _      = 10
 
 -- which path is cheaper?
 decision :: Double -> Traffic -> Bool
@@ -42,27 +42,27 @@ decision price3 s =
       path_a21b = price_a2 s + price3 + price_1b s
       ps        = [path_a1b, path_a12b, path_a2b, path_a21b]
       minpath   = minimum ps
-      alloc     = map (\z -> if z > minpath then 0 else 1) ps
+      alloc     = map (== minpath) ps
   in case alloc of
-    [1,0,0,0] -> True
-    [0,1,0,0] -> True 
-    [0,0,1,0] -> False 
-    [0,0,0,1] -> False 
+    [True,False,False,False] -> True
+    [False,True,False,False] -> True 
+    [False,False,True,False] -> False 
+    [False,False,False,True] -> False 
 
-    [1,1,0,0] -> True
-    [1,0,1,0] -> True 
-    [0,1,1,0] -> True 
-    [1,0,0,1] -> False 
-    [0,1,0,1] -> False 
-    [0,0,1,1] -> False 
+    [True,True,False,False]  -> True
+    [True,False,True,False]  -> True 
+    [False,True,True,False]  -> True 
+    [True,False,False,True]  -> False 
+    [False,True,False,True]  -> False 
+    [False,False,True,True]  -> False 
 
-    [1,1,1,0] -> True
-    [1,1,0,1] -> True
-    [1,0,1,1] -> False 
-    [0,1,1,1] -> False 
+    [True,True,True,False]   -> True
+    [True,True,False,True]   -> True
+    [True,False,True,True]   -> False 
+    [False,True,True,True]   -> False 
 
-    [1,1,1,1] -> True 
-    _         -> False
+    [True,True,True,True]    -> True 
+    _                        -> False
 
 action :: Double -> State Traffic Integer
 action price3 =  
