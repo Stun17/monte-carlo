@@ -10,20 +10,20 @@ import System.Environment
 -- output :  resulting division (vehicles to 1, vehicles to 2)
 main :: IO ()
 main =
-  getArgs >>= \ (prc:lim:ini1:ini2:_) ->
-  let init01 = read ini1
-      init02 = read ini2
-      limit  = read lim
-      price  = read prc
-      count  = init01 + init02
-  in  guard (limit > count) >> -- prg must terminate
-      (print $ calculate limit price (count, (init01, init02)))
+  getArgs >>= \ (prc:lim:iniX:iniY:_) ->
+  let initX = read iniX
+      initY = read iniY
+      limit = read lim
+      price = read prc
+      quantity = initX + initY
+  in  guard (limit > quantity) >> -- because the program must terminate :)
+      (print $ calculate limit price (quantity, (initX, initY)))
 
 type Traffic = (Integer, Integer)
 
 calculate :: Integer -> Double -> (Integer, Traffic) -> Traffic
-calculate limit price3 (count, state@(state1, state2))
-  | count >= limit = state 
+calculate limit price3 (quantity, state@(state1, state2))
+  | quantity >= limit = state 
   | otherwise = calculate limit price3 $ runState (action price3) state 
 
 -- prices for paths
@@ -48,16 +48,19 @@ decision price3 s =
     [0,1,0,0] -> True 
     [0,0,1,0] -> False 
     [0,0,0,1] -> False 
+
     [1,1,0,0] -> True
     [1,0,1,0] -> True 
+    [0,1,1,0] -> True 
     [1,0,0,1] -> False 
-    [0,1,1,0] -> False 
-    [0,1,0,1] -> True 
+    [0,1,0,1] -> False 
     [0,0,1,1] -> False 
+
     [1,1,1,0] -> True
     [1,1,0,1] -> True
     [1,0,1,1] -> False 
     [0,1,1,1] -> False 
+
     [1,1,1,1] -> True 
     _         -> False
 

@@ -1,6 +1,6 @@
 #!/run/current-system/sw/bin/wish
 
-set limits [list 10 20 30 40 50 60 70 80 90 100]
+set limits [list 10 20 30 40 50 60 70 80 90]
 set price 1 ; set limit 30 ; set init1 5 ; set init2 5 
 
 proc calculateit { } {
@@ -16,8 +16,8 @@ labelframe .f -text "исходные данные"
 
 labelframe .f.llim -text "пропускная\nспособность" 
 
-listbox .f.llim.lb -yscrollcommand {.f.llim.sb set} -height 5 -width 5 -listvariable limits \
-  -selectmode single
+listbox .f.llim.lb -yscrollcommand {.f.llim.sb set} -height 4 -width 2 \
+  -listvariable limits -selectmode single
 .f.llim.lb activate 2 
 .f.llim.lb see 2 
 .f.llim.lb selection set 0 
