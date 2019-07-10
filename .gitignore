@@ -1,0 +1,10 @@
+*.out
+*.hi
+*.o
+*.ibc
+*.cmi
+*.cmo
+docs/
+temp/
+_build/
+*.native
