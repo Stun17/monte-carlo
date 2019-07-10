@@ -1,41 +1,46 @@
 module Main where
 
 import Control.Monad.State
+import System.Environment
+
 
 -- input  :  price for additional path
 --           num of vehicles
---           initial state (vehicles01, vehicles02)
+--           initial state vehicles01
+--           initial state vehicles02
 -- output :  (vehicles01, vehicles02)
 main :: IO ()
 main =
-  readLn >>= \ route33 ->
-  readLn >>= \ limit ->
-  readLn >>= \ (init01, init02) ->
-  let count = init01 + init02 in
-  guard (limit > count) >> -- prg must terminate
-  (print $ doitnow limit route33 (count, (init01, init02))) >> main
+  getArgs >>= \ (prc:lim:ini1:ini2:_) ->
+  let init01 = read ini1
+      init02 = read ini2
+      limit  = read lim
+      price  = read prc
+      count  = init01 + init02
+  in  guard (limit > count) >> -- prg must terminate
+      (print $ doitnow limit price (count, (init01, init02)))
 
 type Traffic = (Integer, Integer)
 
 doitnow :: Integer -> Double -> (Integer, Traffic) -> Traffic
-doitnow k route33 (n, g@(st1, st2))
+doitnow k price33 (n, g@(st1, st2))
   | n >= k = g
-  | otherwise = doitnow k route33 $ runState (action route33) g
+  | otherwise = doitnow k price33 $ runState (action price33) g
 
 -- price for path
-route11, route12, route21, route22 :: Traffic -> Double
-route11 _ = 1
-route12 (x, y) = (fromInteger x) / (fromInteger $ x + y)
-route21 (x, y) = (fromInteger y) / (fromInteger $ x + y)
-route22 _ = 1
+price11, price12, price21, price22 :: Traffic -> Double
+price11 _ = 1
+price12 (x, y) = (fromInteger x) / (fromInteger $ x + y)
+price21 (x, y) = (fromInteger y) / (fromInteger $ x + y)
+price22 _ = 1
 
 -- which path is cheaper
 decision :: Double -> Traffic -> Bool
-decision route33 x =
-  let path11  = route11 x + route12 x
-      path12  = route11 x + route33 + route22 x
-      path21  = route21 x + route22 x
-      path22  = route21 x + route33 + route12 x
+decision price33 x =
+  let path11  = price11 x + price12 x
+      path12  = price11 x + price33 + price22 x
+      path21  = price21 x + price22 x
+      path22  = price21 x + price33 + price12 x
       ps      = [path11, path12, path21, path22]
       minpath = minimum ps
       alloc   = map (\x -> if x > minpath then 0 else 1) ps
@@ -44,7 +49,7 @@ decision route33 x =
     _         -> False
 
 action :: Double -> State Traffic Integer
-action route33 =  
+action price33 =  
   get >>= \ st@(st1, st2) ->
-  (if decision route33 st then put (st1 + 1, st2) else put (st1, st2 + 1)) >>
+  (if decision price33 st then put (st1 + 1, st2) else put (st1, st2 + 1)) >>
   return (st1 + st2 + 1)
