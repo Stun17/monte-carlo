@@ -14,9 +14,7 @@ proc calculateit { } {
 
 labelframe .f -text "исходные данные" 
 
-label .f.ll -text "пропускная\nспособность" 
-
-listbox .f.lb -height 9 -width 3 -listvariable limits -selectmode single
+listbox .f.lb -justify right -height 9 -width 3 -listvariable limits -selectmode single
 .f.lb activate 2 
 .f.lb see 2 
 .f.lb selection set 0 
