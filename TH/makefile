@@ -24,8 +24,8 @@ clean:
 build:
 	ocamlbuild -use-ocamlfind -no-hygiene *.cmo main.native
 
-stat1: acesstat.ml
-	ocamlfind ocamlc bat.cmo shuffle.cmo -open Bat -open Shuffle $^ -o $@
+stat1: bat.cmo shuffle.cmo statsstreet.ml 
+	ocamlfind ocamlc bat.cmo shuffle.cmo -open Bat -open Shuffle statsstreet.ml -o $@
 
-stat2: streetstats.ml
-	ocamlfind ocamlc bat.cmo shuffle.cmo -open Bat -open Shuffle $^ -o $@
+stat2: bat.cmo shuffle.cmo streetstats.ml 
+	ocamlfind ocamlc bat.cmo shuffle.cmo -open Bat -open Shuffle streetstats.ml -o $@

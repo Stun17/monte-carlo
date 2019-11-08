@@ -1,28 +1,31 @@
 open Shuffle ;; open Printf ;;
 
-let schet = ref 0 ;;
+let is_eq k (r , _) = r == k
+let is_nl k (r , _) = r <= k
+
+let c0 = ref 0  
+let c1 = ref 0 
 
 let count = fun k ->
   let deck = shuffle () 
   in let poket = Bat.take 2 deck
-     and table = Bat.drop 2 deck |> Bat.take 5
-     and is_in_poket   n = fun (r , _) -> r =  n
-     and more_on_table n = fun (r , _) -> r >= n
-     in let x = List.filter (is_in_poket   k) poket |> List.length 
-        and y = List.filter (more_on_table k) table |> List.length
-        in if in_hands < on_table then incr schet else () 
+     and opp_and_board = Bat.drop 2 deck |> Bat.take 7  
+     in 
+       if List.exists (is_eq k) poket 
+       then 
+         if List.for_all (is_nl k) opp_and_board  
+         then  (incr c0 ; incr c1) 
+         else incr c0 
+       else ()
 ;;
 
+let r = print_endline "rank 0-12 : " ; read_line () ;;
 
-let rank = print_endline "input rank of the card in your pocket: " ; read_line ()
 let f = fun x -> if x < 10000 then Some x else None ;;
 
-let g = 
-  match rank with
-  | "A" -> 12 | "K" -> 11 | "Q" -> 10 | "J" -> 9 | "T" -> 8
-  | x -> (int_of_string x) - 2
-in Stream.from f |> Stream.iter (fun _ -> count g) |> 
-         fun _ ->
-         printf "with %s in your poket, board will over you in %5.2f cases\n"
-                rank (float_of_int (! schet))
+Stream.from f |> Stream.iter (fun _ -> count (int_of_string r)) ;;
+
+let p0 = float_of_int (! c0)
+and p1 = float_of_int (! c1)
+in printf "in favor %5.2f\n" (p1 /. p0) 
 ;;
