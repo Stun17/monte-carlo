@@ -8,11 +8,11 @@ struct
 
   let print_hand =
     fun xs css title ->
-      printf "\n%-12s" title ;
+      printf "\n%i\t" title ;
       List.iter2 (
           fun x cs ->
              if x
-             then (List.iter (fun (a,b) -> printf "%i,%i " a b) (Bat.take 2 cs) ; printf "\t")
+             then (List.iter (fun (a,b) -> printf "%2i%2i   " a b) (Bat.take 2 cs) ; printf "\t")
              else ()) xs css
   ;;
 
@@ -21,7 +21,7 @@ struct
     let numRes = List.filter (fun x -> x == true) xs |> List.length
     in if numRes == 1
        then print_hand xs css title
-       else List.iter print_string ["\n" ; title ; "\t\tmultiple results"]
+       else List.iter print_string ["\n" ; (string_of_int title) ; "\tmultiple results"]
   ;;
     
     
@@ -32,15 +32,15 @@ struct
        else continuation css 
   ;;
   
-  let isAnyHaveHigh  = fun cs -> myWorkFun cs isHigh      "high"  (fun cs -> ()) ;;
-  let isAnyHavePair  = fun cs -> myWorkFun cs isPair      "pair"  isAnyHaveHigh  ;;
-  let isAnyHaveDupal = fun cs -> myWorkFun cs isDupal     "dupal" isAnyHavePair  ;;
-  let isAnyHaveSet   = fun cs -> myWorkFun cs isSet       "set"   isAnyHaveDupal ;;
-  let isAnyHaveStr   = fun cs -> myWorkFun cs isStraight  "str8"  isAnyHaveSet   ;;
-  let isAnyHaveFlush = fun cs -> myWorkFun cs isFlush     "flush" isAnyHaveStr   ;;
-  let isAnyHaveFull  = fun cs -> myWorkFun cs isFull      "full"  isAnyHaveFlush ;;
-  let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull  ;;
-  let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree ;;
+  let isAnyHaveHigh  = fun cs -> myWorkFun cs isHigh       900  (fun cs -> ()) ;;
+  let isAnyHavePair  = fun cs -> myWorkFun cs isPair       800  isAnyHaveHigh  ;;
+  let isAnyHaveDupal = fun cs -> myWorkFun cs isDupal      700  isAnyHavePair  ;;
+  let isAnyHaveSet   = fun cs -> myWorkFun cs isSet        600  isAnyHaveDupal ;;
+  let isAnyHaveStr   = fun cs -> myWorkFun cs isStraight   500  isAnyHaveSet   ;;
+  let isAnyHaveFlush = fun cs -> myWorkFun cs isFlush      400  isAnyHaveStr   ;;
+  let isAnyHaveFull  = fun cs -> myWorkFun cs isFull       300  isAnyHaveFlush ;;
+  let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree      200  isAnyHaveFull  ;;
+  let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8  100  isAnyHaveCaree ;;
     
   let start cs =
     let ts = List.hd cs |> Bat.drop 2  (* we took the board cards only                      *)
