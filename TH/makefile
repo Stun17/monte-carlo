@@ -4,17 +4,17 @@ FST = bat.cmo decisions.cmo
 SND = arbitrage.mli arbitrage.ml
 
 bat.cmo bat.cmi: $(BAT) 
-	ocamlfind ocamlc -c bat.mli
-	ocamlfind ocamlc -c bat.ml
+	ocamlc -c bat.mli
+	ocamlc -c bat.ml
 
 decisions.cmo shuffle.cmo: $(ORG)
-	ocamlfind ocamlc -open Bat -c $^
+	ocamlc -open Bat -c $^
 
 arbitrage.cmo: $(FST) $(SND) 
-	ocamlfind ocamlc -c -open Bat -open Decisions $(SND)
+	ocamlc -c -open Bat -open Decisions $(SND)
 
 a.out: $(ORG) bat.cmo arbitrage.cmo main.ml
-	ocamlfind ocamlc bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo \
+	ocamlc bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo \
 	-open Bat -open Shuffle -open Decisions -open Arbitrage main.ml
 
 clean:
@@ -25,7 +25,7 @@ build:
 	ocamlbuild -use-ocamlfind -no-hygiene *.cmo main.native
 
 stat1: acesstat.ml
-	ocamlfind ocamlc shuffle.cmo -open Shuffle $^ -o $@
+	ocamlfind ocamlc bat.cmo shuffle.cmo -open Bat -open Shuffle $^ -o $@
 
-stat2: preflop.ml
-	ocamlfind ocamlc shuffle.cmo -open Shuffle $^ -o $@
+stat2: streetstats.ml
+	ocamlfind ocamlc bat.cmo shuffle.cmo -open Bat -open Shuffle $^ -o $@

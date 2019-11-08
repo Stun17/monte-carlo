@@ -1,0 +1,16 @@
+echo -n "AA :  " ; ./stat2 12 12    $1
+echo -n "AK :  " ; ./stat2 12 11    $1
+echo -n "AQ :  " ; ./stat2 12 10    $1
+echo -n "AJ :  " ; ./stat2 12 9     $1
+echo -n "AT :  " ; ./stat2 12 8     $1
+echo -n "KK :  " ; ./stat2 11 11    $1
+echo -n "QQ :  " ; ./stat2 10 10    $1
+echo -n "JJ :  " ; ./stat2 9  9     $1
+echo -n "TT :  " ; ./stat2 8  8     $1
+echo -n "99 :  " ; ./stat2 7  7     $1
+echo -n "88 :  " ; ./stat2 6  6     $1
+echo -n "KQ :  " ; ./stat2 11 10    $1
+echo -n "KJ :  " ; ./stat2 11 9     $1
+echo -n "KT :  " ; ./stat2 11 8     $1
+echo -n "QJ :  " ; ./stat2 10 9     $1
+echo -n "QT :  " ; ./stat2 10 8     $1

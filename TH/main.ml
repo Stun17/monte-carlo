@@ -36,6 +36,6 @@ let prepare numGamers deck =
 
 let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* number of hands   *)
 let numOfGamers = int_of_string (Sys.argv.(2)) ;; (* number of players *)
-let f = fun x -> if x > numOfHands then Some x else None ;;
+let f = fun x -> if x < numOfHands then Some x else None ;;
 
 Stream.from f |> Stream.iter (fun _ -> shuffle () |> prepare numOfGamers |> start) ;;

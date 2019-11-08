@@ -51,22 +51,23 @@ let getStr8 xs =
          List.sort compare |> List.rev |> List.hd  
 
 let kicker xs ys title =
-  let one = List.sort compare xs |> List.rev and two = List.sort compare ys |> List.rev in
-  match compare (getHigh one) (getHigh two) with
-  | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-   (match compare (List.tl one |> getHigh) (List.tl two |> getHigh) with
-    | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-    (match compare (Bat.drop 2 one |> getHigh) (Bat.drop 2 two |> getHigh) with
-     | -1 -> print_hand ys title | 1 -> print_hand xs title | 0  ->
-     (match compare (Bat.drop 3 one |> getHigh) (Bat.drop 3 two |> getHigh) with
-      | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-      (match compare (Bat.drop 4 one |> getHigh) (Bat.drop 4 two |> getHigh) with
-       | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-       (match compare (Bat.drop 5 one |> getHigh) (Bat.drop 5 two |> getHigh) with
-        | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-        (match compare (Bat.drop 6 one |> getHigh) (Bat.drop 6 two |> getHigh) with
-         | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-            print_hand xs title ; print_hand ys title ))))))
+  let one = List.sort compare xs |> List.rev 
+  and two = List.sort compare ys |> List.rev 
+  in match compare (getHigh one) (getHigh two) with
+     | -1 -> print_hand ys title | 1 -> print_hand xs title | _ ->
+      (match compare (List.tl one |> getHigh) (List.tl two |> getHigh) with
+      | -1 -> print_hand ys title | 1 -> print_hand xs title | _ ->
+      (match compare (Bat.drop 2 one |> getHigh) (Bat.drop 2 two |> getHigh) with
+       | -1 -> print_hand ys title | 1 -> print_hand xs title | _  ->
+       (match compare (Bat.drop 3 one |> getHigh) (Bat.drop 3 two |> getHigh) with
+        | -1 -> print_hand ys title | 1 -> print_hand xs title | _ ->
+        (match compare (Bat.drop 4 one |> getHigh) (Bat.drop 4 two |> getHigh) with
+         | -1 -> print_hand ys title | 1 -> print_hand xs title | _ ->
+         (match compare (Bat.drop 5 one |> getHigh) (Bat.drop 5 two |> getHigh) with
+          | -1 -> print_hand ys title | 1 -> print_hand xs title | _ ->
+          (match compare (Bat.drop 6 one |> getHigh) (Bat.drop 6 two |> getHigh) with
+           | -1 -> print_hand ys title | 1 -> print_hand xs title | _ ->
+              print_hand xs title ; print_hand ys title ))))))
 ;;
 
 let arbitThem xs title =
@@ -77,19 +78,19 @@ let arbitThem xs title =
   | "pair" ->
      (match compare (getPair one) (getPair two) with
       | -1 -> print_hand two title | 1 -> print_hand one title 
-      | 0 -> kicker one two title )
+      | _ -> kicker one two title )
   | "dupal" ->
      (match compare (getDupal one) (getDupal two) with
       | -1 -> print_hand two title | 1 -> print_hand one title
-      | 0 -> kicker one two title )
+      | _ -> kicker one two title )
   | "set" ->
      (match compare (getSet one) (getSet two) with
       | -1 -> print_hand two title | 1 -> print_hand one title
-      | 0 -> kicker one two title )           
+      | _ -> kicker one two title )           
   | "str8" ->
      (match compare (getStr8 one) (getStr8 two) with
       | -1 -> print_hand two title | 1 -> print_hand one title
-      | 0 -> kicker one two title )              
+      | _ -> kicker one two title )              
   | "flush"  -> () 
   | "full"   -> () 
   | "caree"  -> ()   
@@ -121,13 +122,13 @@ let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull  ;
 let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree ;;
   
 let start cs =
-  let ts = List.hd cs |> Bat.drop 2  (*  we took the board cards only  *)
-  in if isColor ts                   (* and chek if they have three in suit *)
+  let ts = List.hd cs |> Bat.drop 2  (* we took the board cards only                      *)
+  in if isColor ts                   (* and chek if they have three in suit               *)
      then isAnyHaveFlStr cs          (* and in this case we start check from the begining *)
-     else                            (* else we skip the first step in checking *)
-       if isDry ts                   (* and check if board have set *)
-       then isAnyHaveCaree cs        (* in which case we check caree and full *)
-       else isAnyHaveStr cs ;;       (* else we start from stright  *)
+     else                            (* else we skip the first step in checking           *)
+       if isDry ts                   (* and check if board have pair                      *)
+       then isAnyHaveCaree cs        (* in which case we check caree and full             *)
+       else isAnyHaveStr cs ;;       (* else we start from stright                        *)
        
 end ;;                                    
 
