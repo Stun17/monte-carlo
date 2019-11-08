@@ -1,25 +1,23 @@
-BAT = bat.mli bat.ml 
+ORG0 = bat.mli bat.ml 
 ORG1 = shuffle.mli shuffle.ml 
 ORG2 = decisions.mli decisions.ml  
-FST = bat.cmo decisions.cmo 
-SND = arbitrage.mli arbitrage.ml
+ORG3 = arbitrage.mli arbitrage.ml
+ORG4 = bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo main.ml 
 
-bat.cmo bat.cmi: $(BAT) 
-	ocamlc -c bat.mli
-	ocamlc -c bat.ml
+bat.cmo : $(ORG0) 
+	ocamlc -c $^
 
-shuffle.cmo: $(ORG1)
+shuffle.cmo: $(ORG1) bat.cmo
 	ocamlc -open Bat -c $^
 
-decisions.cmo : $(ORG2)
+decisions.cmo : $(ORG2) bat.cmo
 	ocamlc -open Bat -c $^
 
-arbitrage.cmo: $(FST) $(SND) 
-	ocamlc -c -open Bat -open Decisions $(SND)
+arbitrage.cmo: $(ORG3) bat.cmo decisions.cmo 
+	ocamlc -c -open Bat -open Decisions $(ORG3)
 
-a.out: $(ORG1) $(ORG2) bat.cmo arbitrage.cmo main.ml
-	ocamlc bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo \
-	-open Bat -open Shuffle -open Decisions -open Arbitrage main.ml
+a.out: $(ORG4) 
+	ocamlc -open Bat -open Shuffle -open Decisions -open Arbitrage $^ 
 
 clean:
 	@rm *.cm[io] 
