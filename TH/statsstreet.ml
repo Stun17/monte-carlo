@@ -8,9 +8,9 @@ let count = fun k ->
      and table = Bat.drop 2 deck |> Bat.take 5
      and is_in_poket   n = fun (r , _) -> r =  n
      and more_on_table n = fun (r , _) -> r >= n
-         in let in_hands = List.filter (is_in_poket   k) poket |> List.length 
-            and on_table = List.filter (more_on_table k) table |> List.length
-            in if in_hands < on_table then incr schet else () 
+     in let x = List.filter (is_in_poket   k) poket |> List.length 
+        and y = List.filter (more_on_table k) table |> List.length
+        in if in_hands < on_table then incr schet else () 
 ;;
 
 
