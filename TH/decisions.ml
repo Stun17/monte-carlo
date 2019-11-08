@@ -1,10 +1,7 @@
 module Decisions =
 struct
 
-  open Batteries ;;
-    
   type hand = (int * int) list
-
             
   let countSuit cs n = List.filter (fun (_,s) -> s = n) cs |> List.length ;;
 
@@ -78,11 +75,11 @@ struct
                   || ([0;1;2;3;12] = List.rev zs)
         | 6 ->    ((List.nth zs 0) - (List.nth zs 4) = 4)
                   || ((List.nth zs 1) - (List.nth zs 5) = 4)
-                  || ([0;1;2;3] = (List.rev zs |> List.take 4) && (12 = List.nth zs 0))
+                  || ([0;1;2;3] = (List.rev zs |> Bat.take 4) && (12 = List.nth zs 0))
         | 7 ->    ((List.nth zs 0) - (List.nth zs 4) = 4)
                   || ((List.nth zs 1) - (List.nth zs 5) = 4)
                   || ((List.nth zs 2) - (List.nth zs 6) = 4)
-                  || ([0;1;2;3] = (List.rev zs |> List.take 4) && (12 = List.nth zs 0))
+                  || ([0;1;2;3] = (List.rev zs |> Bat.take 4) && (12 = List.nth zs 0))
         | _ -> false
     in match isFlush cs with
        | [] -> []
@@ -117,4 +114,3 @@ struct
   let isHigh cs = cs ;; 
       
 end ;;
-

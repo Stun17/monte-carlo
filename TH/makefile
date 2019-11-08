@@ -1,30 +1,31 @@
+BAT = bat.mli bat.ml 
 ORG = decisions.mli decisions.ml shuffle.mli shuffle.ml 
-FST = decisions.cmo 
+FST = bat.cmo decisions.cmo 
 SND = arbitrage.mli arbitrage.ml
 
+bat.cmo bat.cmi: $(BAT) 
+	ocamlfind ocamlc -c bat.mli
+	ocamlfind ocamlc -c bat.ml
+
 decisions.cmo shuffle.cmo: $(ORG)
-	ocamlfind ocamlc -package batteries -c $^
+	ocamlfind ocamlc -open Bat -c $^
 
 arbitrage.cmo: $(FST) $(SND) 
-	ocamlfind ocamlc -c -open Batteries -open Decisions -package batteries $(SND)
+	ocamlfind ocamlc -c -open Bat -open Decisions $(SND)
 
-a.out: $(ORG) arbitrage.cmo main.ml
-	ocamlfind ocamlc \
-	shuffle.cmo decisions.cmo arbitrage.cmo \
-	-open Batteries -open Shuffle -open Decisions -open Arbitrage \
-	-package batteries -linkpkg main.ml
+a.out: $(ORG) bat.cmo arbitrage.cmo main.ml
+	ocamlfind ocamlc bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo \
+	-open Bat -open Shuffle -open Decisions -open Arbitrage main.ml
 
 clean:
 	@rm *.cm[io] 
 	@test -z "a.out" || rm -f a.out 
 
 build:
-	ocamlbuild -use-ocamlfind -no-hygiene -pkg batteries *.cmo main.native
+	ocamlbuild -use-ocamlfind -no-hygiene *.cmo main.native
 
 stat1: acesstat.ml
-	ocamlfind ocamlc shuffle.cmo -open Batteries -open Shuffle \
-         -package batteries -linkpkg $^ -o $@
+	ocamlfind ocamlc shuffle.cmo -open Shuffle $^ -o $@
 
 stat2: preflop.ml
-	ocamlfind ocamlc shuffle.cmo -open Batteries -open Shuffle \
-         -package batteries -linkpkg $^ -o $@
+	ocamlfind ocamlc shuffle.cmo -open Shuffle $^ -o $@

@@ -4,23 +4,23 @@
     ouput        : win-poket(rank/suit)
  *)
 
-open Shuffle ;; open Arbitrage ;; open Batteries ;;
+open Shuffle ;; open Arbitrage ;; 
 
 let cardSort = fun (rank1, suit1) (rank2, suit2) -> if rank1 < rank2 then 1 else -1 ;;
   
 let prepare numGamers deck =
-  let board   =                      List.take 5 deck
-  and player1 = List.drop  5 deck |> List.take 2 |> List.sort cardSort 
-  and player2 = List.drop  7 deck |> List.take 2 |> List.sort cardSort 
-  and player3 = List.drop  9 deck |> List.take 2 |> List.sort cardSort 
-  and player4 = List.drop 11 deck |> List.take 2 |> List.sort cardSort 
-  and player5 = List.drop 13 deck |> List.take 2 |> List.sort cardSort 
-  and player6 = List.drop 15 deck |> List.take 2 |> List.sort cardSort 
-  and player7 = List.drop 17 deck |> List.take 2 |> List.sort cardSort 
-  and player8 = List.drop 19 deck |> List.take 2 |> List.sort cardSort 
-  and player9 = List.drop 21 deck |> List.take 2 |> List.sort cardSort 
-  and player0 = List.drop 23 deck |> List.take 2 |> List.sort cardSort 
-  in ( List.take numGamers [ player1 @ board
+  let board   =                     Bat.take 5 deck
+  and player1 = Bat.drop  5 deck |> Bat.take 2 |> List.sort cardSort 
+  and player2 = Bat.drop  7 deck |> Bat.take 2 |> List.sort cardSort 
+  and player3 = Bat.drop  9 deck |> Bat.take 2 |> List.sort cardSort 
+  and player4 = Bat.drop 11 deck |> Bat.take 2 |> List.sort cardSort 
+  and player5 = Bat.drop 13 deck |> Bat.take 2 |> List.sort cardSort 
+  and player6 = Bat.drop 15 deck |> Bat.take 2 |> List.sort cardSort 
+  and player7 = Bat.drop 17 deck |> Bat.take 2 |> List.sort cardSort 
+  and player8 = Bat.drop 19 deck |> Bat.take 2 |> List.sort cardSort 
+  and player9 = Bat.drop 21 deck |> Bat.take 2 |> List.sort cardSort 
+  and player0 = Bat.drop 23 deck |> Bat.take 2 |> List.sort cardSort 
+  in ( Bat.take numGamers [ player1 @ board
                            ; player2 @ board
                            ; player3 @ board
                            ; player4 @ board
@@ -36,5 +36,6 @@ let prepare numGamers deck =
 
 let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* number of hands   *)
 let numOfGamers = int_of_string (Sys.argv.(2)) ;; (* number of players *)
-  
-(1 -- numOfHands) |> Enum.iter (fun _ -> shuffle () |> prepare numOfGamers |> start) ;;
+let f = fun x -> if x > numOfHands then Some x else None ;;
+
+Stream.from f |> Stream.iter (fun _ -> shuffle () |> prepare numOfGamers |> start) ;;

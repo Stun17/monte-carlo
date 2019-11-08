@@ -1,7 +1,7 @@
 module Arbitrage =
 struct
      
-open Decisions ;; open Batteries ;; open Printf ;;
+open Decisions ;; open Printf ;;
 
 type hand = (int * int) list  
 type cards = hand list ;;
@@ -56,21 +56,21 @@ let kicker xs ys title =
   | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
    (match compare (List.tl one |> getHigh) (List.tl two |> getHigh) with
     | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-    (match compare (List.drop 2 one |> getHigh) (List.drop 2 two |> getHigh) with
+    (match compare (Bat.drop 2 one |> getHigh) (Bat.drop 2 two |> getHigh) with
      | -1 -> print_hand ys title | 1 -> print_hand xs title | 0  ->
-     (match compare (List.drop 3 one |> getHigh) (List.drop 3 two |> getHigh) with
+     (match compare (Bat.drop 3 one |> getHigh) (Bat.drop 3 two |> getHigh) with
       | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-      (match compare (List.drop 4 one |> getHigh) (List.drop 4 two |> getHigh) with
+      (match compare (Bat.drop 4 one |> getHigh) (Bat.drop 4 two |> getHigh) with
        | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-       (match compare (List.drop 5 one |> getHigh) (List.drop 5 two |> getHigh) with
+       (match compare (Bat.drop 5 one |> getHigh) (Bat.drop 5 two |> getHigh) with
         | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
-        (match compare (List.drop 6 one |> getHigh) (List.drop 6 two |> getHigh) with
+        (match compare (Bat.drop 6 one |> getHigh) (Bat.drop 6 two |> getHigh) with
          | -1 -> print_hand ys title | 1 -> print_hand xs title | 0 ->
             print_hand xs title ; print_hand ys title ))))))
 ;;
 
 let arbitThem xs title =
-  let one = List.take 7 xs and two = List.drop 7 xs |> List.take 7 in
+  let one = Bat.take 7 xs and two = Bat.drop 7 xs |> Bat.take 7 in
   match title with
   | "high" ->
      kicker one two title
@@ -121,7 +121,7 @@ let isAnyHaveCaree = fun cs -> myWorkFun cs isCaree     "caree" isAnyHaveFull  ;
 let isAnyHaveFlStr = fun cs -> myWorkFun cs isFlushStr8 "fl-st" isAnyHaveCaree ;;
   
 let start cs =
-  let ts = List.hd cs |> List.drop 2 (*  we took the board cards only  *)
+  let ts = List.hd cs |> Bat.drop 2  (*  we took the board cards only  *)
   in if isColor ts                   (* and chek if they have three in suit *)
      then isAnyHaveFlStr cs          (* and in this case we start check from the begining *)
      else                            (* else we skip the first step in checking *)

@@ -15,17 +15,17 @@ proc calculateit { } {
 labelframe .f -text "исходные данные" 
 
 listbox .f.lb -justify right -height 9 -width 3 -listvariable limits -selectmode single
+.f.lb selection set 2 
 .f.lb activate 2 
 .f.lb see 2 
-.f.lb selection set 0 
 bind .f.lb <<ListboxSelect>> { setLimit [%W curselection] }
 
 scale .f.s1 -label цена   -variable price -orient horizontal -from -22 -to 22 \
   -length 120 -showvalue 1 
-scale .f.s2 -label "нач.условия Х" -variable init1 -orient horizontal -from 0 -to [expr "$limit/2"] \
-  -length 120 -showvalue 1 
-scale .f.s3 -label "нач.условия Y" -variable init2 -orient horizontal -from 0 -to [expr "$limit/2"] \
-  -length 120 -showvalue 1 
+scale .f.s2 -label "нач.условия Х" -variable init1 -orient horizontal \
+  -from 0 -to [expr "$limit/2 - 1"] -length 120 -showvalue 1 
+scale .f.s3 -label "нач.условия Y" -variable init2 -orient horizontal \
+  -from 0 -to [expr "$limit/2 - 1"] -length 120 -showvalue 1 
 
 proc setLimit { num } {
   global limit 
