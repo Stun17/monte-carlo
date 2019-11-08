@@ -78,11 +78,8 @@ struct
                   || ((List.nth zs 2) - (List.nth zs 6) == 4)
                   || ([0;1;2;3] == (List.rev zs |> Bat.take 4) && (12 == List.nth zs 0))
         | _ -> false
-    in if isFlush cs 
-       then 
-         if isStraight cs 
-         then List.map proc [0;1;2;3] |> List.exists (fun x -> x == true)
-         else false
+    in if (isFlush cs) && (isStraight cs) 
+       then List.map proc [0;1;2;3] |> List.exists (fun x -> x == true)
        else false 
     ;;
     
