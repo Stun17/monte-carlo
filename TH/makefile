@@ -16,6 +16,9 @@ decisions.cmo : $(ORG2) bat.cmo
 arbitrage.cmo: $(ORG3) bat.cmo decisions.cmo 
 	ocamlc -c -open Bat -open Decisions $(ORG3)
 
+evaluations.cmo : bat.cmo evaluations.mli evaluations.ml
+	ocamlc -c -open Bat $^
+
 a.out: $(ORG4) 
 	ocamlc -open Bat -open Shuffle -open Decisions -open Arbitrage $^ 
 
