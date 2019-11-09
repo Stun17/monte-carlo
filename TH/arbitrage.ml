@@ -1,4 +1,4 @@
-open Bat ;; open Decisions ;; open Evaluations ;; open Printf ;;
+open Bat ;; open Decisions ;; open Evaluations ;; open Printf ;; open Treatment ;;
 
 module Arbitrage =
 struct
@@ -21,14 +21,13 @@ struct
     | _ -> 0
   ;;
 
-  let print_winners =
+  let rwinners =
     fun ws ->
     let (w1, _, _) = List.hd ws
     in List.filter (fun (t, _, _) -> t = w1) ws |>
-         List.iter (
-             fun (_, (r1, s1), (r2, s2)) ->
-             printf "%2i %2i %2i %2i\n" r1 s1 r2 s2
-           )
+         List.iter (fun (_, (r1, s1), (r2, s2)) ->
+             (* printf "%2i %2i %2i %2i\n" r1 s1 r2 s2) *)
+             Treatment.insert (r1, s1, r2, s2)) ;
   ;;
 
   let work css predicat combi continuation =
@@ -41,7 +40,7 @@ struct
                 in if x
                    then (evaluate_hand cs combi, c1, c2)
                    else (0                     , c1, c2)
-              ) xs css |> List.sort compare |> List.rev |> print_winners
+              ) xs css |> List.sort compare |> List.rev |> rwinners
        else continuation css
   ;;
 

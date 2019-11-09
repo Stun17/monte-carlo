@@ -4,7 +4,7 @@
     ouput        :      win-poket(rank/suit)
  *)
 
-open Bat ;; open Shuffle ;; open Arbitrage ;; 
+open Bat ;; open Shuffle ;; open Arbitrage ;; open Treatment ;;
 
 let cardSort = fun (rank1, suit1) (rank2, suit2) -> if rank1 < rank2 then 1 else -1 ;;
   
@@ -36,14 +36,18 @@ let prepare numGamers deck =
 
 let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* get number of hands fm command line params   *)
 let numOfGamers = int_of_string (Sys.argv.(2)) ;; (* get number of players fm command line params *)
-  
+
+Treatment.inithash () ;;
+    
 let f = fun x -> if x < numOfHands then Some x else None ;; (* generate sequence on Nats *)
 
   (*  we pass to Arbitrage module sorted-by-rank lists of players hands    *)
-  Stream.from f |>
+Stream.from f |>
     Stream.iter
       ( fun _ ->
         Shuffle.shuffle ()  |> 
         prepare numOfGamers |>
         Arbitrage.start
       ) ;;
+
+Treatment.extract () ;;

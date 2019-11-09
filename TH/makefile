@@ -4,7 +4,7 @@ ORG2 = decisions.mli decisions.ml	# module for combinations detection
 ORG3 = evaluations.mli evaluations.ml	# module for combinations ranking
 ORG4 = arbitrage.mli arbitrage.ml	# module for prizing the winner
 
-CMN0 = bat.cmo shuffle.cmo decisions.cmo evaluations.cmo arbitrage.cmo main.ml 
+CMN0 = bat.cmo shuffle.cmo treatment.cmo decisions.cmo evaluations.cmo arbitrage.cmo main.ml 
 
 bat.cmo : $(ORG0) 
 	ocamlc -c $^
@@ -18,11 +18,15 @@ decisions.cmo : $(ORG2) bat.cmo
 evaluations.cmo : $(ORG3) bat.cmo
 	ocamlc -c -open Bat $^
 
-arbitrage.cmo: $(ORG4) bat.cmo decisions.cmo 
-	ocamlc -c -open Bat -open Decisions -open Evaluations $(ORG4)
+treatment.cmo : treatment.mli treatment.ml
+	ocamlc -c $^
+
+arbitrage.cmo: $(ORG4) bat.cmo decisions.cmo treatment.cmo 
+	ocamlc -c -open Bat -open Decisions -open Evaluations -open Treatment $(ORG4)
 
 a.out: $(CMN0) 
-	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage $^ 
+	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage \
+        -open Treatment $^ 
 
 
 # to clean stuff
