@@ -10,29 +10,39 @@ module Evaluations =
     ;;
 
     let pricePair (xs : hand) =
-      List.sort compare xs |> List.rev |> List.split |> fst |>
-        fun ys ->
-        List.fold_right
-          (fun x acc -> if x == acc then acc else x)
-          (List.tl ys)
-          (List.hd ys) 
+      let n = List.sort compare xs |> List.rev |> List.split |> fst |>
+                fun ys ->
+                List.fold_right
+                  (fun x acc -> if x == acc then acc else x)
+                  (List.tl ys)
+                  (List.hd ys)
+      in let k1 = List.filter (fun (r,_) -> r != n) xs |> priceHigh
+         in let k2 = List.filter (fun (r,_) -> r != n && r != k1) xs |> priceHigh
+            in let k3 = List.filter (fun (r,_) -> r != n && r != k1 && r != k2) xs |> priceHigh
+               in 3000 * (n + 1) + 200 * (k1 + 1) + 13 * (k2 + 1) + k3
     ;;
 
     let priceDupal (xs : hand) =
-      List.sort compare xs |> List.rev |> List.split |> fst |>
-        fun ys ->
-        let ys1 = ys @ [0]
-        and ys2 = 0 :: ys
-        in List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) ys1 ys2 |>
-             List.sort compare |> List.rev |>
-             fun zs -> 13 * (1 + (List.hd zs)) + (List.hd (List.tl zs))
+      let (n1, n2) =
+        List.sort compare xs |> List.rev |> List.split |> fst |>
+          fun ys ->
+          let ys1 = ys @ [0]
+          and ys2 = 0 :: ys
+          in List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) ys1 ys2 |>
+               List.sort compare |> List.rev |>
+               fun zs -> List.hd zs , List.hd (List.tl zs)
+      in let k = List.filter (fun (r,_) -> r != n1 && r != n2) xs |> priceHigh 
+         in 3000 * (n1 + 1) + 14 * (n2 + 1) + k
     ;;
 
     let priceSet (xs : hand) =
-      List.sort compare xs |> List.rev |> List.split |> fst |>
-        fun ys ->
-        List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) (ys @ [0]) (0 :: ys) |>
-          List.sort compare |> List.rev |> List.hd
+      let n = List.sort compare xs |> List.rev |> List.split |> fst |>
+                fun ys ->
+                List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) (ys @ [0]) (0 :: ys) |>
+                  List.sort compare |> List.rev |> List.hd
+      in let k1 = List.filter (fun (r, _) -> r != n) xs |> priceHigh
+         in let k2 = List.filter (fun (r, _) -> r != n && r != k1) xs |> priceHigh
+            in 3000 * (n + 1) + 14 * (k1 + 1) + k2
     ;;
 
     let priceStr8 (xs : hand) =
@@ -60,13 +70,16 @@ module Evaluations =
       in let ys = List.map countRank [0;1;2;3;4;5;6;7;8;9;10;11;12]
          in let fset = List.filter (fun x -> x == 3) ys |> List.hd 
             and fpar = List.filter (fun x -> x == 2) ys |> List.hd 
-            in 13 * (fset + 1) + fpar
+            in 200 * (fset + 1) + fpar
     ;;
 
     let priceCaree (xs : hand) =
       let countRank n = List.filter (fun (r, _) -> r == n) xs |> List.length
-      in List.map countRank [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
-           List.filter (fun x -> x == 4) |> List.hd 
+      in let n =
+           List.map countRank [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+             List.filter (fun x -> x == 4) |> List.hd
+         in let k = List.filter (fun (r,_) -> r != n) xs |> priceHigh
+            in 200 * (n + 1) + k
     ;;
 
     let priceFlushStr8 (xs : hand) =

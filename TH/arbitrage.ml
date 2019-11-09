@@ -9,16 +9,16 @@ struct
   let evaluate_hand =
     fun cs combi ->
     match combi with
-    | 8000 -> Evaluations.priceFlushStr8 cs
-    | 7000 -> Evaluations.priceCaree     cs
-    | 6000 -> Evaluations.priceFull      cs
-    | 5000 -> Evaluations.priceFlush     cs
-    | 4000 -> Evaluations.priceStr8      cs
-    | 3000 -> Evaluations.priceSet       cs
-    | 2000 -> Evaluations.priceDupal     cs
-    | 1000 -> Evaluations.pricePair      cs
-    |    0 -> Evaluations.priceHigh      cs
-    | _   -> 0
+    | 8 -> Evaluations.priceFlushStr8 cs
+    | 7 -> Evaluations.priceCaree     cs
+    | 6 -> Evaluations.priceFull      cs
+    | 5 -> Evaluations.priceFlush     cs
+    | 4 -> Evaluations.priceStr8      cs
+    | 3 -> Evaluations.priceSet       cs
+    | 2 -> Evaluations.priceDupal     cs
+    | 1 -> Evaluations.pricePair      cs
+    | 0 -> Evaluations.priceHigh      cs
+    | _ -> 0
   ;;
 
   let print_winners =
@@ -39,21 +39,21 @@ struct
                 let c1 = List.hd cs
                 and c2 = List.hd (List.tl cs)
                 in if x
-                   then (combi + (evaluate_hand cs combi), c1, c2)
-                   else (0                               , c1, c2)
+                   then (evaluate_hand cs combi, c1, c2)
+                   else (0                     , c1, c2)
               ) xs css |> List.sort compare |> List.rev |> print_winners
        else continuation css
   ;;
 
-  let tryWithHigh  = fun css -> work css isHigh          0  (fun cs -> ()) ;;
-  let tryWithPair  = fun css -> work css isPair       1000  tryWithHigh  ;;
-  let tryWithDupal = fun css -> work css isDupal      2000  tryWithPair  ;;
-  let tryWithSet   = fun css -> work css isSet        3000  tryWithDupal ;;
-  let tryWithStr   = fun css -> work css isStraight   4000  tryWithSet   ;;
-  let tryWithFlush = fun css -> work css isFlush      5000  tryWithStr   ;;
-  let tryWithFull  = fun css -> work css isFull       6000  tryWithFlush ;;
-  let tryWithCaree = fun css -> work css isCaree      7000  tryWithFull  ;;
-  let tryWithFlStr = fun css -> work css isFlushStr8  8000  tryWithCaree ;;
+  let tryWithHigh  = fun css -> work css isHigh       0  (fun cs -> ()) ;;
+  let tryWithPair  = fun css -> work css isPair       1  tryWithHigh  ;;
+  let tryWithDupal = fun css -> work css isDupal      2  tryWithPair  ;;
+  let tryWithSet   = fun css -> work css isSet        3  tryWithDupal ;;
+  let tryWithStr   = fun css -> work css isStraight   4  tryWithSet   ;;
+  let tryWithFlush = fun css -> work css isFlush      5  tryWithStr   ;;
+  let tryWithFull  = fun css -> work css isFull       6  tryWithFlush ;;
+  let tryWithCaree = fun css -> work css isCaree      7  tryWithFull  ;;
+  let tryWithFlStr = fun css -> work css isFlushStr8  8  tryWithCaree ;;
 
   (*  css is the list of lists and each list is poket @ board *)
   let start css =
