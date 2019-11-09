@@ -26,8 +26,8 @@ struct
     let (w1, _, _) = List.hd ws
     in List.filter (fun (t, _, _) -> t = w1) ws |>
          List.iter (fun (_, (r1, s1), (r2, s2)) ->
-             (* printf "%2i %2i %2i %2i\n" r1 s1 r2 s2) *)
-             Treatment.insert (r1, s1, r2, s2)) ;
+             Treatment.insert_win (r1, s1, r2, s2)
+           ) 
   ;;
 
   let work css predicat combi continuation =

@@ -20,18 +20,32 @@ let prepare numGamers deck =
   and player8 = Bat.drop 19 deck |> Bat.take 2 |> List.sort cardSort 
   and player9 = Bat.drop 21 deck |> Bat.take 2 |> List.sort cardSort 
   and player0 = Bat.drop 23 deck |> Bat.take 2 |> List.sort cardSort 
-  in ( Bat.take numGamers  [ player1 @ board
-                           ; player2 @ board
-                           ; player3 @ board
-                           ; player4 @ board
-                           ; player5 @ board
-                           ; player6 @ board
-                           ; player7 @ board
-                           ; player8 @ board
-                           ; player9 @ board
-                           ; player0 @ board
-                           ]
-        )
+  in
+  List.iter (fun xs ->
+      let [(r1, s1) ; (r2, s2)] = xs
+      in Treatment.insert_deal (r1, s1, r2, s2))
+                           [ player1 
+                           ; player2 
+                           ; player3 
+                           ; player4 
+                           ; player5 
+                           ; player6 
+                           ; player7 
+                           ; player8 
+                           ; player9 
+                           ; player0 
+                           ] |>
+    fun _ ->  Bat.take numGamers   [ player1 @ board
+                                   ; player2 @ board
+                                   ; player3 @ board
+                                   ; player4 @ board
+                                   ; player5 @ board
+                                   ; player6 @ board
+                                   ; player7 @ board
+                                   ; player8 @ board
+                                   ; player9 @ board
+                                   ; player0 @ board
+                                   ]
 ;;
 
 let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* get number of hands fm command line params   *)
