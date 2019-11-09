@@ -13,7 +13,4 @@ module Evaluations :
     val getCaree     : hand -> int
     val getFlushStr8 : hand -> int
 
-    val kicker    : hand -> hand -> int -> unit 
-    val arbitThem : hand -> int -> unit 
-     
   end ;;  

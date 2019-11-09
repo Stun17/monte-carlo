@@ -34,9 +34,16 @@ let prepare numGamers deck =
         )
 ;;
 
-let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* number of hands   *)
-let numOfGamers = int_of_string (Sys.argv.(2)) ;; (* number of players *)
-let f = fun x -> if x < numOfHands then Some x else None ;;
+let numOfHands  = int_of_string (Sys.argv.(1)) ;; (* get number of hands fm command line params   *)
+let numOfGamers = int_of_string (Sys.argv.(2)) ;; (* get number of players fm command line params *)
+  
+let f = fun x -> if x < numOfHands then Some x else None ;; (* generate sequence on Nats *)
 
-Stream.from f |> Stream.iter (fun _ -> Shuffle.shuffle () |> 
-prepare numOfGamers |> Arbitrage.start) ;;
+  (*  we pass to Arbitrage module sorted-by-rank lists of players hands    *)
+  Stream.from f |>
+    Stream.iter
+      ( fun _ ->
+        Shuffle.shuffle ()  |> 
+        prepare numOfGamers |>
+        Arbitrage.start
+      ) ;;

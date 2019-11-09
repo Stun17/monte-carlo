@@ -43,60 +43,9 @@ module Evaluations =
         in List.map2 (fun s1 s2 -> if s2 - s1 = 1 then s2 else 0) ys1 ys2 |>
              List.sort compare |> List.rev |> List.hd  
 
-    let getFlush xs     = 0 ;;
-    let getFull xs      = 0 ;;
-    let getCaree xs     = 0 ;;
-    let getFlushStr8 xs = 0 ;;
-      
-    let rec kicker xs ys title =
-      let one = List.sort compare xs |> List.rev 
-      and two = List.sort compare ys |> List.rev 
-      in
-        match compare (getHigh one) (getHigh two) with
-        | -1 -> ()
-        |  1 -> ()
-        |  _ -> kicker (List.tl one) (List.tl two) title
-    ;;
-
-   let arbitThem xs title =
-     let one = Bat.take 7 xs
-     and two = Bat.drop 7 xs |> Bat.take 7
-     in
-     match title with
-     | 900 -> kicker one two title
-     | 800 -> (match compare (getPair one) (getPair two) with
-               | -1 -> ()
-               |  1 -> ()
-               |  _ -> kicker one two title )
-     | 700 -> (match compare (getDupal one) (getDupal two) with
-               | -1 -> ()
-               |  1 -> ()
-               |  _ -> kicker one two title )
-     | 600 -> (match compare (getSet one) (getSet two) with
-               | -1 -> ()
-               |  1 -> ()
-               |  _ -> kicker one two title )           
-     | 500 -> (match compare (getStr8 one) (getStr8 two) with
-               | -1 -> ()
-               |  1 -> ()
-               |  _ -> kicker one two title )              
-     | 400  -> (match compare (getFlush one) (getFlush two) with
-                | -1 -> ()
-                |  1 -> ()
-                |  _ -> kicker one two title ) 
-     | 300  -> (match compare (getFull one) (getFull two) with
-                | -1 -> ()
-                |  1 -> ()
-                |  _ -> kicker one two title ) 
-     | 200  -> (match compare (getCaree one) (getCaree two) with
-                | -1 -> ()
-                |  1 -> ()
-                |  _ -> kicker one two title ) 
-     | 100  -> (match compare (getFlushStr8 one) (getFlushStr8 two) with
-                | -1 -> ()
-                |  1 -> ()
-                |  _ -> kicker one two title ) 
-     | _    -> ()
-   ;;
+    let getFlush xs     = 999 ;;
+    let getFull xs      = 999 ;;
+    let getCaree xs     = 999 ;;
+    let getFlushStr8 xs = 999 ;;
      
   end ;;  
