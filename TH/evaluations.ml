@@ -59,7 +59,9 @@ module Evaluations =
     ;;
 
    let arbitThem xs title =
-     let one = Bat.take 7 xs and two = Bat.drop 7 xs |> Bat.take 7 in
+     let one = Bat.take 7 xs
+     and two = Bat.drop 7 xs |> Bat.take 7
+     in
      match title with
      | 900 -> kicker one two title
      | 800 -> (match compare (getPair one) (getPair two) with

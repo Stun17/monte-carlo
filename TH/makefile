@@ -1,8 +1,9 @@
 ORG0 = bat.mli bat.ml 
 ORG1 = shuffle.mli shuffle.ml 
 ORG2 = decisions.mli decisions.ml  
-ORG3 = arbitrage.mli arbitrage.ml
-ORG4 = bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo main.ml 
+ORG3 = evaluations.mli evaluations.ml 
+ORG4 = arbitrage.mli arbitrage.ml
+ORG5 = bat.cmo shuffle.cmo decisions.cmo arbitrage.cmo main.ml 
 
 bat.cmo : $(ORG0) 
 	ocamlc -c $^
@@ -13,13 +14,13 @@ shuffle.cmo: $(ORG1) bat.cmo
 decisions.cmo : $(ORG2) bat.cmo
 	ocamlc -open Bat -c $^
 
-arbitrage.cmo: $(ORG3) bat.cmo decisions.cmo 
-	ocamlc -c -open Bat -open Decisions $(ORG3)
-
-evaluations.cmo : bat.cmo evaluations.mli evaluations.ml
+evaluations.cmo :  $(ORG3) bat.cmo
 	ocamlc -c -open Bat $^
 
-a.out: $(ORG4) 
+arbitrage.cmo: $(ORG4) bat.cmo decisions.cmo 
+	ocamlc -c -open Bat -open Decisions $(ORG4)
+
+a.out: $(ORG5) 
 	ocamlc -open Bat -open Shuffle -open Decisions -open Arbitrage $^ 
 
 clean:
