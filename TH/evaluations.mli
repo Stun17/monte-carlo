@@ -1,16 +1,16 @@
 module Evaluations :
   sig
 
-    type hand = (int * int) list
+    type hand = (int * int) list (* list of pairs rank/suit *)
               
-    val getHigh      : hand -> int 
-    val getPair      : hand -> int
-    val getDupal     : hand -> int
-    val getSet       : hand -> int 
-    val getStr8      : hand -> int 
-    val getFlush     : hand -> int
-    val getFull      : hand -> int
-    val getCaree     : hand -> int
-    val getFlushStr8 : hand -> int
+    val priceHigh      : hand -> int 
+    val pricePair      : hand -> int
+    val priceDupal     : hand -> int
+    val priceSet       : hand -> int 
+    val priceStr8      : hand -> int 
+    val priceFlush     : hand -> int
+    val priceFull      : hand -> int
+    val priceCaree     : hand -> int
+    val priceFlushStr8 : hand -> int
 
   end ;;  

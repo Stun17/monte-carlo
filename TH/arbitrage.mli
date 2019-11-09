@@ -1,19 +1,19 @@
 module Arbitrage :
 sig
   
-  type hand = (int * int) list 
+  type hand = (int * int) list  (* list of pairs rank/suit *)
   type cards = hand list
 
-  val isAnyHaveHigh  : cards -> unit 
-  val isAnyHavePair  : cards -> unit 
-  val isAnyHaveDupal : cards -> unit 
-  val isAnyHaveSet   : cards -> unit 
-  val isAnyHaveStr   : cards -> unit 
-  val isAnyHaveFlush : cards -> unit 
-  val isAnyHaveFull  : cards -> unit              
-  val isAnyHaveCaree : cards -> unit
-  val isAnyHaveFlStr : cards -> unit
+  val tryWithHigh  : cards -> unit 
+  val tryWithPair  : cards -> unit 
+  val tryWithDupal : cards -> unit 
+  val tryWithSet   : cards -> unit 
+  val tryWithStr   : cards -> unit 
+  val tryWithFlush : cards -> unit 
+  val tryWithFull  : cards -> unit              
+  val tryWithCaree : cards -> unit
+  val tryWithFlStr : cards -> unit
 
-  val start : cards -> unit
+  val start          : cards -> unit
     
 end

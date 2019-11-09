@@ -3,7 +3,7 @@ open Bat ;;
 module Decisions =
 struct
 
-  type hand = (int * int) list
+  type hand = (int * int) list  (* list of pairs rank/suit *)
             
   let countSuit cs n = List.filter (fun (_,s) -> s == n) cs |> List.length ;;
 
@@ -17,28 +17,32 @@ struct
   ;;
 
   (* is there pair *)
-  let isDry xs =
+  let isWet xs =
     List.map (countRank xs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
     List.filter (fun x -> x > 1) |> 
     List.length |> fun x -> x > 0
   ;;
 
-  let isFlush cs =
-    List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x >= 5)
-  ;;
-       
-  let isCaree cs =
+  let isHigh cs = true ;;
+
+  let isPair cs = 
     let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.exists (fun x -> x == 4) bs 
+    in List.filter (fun x -> x == 2) bs |> List.length |> fun x -> x == 1
   ;;
 
-  let isFull cs =
+  let isDupal cs =
     let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.exists (fun x -> x == 3) bs && List.exists (fun x -> x == 2) bs
+    in List.filter (fun x -> x == 2) bs |> List.length |> fun x -> x == 2
+  ;;
+    
+  let isSet cs =
+    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
+    in List.exists (fun x -> x == 3) bs
   ;;
     
   let isStraight cs =
-    List.split cs |> fst |> List.sort compare |> List.rev |> fun zs ->
+    List.split cs |> fst |> List.sort compare |> List.rev |>
+      fun zs ->
              ( (List.nth zs 0) - (List.nth zs 4) == 4 &&
                (List.nth zs 1) - (List.nth zs 4) == 3 &&
                (List.nth zs 2) - (List.nth zs 4) == 2 &&
@@ -62,6 +66,20 @@ struct
              )
   ;;
 
+  let isFlush cs =
+    List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x >= 5)
+  ;;
+      
+  let isFull cs =
+    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
+    in List.exists (fun x -> x == 3) bs && List.exists (fun x -> x == 2) bs
+  ;;
+       
+  let isCaree cs =
+    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
+    in List.exists (fun x -> x == 4) bs 
+  ;;
+
   let isFlushStr8 cs =
     let proc n =
       List.filter (fun (_, s) -> s == n) cs |> List.split |> fst |> 
@@ -83,21 +101,4 @@ struct
        else false 
     ;;
     
-  let isSet cs =
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.exists (fun x -> x == 3) bs
-  ;;
-
-  let isDupal cs =
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.filter (fun x -> x == 2) bs |> List.length |> fun x -> x == 2
-  ;;
-    
-  let isPair cs = 
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.filter (fun x -> x == 2) bs |> List.length |> fun x -> x == 1
-  ;;
-
-  let isHigh cs = true ;; 
-      
 end ;;
