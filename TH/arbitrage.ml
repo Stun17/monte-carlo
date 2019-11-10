@@ -22,12 +22,13 @@ struct
   ;;
 
   let rwinners =
-    fun ws ->
+    fun n ws ->
     let (w1, _, _) = List.hd ws
-    in List.filter (fun (t, _, _) -> t = w1) ws |>
-         List.iter (fun (_, (r1, s1), (r2, s2)) ->
-             Treatment.insert_win (r1, s1, r2, s2)
-           ) 
+    in let winlist = List.filter (fun (t, _, _) -> t = w1) ws
+       in let winprice = n / (List.length winlist)
+          in List.iter (fun (_, (r1, s1), (r2, s2)) ->
+             Treatment.insert_win (r1, s1, r2, s2, winprice)
+           ) winlist
   ;;
 
   let work css predicat combi continuation =
@@ -40,7 +41,7 @@ struct
                 in if x
                    then (evaluate_hand cs combi, c1, c2)
                    else (0                     , c1, c2)
-              ) xs css |> List.sort compare |> List.rev |> rwinners
+              ) xs css |> List.sort compare |> List.rev |> rwinners (List.length css)
        else continuation css
   ;;
 
