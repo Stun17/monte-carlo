@@ -4,7 +4,7 @@
     ouput        :      win-poket(rank/suit)
  *)
 
-open Shuffle ;;  open Treatment ;; open Dealing ;; open Arbitrage ;;
+open Shuffle ;;  open Treatment ;; open Dealing ;; open Arbitrage ;; open Bat ;;
 
 let numOfHands =
   int_of_string (Sys.argv.(1)) ;; (* get number of hands fm command line params   *)
@@ -22,19 +22,12 @@ else () ;;
 
 Treatment.inithash () ;; (* prepare hash-table for data *)
     
-let f = fun x ->  (* to generate sequence of Nats from 1 to numOfHands *)
-  if x < numOfHands
-  then Some x
-  else None
-;; 
-
-  (*  we pass to Arbitrage module sorted-by-rank lists of players hands    *)
-Stream.from f |>
+(1 -- numOfHands) |> (* to generate sequence of Nats from 1 to numOfHands *)
     Stream.iter
       ( fun _ ->
         Shuffle.shuffle ()  |> 
         Dealing.dealing numOfGamers |>
-        Arbitrage.start
+        Arbitrage.start   (*  we pass lists of hands *)
       )
 ;;
 
