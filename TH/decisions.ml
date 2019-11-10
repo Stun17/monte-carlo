@@ -26,44 +26,27 @@ struct
   let isHigh cs = true ;;
 
   let isPair cs = 
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.filter (fun x -> x == 2) bs |> List.length |> fun x -> x == 1
+    List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+      List.filter (fun x -> x == 2) |> List.length |> fun x -> x == 1
   ;;
 
   let isDupal cs =
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.filter (fun x -> x == 2) bs |> List.length |> fun x -> x == 2
+    List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+      List.filter (fun x -> x == 2) |> List.length |> fun x -> x == 2
   ;;
     
   let isSet cs =
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.exists (fun x -> x == 3) bs
+    List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+      List.exists (fun x -> x == 3)
   ;;
     
   let isStraight cs =
     List.split cs |> fst |> List.sort compare |> List.rev |>
-      fun zs ->
-             ( (List.nth zs 0) - (List.nth zs 4) == 4 &&
-               (List.nth zs 1) - (List.nth zs 4) == 3 &&
-               (List.nth zs 2) - (List.nth zs 4) == 2 &&
-               (List.nth zs 3) - (List.nth zs 4) == 1
-             )
-          || ( (List.nth zs 1) - (List.nth zs 5) == 4 &&
-               (List.nth zs 2) - (List.nth zs 5) == 3 &&
-               (List.nth zs 3) - (List.nth zs 5) == 2 &&
-               (List.nth zs 4) - (List.nth zs 5) == 1
-             )
-          || ( (List.nth zs 2) - (List.nth zs 6) == 4 &&
-               (List.nth zs 3) - (List.nth zs 6) == 3 &&
-               (List.nth zs 4) - (List.nth zs 6) == 2 &&
-               (List.nth zs 5) - (List.nth zs 6) == 1
-             )
-          || ( (List.nth zs 0) == 12 &&
-               (List.nth zs 3) == 3  &&
-               (List.nth zs 4) == 2  &&
-               (List.nth zs 5) == 1  &&
-               (List.nth zs 6) == 0
-             )
+      fun [m0;m1;m2;m3;m4;m5;m6] ->
+             ( m0 - m4 == 4 && m1 - m4 == 3 && m2 - m4 == 2 && m3 - m4 == 1)
+          || ( m1 - m5 == 4 && m2 - m5 == 3 && m3 - m5 == 2 && m4 - m5 == 1)
+          || ( m2 - m6 == 4 && m3 - m6 == 3 && m4 - m6 == 2 && m5 - m6 == 1)
+          || ( m0 == 12 && m3 == 3  && m4 == 2  && m5 == 1  && m6 == 0)
   ;;
 
   let isFlush cs =
@@ -76,8 +59,8 @@ struct
   ;;
        
   let isCaree cs =
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.exists (fun x -> x == 4) bs 
+    List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+      List.exists (fun x -> x == 4)
   ;;
 
   let isFlushStr8 cs =
@@ -85,20 +68,19 @@ struct
       List.filter (fun (_, s) -> s == n) cs |> List.split |> fst |> 
       List.sort compare |> List.rev |>
         fun zs ->
-        match List.length zs with
-        | 5 ->    ((List.nth zs 0) - (List.nth zs 4) == 4)
-                  || ([0;1;2;3;12] == List.rev zs)
-        | 6 ->    ((List.nth zs 0) - (List.nth zs 4) == 4)
-                  || ((List.nth zs 1) - (List.nth zs 5) == 4)
-                  || ([0;1;2;3] == (List.rev zs |> Bat.take 4) && (12 == List.nth zs 0))
-        | 7 ->    ((List.nth zs 0) - (List.nth zs 4) == 4)
-                  || ((List.nth zs 1) - (List.nth zs 5) == 4)
-                  || ((List.nth zs 2) - (List.nth zs 6) == 4)
-                  || ([0;1;2;3] == (List.rev zs |> Bat.take 4) && (12 == List.nth zs 0))
+        match zs with
+        | [m0;m1;m2;m3;m4] -> 
+            (m0 - m4 == 4) || ([0;1;2;3;12] == List.rev zs)
+        | [m0;m1;m2;m3;m4;m5] -> 
+            (m0 - m4 == 4) || (m1 - m5 == 4) || 
+            ([0;1;2;3] == (List.rev zs |> Bat.take 4) && 12 == m0)
+        | [m0;m1;m2;m3;m4;m5;m6] -> 
+            (m0 - m4 == 4) || (m1 - m5 == 4) || (m2 - m6 == 4) || 
+            ([0;1;2;3] == (List.rev zs |> Bat.take 4) && 12 == m0)
         | _ -> false
-    in if (isFlush cs) && (isStraight cs) 
-       then List.map proc [0;1;2;3] |> List.exists (fun x -> x == true)
-       else false 
+    in (isFlush cs) &&
+         (isStraight cs) &&
+           (List.map proc [0;1;2;3] |> List.exists (fun x -> x == true))
     ;;
     
 end ;;
