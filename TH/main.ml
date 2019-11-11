@@ -25,7 +25,7 @@ Treatment.inithash () ;; (* prepare hash-table for data *)
 (1 -- numOfHands) |> (* to generate Stream of Nats from 1 to numOfHands *)
     Stream.iter
       ( fun _ ->
-        Shuffle.shuffle ()  |> 
+        Shuffle.shuffle () |> 
         Dealing.dealing numOfGamers |> (*  we pass lists of hands as list *)
         Arbitrage.start   
       )
