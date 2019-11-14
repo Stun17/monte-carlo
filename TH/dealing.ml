@@ -6,48 +6,40 @@ module Dealing =
     type hands = (int * int) list
     type cards = hands list
 
-    let poketSort = fun (r1, s1) (r2, s2) -> if r1 < r2 then 1 else -1 ;;
-
     (* to form list of lists of hands . each card is coded as (rank, suit) 
        params :   number of Players and shuffled deck  - plain list of pairs (rank, suit)
     *)  
     let dealing (n : int)  (deck : hands) : cards =
-      let board   = Bat.take  5 deck
-      and player1 = Bat.drop  5 deck |> Bat.take 2 |> List.sort poketSort 
-      and player2 = Bat.drop  7 deck |> Bat.take 2 |> List.sort poketSort 
-      and player3 = Bat.drop  9 deck |> Bat.take 2 |> List.sort poketSort 
-      and player4 = Bat.drop 11 deck |> Bat.take 2 |> List.sort poketSort 
-      and player5 = Bat.drop 13 deck |> Bat.take 2 |> List.sort poketSort 
-      and player6 = Bat.drop 15 deck |> Bat.take 2 |> List.sort poketSort 
-      and player7 = Bat.drop 17 deck |> Bat.take 2 |> List.sort poketSort 
-      and player8 = Bat.drop 19 deck |> Bat.take 2 |> List.sort poketSort 
-      and player9 = Bat.drop 21 deck |> Bat.take 2 |> List.sort poketSort 
-      and player0 = Bat.drop 23 deck |> Bat.take 2 |> List.sort poketSort 
-      in List.iter (fun [ (r1, s1) ; (r2, s2) ] -> Treatment.insert_deal (r1, s1, r2, s2))
-                   ( Bat.take n
-                              [ player1 
-                              ; player2 
-                              ; player3 
-                              ; player4 
-                              ; player5 
-                              ; player6 
-                              ; player7 
-                              ; player8 
-                              ; player9 
-                              ; player0 
-                   ] ) |>
-           fun _ -> Bat.take n
-                             [ player1 @ board
-                             ; player2 @ board
-                             ; player3 @ board
-                             ; player4 @ board
-                             ; player5 @ board
-                             ; player6 @ board
-                             ; player7 @ board
-                             ; player8 @ board
-                             ; player9 @ board
-                             ; player0 @ board
-                             ]
+      let [ p11 ; p21 ; p31 ; p41 ; p51 ]     = Bat.take  5 deck
+      and [ p61 ; p71 ; p81 ; p91 ; p01 ]     = Bat.drop  5 deck |> Bat.take 5
+      and [ p12 ; p22 ; p32 ; p42 ; p52 ]     = Bat.drop 10 deck |> Bat.take 5
+      and [ p62 ; p72 ; p82 ; p92 ; p02 ]     = Bat.drop 15 deck |> Bat.take 5
+      and [ _ ; b1 ; b2; b3 ; _ ; b4; _ ; b5] = Bat.drop 20 deck |> Bat.take 8
+      in
+      List.iter (fun [ (r1, s1) ; (r2, s2) ] -> Treatment.insert_deal (r1, s1, r2, s2))
+                   ( Bat.take n [ [ p11 ; p12 ]
+                                ; [ p21 ; p22 ]
+                                ; [ p31 ; p32 ]
+                                ; [ p41 ; p42 ]
+                                ; [ p51 ; p52 ]
+                                ; [ p61 ; p62 ]
+                                ; [ p71 ; p72 ]
+                                ; [ p81 ; p82 ]
+                                ; [ p91 ; p92 ]
+                                ; [ p01 ; p02 ]
+                                ]
+                   ) |> fun _ ->
+                    Bat.take n [ [ p11 ; p12 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p21 ; p22 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p31 ; p32 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p41 ; p42 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p51 ; p52 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p61 ; p62 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p71 ; p72 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p81 ; p82 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p91 ; p92 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ; [ p01 ; p02 ; b1 ; b2 ; b3 ; b4 ; b5]
+                               ]
     ;;
 
   end

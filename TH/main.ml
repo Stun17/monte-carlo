@@ -26,8 +26,8 @@ Treatment.inithash () ;; (* prepare hash-table for data *)
     Stream.iter
       ( fun _ ->
         Shuffle.shuffle () |> 
-        Dealing.dealing numOfGamers |> (*  we pass lists of hands as list *)
-        Arbitrage.start   
+          Dealing.dealing numOfGamers |>      (*  we pass lists of hands as list *)
+          Arbitrage.start
       )
 ;;
 
