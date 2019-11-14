@@ -1,5 +1,8 @@
 open Printf ;;
-  
+
+(*  to create, insert and extract results from/to hash-table
+    key of this hash is (rank1, rank2, suited 1 / unsuited 0) tuple 
+ *)
 module Treatment =
   struct
 
@@ -9,9 +12,7 @@ module Treatment =
       List.iter (fun s ->
           List.iter (fun r2 -> 
               List.iter (fun r1 ->
-                  if ( r1 = r2 && s = 0 ) || ( r1 > r2 )
-                  then Hashtbl.add my_hash (r1, r2, s) (0, 0)
-                  else ()
+                  Hashtbl.add my_hash (r1, r2, s) (0, 0)
                 ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
             ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
         ) [0;1]
