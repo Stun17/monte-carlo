@@ -39,25 +39,20 @@ struct
     List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
       List.exists (fun x -> x == 3)
   ;;
-    
+
   let isStraight cs =
-    List.split cs |> fst |> List.sort compare |> List.rev |>
+    List.split cs |> fst |> List.sort compare |>
       fun [m0;m1;m2;m3;m4;m5;m6] ->
-             ( m0 - m4 == 4 && m1 - m4 == 3 && m2 - m4 == 2 && m3 - m4 == 1)
-          || ( m1 - m5 == 4 && m2 - m5 == 3 && m3 - m5 == 2 && m4 - m5 == 1)
-          || ( m2 - m6 == 4 && m3 - m6 == 3 && m4 - m6 == 2 && m5 - m6 == 1)
-          || ( m0 == 12 && m3 == 3  && m4 == 2  && m5 == 1  && m6 == 0)
+             ( m4 - m0 == 4 && m4 - m1 == 3 && m4 - m2 == 2 && m4 - m3 == 1)
+          || ( m5 - m1 == 4 && m5 - m2 == 3 && m5 - m3 == 2 && m5 - m4 == 1)
+          || ( m6 - m2 == 4 && m6 - m3 == 3 && m6 - m4 == 2 && m6 - m5 == 1)
+          || ( m6 == 12 && m3 == 3  && m2 == 2  && m1 == 1  && m0 == 0)
   ;;
 
-  let isFlush cs =
-    List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x >= 5)
-  ;;
+  let isFlush cs = List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x >= 5) ;;
       
-  let isFull cs =
-    let bs = List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12]
-    in List.exists (fun x -> x == 3) bs && List.exists (fun x -> x == 2) bs
-  ;;
-       
+  let isFull cs = (isSet cs) && (isPair cs) ;;
+    
   let isCaree cs =
     List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
       List.exists (fun x -> x == 4)
@@ -66,21 +61,22 @@ struct
   let isFlushStr8 cs =
     let proc n =
       List.filter (fun (_, s) -> s == n) cs |> List.split |> fst |> 
-      List.sort compare |> List.rev |>
+      List.sort compare |> 
         fun zs ->
         match zs with
-        | [m0;m1;m2;m3;m4] -> 
-            (m0 - m4 == 4) || ([0;1;2;3;12] == List.rev zs)
-        | [m0;m1;m2;m3;m4;m5] -> 
-            (m0 - m4 == 4) || (m1 - m5 == 4) || 
-            ([0;1;2;3] == (List.rev zs |> Bat.take 4) && 12 == m0)
-        | [m0;m1;m2;m3;m4;m5;m6] -> 
-            (m0 - m4 == 4) || (m1 - m5 == 4) || (m2 - m6 == 4) || 
-            ([0;1;2;3] == (List.rev zs |> Bat.take 4) && 12 == m0)
+        | [m0;m1;m2;m3;m4] ->          (m4 - m0 == 4)
+                                    || (m4 == 12 && m0 == 0 && m3 == 3)
+        | [m0;m1;m2;m3;m4;m5] ->       (m4 - m0 == 4)
+                                    || (m5 - m1 == 4)
+                                    || (m5 == 12 && m0 == 0 && m3 == 3)
+        | [m0;m1;m2;m3;m4;m5;m6] ->    (m4 - m0 == 4)
+                                    || (m5 - m1 == 4)
+                                    || (m6 - m2 == 4)
+                                    || (m6 == 12 && m0 == 0 && m3 == 3)
         | _ -> false
-    in (isFlush cs) &&
-         (isStraight cs) &&
-           (List.map proc [0;1;2;3] |> List.exists (fun x -> x == true))
+    in if (isFlush cs) && (isStraight cs)
+       then (List.map proc [0;1;2;3] |> List.exists (fun x -> x == true))
+       else false
     ;;
     
 end ;;
