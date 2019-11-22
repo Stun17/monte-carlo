@@ -1,4 +1,4 @@
 while read x
 do
-  grep $x *.data
+  grep $x $2.data
 done < $1 

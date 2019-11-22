@@ -67,24 +67,19 @@ struct
     (5 > List.length cs) && (List.map (countSuit cs) [0;1;2;3] |> List.exists (fun x -> x > 4))
   ;;
       
-  let isFull cs = 
-    if (5 > List.length cs)
-    then false
-    else isSet cs && isPair cs
-  ;;
+  let isFull cs = (4 < List.length cs) && isSet cs && isPair cs ;;
     
   let isCaree cs = 
-    if (4 > List.length cs)
-    then false
-    else (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |> List.exists (fun x -> x == 4))
+    (3 < List.length cs) &&
+    (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |> List.exists (fun x -> x == 4))
   ;;
 
   let isFlushStr8 cs = 
-      if (isFlush cs && isStraight cs)
-      then 
+      isFlush cs && isStraight cs &&
+      (
         let p n = (List.filter (fun (_, s) -> s == n) cs) |> isStraight
         in (List.map p [0;1;2;3]) |> List.exists (fun x -> x == true)
-      else false
+      )
   ;;
     
 end ;;
