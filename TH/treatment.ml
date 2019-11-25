@@ -47,9 +47,7 @@ module Treatment =
                   then
                     let (m, n) = Hashtbl.find my_hash (r1, r2, s)
                     in let rez = (float_of_int m) /. (float_of_int n) 
-                       in if rez > 0.0
-                          then printf "%2i %2i %i %3.1f\n" r1 r2 s rez
-                          else ()
+                       in  printf "%2i %2i %i %3.1f\n" r1 r2 s rez
                   else ()
                 ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
             ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
