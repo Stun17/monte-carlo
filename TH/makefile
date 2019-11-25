@@ -8,9 +8,11 @@ ORG6 = dealing.mli dealing.ml           # module for dealing deck
 CMN0 = bat.cmo shuffle.cmo treatment.cmo dealing.cmo \
        decisions.cmo evaluations.cmo arbitrage.cmo main.ml 
 
-a.out: $(CMN0) 
+a.out: $(CMN0)
+	@echo "start with a.out"
 	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage \
         -open Treatment $^ 
+	@echo "done with a.out" 
 
 
 bat.cmo : $(ORG0) 

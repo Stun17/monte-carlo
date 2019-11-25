@@ -1,4 +1,8 @@
-open Bat ;; open Decisions ;; open Evaluations ;; open Printf ;; open Treatment ;;
+open Bat ;;
+open Decisions ;;
+open Evaluations ;;
+open Printf ;;
+open Treatment ;;
 
 module Arbitrage =
 struct
@@ -21,6 +25,7 @@ struct
     | _ -> 0
   ;;
 
+  (* to arbitrate among equal combinations *)
   let rwinners =
     fun n ws ->
     let (w1, _, _) = List.hd ws
@@ -31,29 +36,29 @@ struct
            ) winlist
   ;;
 
+  (* to evaluate combination if it exists or go ahead if it is not exists *)
   let work css predicat combi continuation =
     let xs = List.map predicat css
-    in if (List.exists (fun x -> x == true) xs)
-       then List.map2 (
-                fun x cs ->
-                let c1 = List.hd cs
-                and c2 = List.hd (List.tl cs)
-                in if x
-                   then (evaluate_hand cs combi, c1, c2)
-                   else (0                     , c1, c2)
-              ) xs css |> List.sort compare |> List.rev |> rwinners (List.length css)
-       else continuation css
+    in if (List.exists (fun x -> x == true) xs) (* the combination exists *)
+       then List.map2 (                         (* traverse list of hands and evaluate each of them *)
+                fun x (c1::c2::cs) ->     
+                if x
+                then (evaluate_hand (c1::c2::cs) combi, c1, c2)
+                else (0                               , c1, c2)
+              ) xs css |>
+              List.sort compare |> List.rev |> rwinners (List.length css)
+       else continuation css                    (* goto the next combination *)
   ;;
 
   let tryWithHigh  = fun css -> work css isHigh       0  (fun cs -> ()) ;;
-  let tryWithPair  = fun css -> work css isPair       1  tryWithHigh  ;;
-  let tryWithDupal = fun css -> work css isDupal      2  tryWithPair  ;;
-  let tryWithSet   = fun css -> work css isSet        3  tryWithDupal ;;
-  let tryWithStr   = fun css -> work css isStraight   4  tryWithSet   ;;
-  let tryWithFlush = fun css -> work css isFlush      5  tryWithStr   ;;
-  let tryWithFull  = fun css -> work css isFull       6  tryWithFlush ;;
-  let tryWithCaree = fun css -> work css isCaree      7  tryWithFull  ;;
-  let tryWithFlStr = fun css -> work css isFlushStr8  8  tryWithCaree ;;
+  let tryWithPair  = fun css -> work css isPair       1  tryWithHigh    ;;
+  let tryWithDupal = fun css -> work css isDupal      2  tryWithPair    ;;
+  let tryWithSet   = fun css -> work css isSet        3  tryWithDupal   ;;
+  let tryWithStr   = fun css -> work css isStraight   4  tryWithSet     ;;
+  let tryWithFlush = fun css -> work css isFlush      5  tryWithStr     ;;
+  let tryWithFull  = fun css -> work css isFull       6  tryWithFlush   ;;
+  let tryWithCaree = fun css -> work css isCaree      7  tryWithFull    ;;
+  let tryWithFlStr = fun css -> work css isFlushStr8  8  tryWithCaree   ;;
 
   (*  css is the list of lists and each list is poket @ board *)
   let start css =
