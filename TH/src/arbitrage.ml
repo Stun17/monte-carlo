@@ -33,13 +33,14 @@ struct
     in let winlist = List.filter (fun (t, _, _) -> t = w1) ws
        in let winprice = n / (List.length winlist)
           in List.iter (fun (_, (r1, s1), (r2, s2)) ->
-             Treatment.insert_win (r1, s1, r2, s2, winprice)
+             Treatment.insert_win (n, r1, s1, r2, s2, winprice)
            ) winlist
   ;;
 
   (* to evaluate combination if it exists or go ahead if it is not exists *)
   let work css predicat combi continuation =
     let xs = List.map predicat css
+    and k = List.length css
     in if (List.exists (fun x -> x == true) xs) (* the combination exists *)
        then List.map2 (                         (* traverse list of hands and evaluate each of them *)
                 fun x (c1::c2::cs) ->     
@@ -47,7 +48,7 @@ struct
                 then (evaluate_hand (c1::c2::cs) combi, c1, c2)
                 else (0                               , c1, c2)
               ) xs css |>
-              List.sort compare |> List.rev |> rwinners (List.length css)
+              List.sort compare |> List.rev |> rwinners k
        else continuation css                    (* goto the next combination *)
   ;;
 

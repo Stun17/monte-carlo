@@ -26,7 +26,7 @@ module Dealing =
       and [ _ ; b1 ; b2; b3 ; _ ; b4; _ ; b5] = Bat.drop 20 deck |> Bat.take 8
       in
       (* to put pockets into hash table *)
-      List.iter (fun [ (r1, s1) ; (r2, s2) ] -> Treatment.insert_deal (r1, s1, r2, s2))
+      List.iter (fun [ (r1, s1) ; (r2, s2) ] -> Treatment.insert_deal (n, r1, s1, r2, s2))
                    ( Bat.take n [ [ p11 ; p12 ]
                                 ; [ p21 ; p22 ]
                                 ; [ p31 ; p32 ]
