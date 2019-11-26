@@ -45,7 +45,7 @@ then
   )
 else () ;;
 
-Treatment.inithash () ;;                      (* prepare hash-table for data *)
+Treatment.init_hash () ;;                     (* prepare hash-table for data *)
     
 (1 -- numOfHands) |>                          (* to generate Stream of Nats from 1 to numOfHands *)
     Stream.iter

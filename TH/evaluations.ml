@@ -3,9 +3,9 @@ open Bat ;;
 module Evaluations =
   struct
 
-    type hand = (int * int) list (* list of pairs rank/suit *)
+    type hand = (int * int) list ;; (* list of pairs rank/suit *)
 
-    let takeRanks xs = List.sort compare xs |> List.rev |> List.split |> fst
+    let takeRanks xs = List.sort compare xs |> List.rev |> List.split |> fst ;;
               
     let priceHigh (xs : hand) = takeRanks xs |> List.hd ;;
 
@@ -50,13 +50,13 @@ module Evaluations =
     let priceFlush (xs : hand) =
       let f n  = List.filter (fun (_, s) -> s == n) xs
       and g ys = List.sort compare ys |> List.rev |> List.hd |> fst 
-      in let ss = f 0
-         and cs = f 1
-         and ds = f 2 
-         and hs = f 3
-         in if 4 < List.length ss then g ss else
-              if 4 < List.length cs then g cs else
-                if 4 < List.length ds then g ds else g hs 
+      in let spades_s = f 0
+         and clubs__s = f 1
+         and diams__s = f 2 
+         and hearts_s = f 3
+         in if 4 < List.length spades_s then g spades_s else
+              if 4 < List.length clubs__s then g clubs__s else
+                if 4 < List.length diams__s then g diams__s else g hearts_s 
     ;;
 
     let priceFull (xs : hand) =
@@ -78,4 +78,5 @@ module Evaluations =
 
     let priceFlushStr8 (xs : hand) = min (priceFlush xs) (priceStr8 xs) ;;
      
-  end ;;  
+  end
+;;  

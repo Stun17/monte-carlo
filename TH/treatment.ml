@@ -8,7 +8,7 @@ module Treatment =
 
     let my_hash = Hashtbl.create 169 ;;
 
-    let inithash () = 
+    let init_hash () = 
       List.iter (fun s ->
           List.iter (fun r2 -> 
               List.iter (fun r1 ->
@@ -47,7 +47,7 @@ module Treatment =
                   then
                     let (m, n) = Hashtbl.find my_hash (r1, r2, s)
                     in let rez = (float_of_int m) /. (float_of_int n) 
-                       in  printf "%2i %2i %i %-5.1f\n" r1 r2 s rez
+                       in  printf "%2i %2i %i %6.1f\n" r1 r2 s rez
                   else ()
                 ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
             ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
@@ -55,3 +55,4 @@ module Treatment =
     ;;
                     
   end
+;;

@@ -1,7 +1,7 @@
 module Shuffle =
-struct
+  struct
 
-  (* input: num of cards,  accum ;   output: shuffled deck *)
+    (* input: num of cards,  accum ;   output: shuffled deck *)
     let rec genDeck ((num : int), (acc : int list)) : int list = 
       match num with
       | 0 -> acc 
@@ -13,12 +13,15 @@ struct
     ;;
 
     let rangeIt (deck : int list) : (int * int) list =
-      List.map (fun x -> (x mod 13, x / 13)) deck ;;
+      List.map (fun x -> (x mod 13, x / 13)) deck
+    ;;
       
     let shuffle =
       fun () -> Random.self_init () ; genDeck (28, []) |> rangeIt
+    ;;
 
-end ;;
+  end
+;;
 
 
 
