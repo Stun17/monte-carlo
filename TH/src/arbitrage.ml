@@ -43,10 +43,10 @@ struct
     and k = List.length css
     in if (List.exists (fun x -> x == true) xs) (* the combination exists *)
        then List.map2 (                         (* traverse list of hands and evaluate each of them *)
-                fun x (c1::c2::cs) ->     
+                fun x ((c1::c2::cs) as ts) ->     
                 if x
-                then (evaluate_hand (c1::c2::cs) combi, c1, c2)
-                else (0                               , c1, c2)
+                then (evaluate_hand ts combi, c1, c2)
+                else (0                     , c1, c2)
               ) xs css |>
               List.sort compare |> List.rev |> rwinners k
        else continuation css                    (* goto the next combination *)
