@@ -4,6 +4,7 @@ open Evaluations ;;
 open Printf ;;
 open Treatment ;;
 
+(*  module to arbitrage different hands *)
 module Arbitrage =
 struct
 
