@@ -3,8 +3,7 @@
     it estimates how often the particular pocket win 
 
     input params :      number of hands
-                        number of gamers
-    ouput        :      win-poket(rank/suit)
+    ouput        :      plain text [table-size] [card1 card2 suit] [rate]
 *)
 
 open Shuffle ;;
@@ -34,20 +33,19 @@ then
   )
 else () ;;
 
-Treatment.init_hash () ;;                     (* prepare hash-table for data *)
+Treatment.init_hash () ;;               (* prepare hash-table for data *)
     
-(1 -- numOfHands) |>                          (* to generate Stream of Nats from 1 to numOfHands *)
+(1 -- numOfHands) |>                    (* to generate Stream of Nats from 1 to numOfHands *)
     Stream.iter
       ( fun _ ->
-        (2 -- 10) |>
+        (2 -- 10) |>                    (* to generate tables from HU to MX10 *)
           Stream.iter
-          ( fun n ->
-            Shuffle.shuffle () |> 
-              Dealing.dealing n |>      (*  we pass lists of hands as list *)
-              Arbitrage.start
+            ( fun n ->
+              Shuffle.shuffle () |> 
+                Dealing.dealing n |>    (*  we pass lists of hands as list *)
+                  Arbitrage.start
           )
       )
 ;;
 
-Treatment.extract () ;;
-
+Treatment.extract () ;;                 (* to put results out *)
