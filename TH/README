@@ -1,26 +1,20 @@
 to compile from sources you need to install 'ocaml' language on your computer
-you also need 'bash shell' and 'make' been installed
+you also need 'bash shell' and 'make' have been installed
 
 to compile from source files , in terminal :
 
+   cd src/
    make
 
-this command will create executable file a.out
+this command will create executable file a.out in project root dir
 you will receive a lot of warnings during compilation - its ok because right conditions tested in code, so dont warry
 
 after that :
 
-  ./myscript
+  cd ../
+  ./dowork.sh
 
-this command will create 9 files in dir "rez" with names [2-0].txt
-
-after that :
-
-      cd rez
-      ./dowork.sh
-
-last command will create 9 files with names [2-0].data
-they are plain text files with results in format [card][card][suited] [rate]
+this command will create result file in format [table_size] [card1 card2 suit] [rate]
 
 thats all
 

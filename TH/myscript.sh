@@ -1,9 +1,0 @@
-./a.out 111000 10 >  rez/0.txt
-./a.out 111000  9 >  rez/9.txt
-./a.out 111000  8 >  rez/8.txt
-./a.out 111000  7 >  rez/7.txt
-./a.out 111000  6 >  rez/6.txt
-./a.out 111000  5 >  rez/5.txt
-./a.out 111000  4 >  rez/4.txt
-./a.out 111000  3 >  rez/3.txt
-./a.out 111000  2 >  rez/2.txt

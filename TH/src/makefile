@@ -11,7 +11,8 @@ CMN0 = bat.cmo shuffle.cmo treatment.cmo dealing.cmo \
 a.out: $(CMN0)
 	@echo "start with a.out"
 	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage \
-        -open Treatment $^ 
+        -open Treatment $^
+	mv a.out ../
 	@echo "done with a.out" 
 
 
@@ -38,4 +39,3 @@ arbitrage.cmo: $(ORG4) bat.cmo decisions.cmo treatment.cmo
 
 clean:
 	@rm *.cm[io] 
-	@test -z "a.out" || rm -f a.out 
