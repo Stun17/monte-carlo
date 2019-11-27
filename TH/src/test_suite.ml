@@ -87,6 +87,18 @@ let t6_evaluations test_ctxt =
   assert_equal 54 (priceFull  [(2,0); (12,0); (2,1); (9,0); (2,2); (12,2); (7,3)])  
 ;;
 let t7_evaluations test_ctxt =
+  assert_equal 6 (priceStr8  [(2,0); (6,3); (3,1); (9,0); (4,2); (12,2); (5,3)])  
+;;
+let t8_evaluations test_ctxt =
+  assert_equal 1091 (priceSet  [(2,0); (6,3); (3,1); (2,1); (9,2); (12,2); (2,3)])  
+;;
+let t9_evaluations test_ctxt =
+  assert_equal 1077 (priceSet  [(2,0); (6,3); (3,1); (2,1); (9,2); (11,2); (2,3)])
+;;
+let ta_evaluations test_ctxt =
+  assert_equal 100 100
+;;
+let tb_evaluations test_ctxt =
   assert_equal 100 100
 ;;
 
@@ -114,8 +126,11 @@ let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testEvaluations FluStr" >:: t2_evaluations
                       ; "testEvaluations  Caree" >:: t3_evaluations
                       ; "testEvaluations  Caree" >:: t4_evaluations
-                      ; "testEvaluations  Caree" >:: t5_evaluations
-                      ; "testEvaluations  Caree" >:: t6_evaluations
+                      ; "testEvaluations   Full" >:: t5_evaluations
+                      ; "testEvaluations   Full" >:: t6_evaluations
+                      ; "testEvaluations   Str8" >:: t7_evaluations
+                      ; "testEvaluations    Set" >:: t8_evaluations
+                      ; "testEvaluations    Set" >:: t9_evaluations
                       ]
 
 ;;

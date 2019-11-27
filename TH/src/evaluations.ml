@@ -32,10 +32,12 @@ module Evaluations =
     ;;
 
     let priceSet (xs : hand) =
-      let n = takeRanks xs |> 
-        fun ys ->
-          List.map2 (fun s1 s2 -> if s1 = s2 then s1 else 0) (ys @ [0]) (0 :: ys) |>
-          List.sort compare |> List.rev |> List.hd
+      let [x0;x1;x2;x3;x4;x5;x6] = List.split xs |> fst |> List.sort compare |> List.rev
+      in let n =
+           if x0 == x1 && x0 == x2 then x0 else
+             if x1 == x2 && x2 == x3 then x1 else
+               if x2 == x3 && x2 == x4 then x2 else
+                 if x3 == x4 && x3 == x5 then x3 else x4
       in let k1 = List.filter (fun (r, _) -> r != n) xs |> priceHigh
          in let k2 = List.filter (fun (r, _) -> r != n && r != k1) xs |> priceHigh
             in 300 * (n + 1) + 14 * (k1 + 1) + k2
