@@ -1,13 +1,15 @@
 this program will evaluate equity of different pockets in poker Texas Holdem
 
 algorithm is the next:
-     - on preflop all players stake 1 chip in the pot 
+     - on preflop all players stake 1 chip into the pot 
      - no further trading take place
      - after river all players go to showdown
      - winning hand add pot to the stack
      - if pot splitted the sum is splitted too
 in the end program put out results:
 format : [table_size] [pocket_card1 pocket_card2 suit/unsuit] [rate]
+
+all pockets are evaluated by formula : pocket_stack / num_of_hands_pocket_presented
 neutral pocket is the pocket with rate just 0.0
 if rate > 0.0 then this pocket has positive equity
 if rate < 0.0 then this pocket has negative equity
@@ -20,14 +22,18 @@ sources - in this case u need to install OUnit library
 
 you also need 'bash shell' and 'make utility' 
 
+the progam WILL NOT BE INSTALLED anywere on your computer.
+instead exec file will be created just in the root dir of the project
+
 to compile from the source files , in terminal :
 
    cd src/
    make a.out
 
-this command will create executable file a.out in project root dir
-you will receive a lot of warnings during compilation - its ok because
-in each case right conditions tested in code, so dont warry
+this command will create executable file 'a.out' in project root dir
+
+NB: you will receive a lot of warnings during compilation - its ok because
+    in each case right conditions tested in code, so dont warry
 
 after that :
 
