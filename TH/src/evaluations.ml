@@ -97,7 +97,27 @@ module Evaluations =
     ;;
 
     let priceFlushStr8 (xs : hand) =
-      min (priceFlush xs) (priceStr8 xs)
+      let f n  = List.filter (fun (_, s) -> s == n) xs
+      and g ys =
+        let zs = takeRanks ys
+        in match zs with
+           | [x7;x6;x5;x4;x3;x2;x1] ->
+              if x7 - x6 == 1 && x6 - x5 == 1 && x5 - x4 == 1 then x7 else
+                if x6 - x5 == 1 && x5 - x4 == 1 && x4 - x3 == 1 then x6 else
+                  if x7 == 12 && x1 == 0 && x5 - x4 > 1 then x4 else x5
+           | [x6;x5;x4;x3;x2;x1] ->
+              if x6 - x5 == 1 && x5 - x4 == 1 && x4 - x3 == 1 then x6 else
+                if x6 == 12 && x1 == 0 && x5 - x4 > 1 then x4 else x5              
+           | _ ->
+              if 12 == List.hd zs && 11 == (List.hd (List.tl zs)) then 12 else
+                if 12 == List.hd zs && 0 == (List.hd (List.rev zs)) then 3 else List.hd zs
+      in let spades_s = f 0
+         and clubs__s = f 1
+         and diams__s = f 2 
+         and hearts_s = f 3
+         in if 4 < List.length spades_s then g spades_s else
+              if 4 < List.length clubs__s then g clubs__s else
+                if 4 < List.length diams__s then g diams__s else g hearts_s 
     ;;
      
   end

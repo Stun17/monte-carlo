@@ -1,21 +1,41 @@
-to compile from sources you need to install 'ocaml' language on your computer
-you also need 'bash shell' and 'make' have been installed
+this program will evaluate equity of different pockets in poker Texas Holdem
 
-to compile from source files , in terminal :
+algorithm is the next:
+     - on preflop all players stake 1 chip in the pot 
+     - no further trading take place
+     - after river all players go to showdown
+     - winning hand add pot to the stack
+     - if pot splitted the sum is splitted too
+in the end program put out results:
+format : [table_size] [pocket_card1 pocket_card2 suit/unsuit] [rate]
+neutral pocket is the pocket with rate just 0.0
+if rate > 0.0 then this pocket has positive equity
+if rate < 0.0 then this pocket has negative equity
+
+-------------------------------------------------------------------------------------
+
+to compile from the sources you need to install 'ocaml' compiler on your computer
+you need only basic level - no additional libraries are required untill u want to test
+sources - in this case u need to install OUnit library
+
+you also need 'bash shell' and 'make utility' 
+
+to compile from the source files , in terminal :
 
    cd src/
-   make
+   make a.out
 
 this command will create executable file a.out in project root dir
-you will receive a lot of warnings during compilation - its ok because right conditions tested in code, so dont warry
+you will receive a lot of warnings during compilation - its ok because
+in each case right conditions tested in code, so dont warry
 
 after that :
 
   cd ../
-  ./a.out 111000
+  ./a.out 111000 > filename
 
-where params is number of hands for each table size
-this command will create result file in format [table_size] [card1 card2 suit] [rate]
+where param is number of hands for each table size (should be more then 34K for reliable results)
+this command will create result file in format : [table_size] [card1 card2 suit] [rate]
 
 thats all
 
