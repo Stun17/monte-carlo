@@ -8,6 +8,11 @@ ORG6 = dealing.mli dealing.ml           # module for dealing deck
 CMN0 = bat.cmo shuffle.cmo treatment.cmo dealing.cmo \
        decisions.cmo evaluations.cmo arbitrage.cmo main.ml 
 
+test_shuffle: shuffle.cmo bat.cmo
+	ocamlfind ocamlc -open Bat -open Shuffle -o shuffle.test -package oUnit -linkpkg \
+		shuffle.cmo bat.cmo test_shuffle.ml
+
+# -open Shuffle -c $(PATH)/shuffle.cmo
 a.out: $(CMN0)
 	@echo "start with a.out"
 	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage \

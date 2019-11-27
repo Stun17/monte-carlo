@@ -12,7 +12,7 @@ you will receive a lot of warnings during compilation - its ok because right con
 after that :
 
   cd ../
-  ./dowork.sh 111000
+  ./a.out 111000
 
 where params is number of hands for each table size
 this command will create result file in format [table_size] [card1 card2 suit] [rate]

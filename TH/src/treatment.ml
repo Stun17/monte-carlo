@@ -66,7 +66,7 @@ module Treatment =
                           | _  -> "a"
                         and c3 =
                           match s with
-                          | 0 -> "o"
+                          | 0 -> "u"
                           | _ -> "s"
                         and (m, n) = Hashtbl.find my_hash (k, r1, r2, s)
                         in let rez = (float_of_int m) /. (float_of_int n) 
