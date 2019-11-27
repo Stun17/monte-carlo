@@ -6,7 +6,7 @@ module Evaluations =
     type hand = (int * int) list ;; (* list of pairs rank/suit *)
 
     let takeRanks xs = List.sort compare xs |> List.rev |> List.split |> fst ;;
-              
+
     let priceHigh (xs : hand) = takeRanks xs |> List.hd ;;
 
     let pricePair (xs : hand) =
@@ -42,7 +42,7 @@ module Evaluations =
     ;;
 
     let priceStr8 (xs : hand) =
-      takeRanks xs |>
+      takeRanks xs |> 
       fun ys ->
         List.map2 (fun s1 s2 -> if s2 - s1 = 1 then s2 else 0) (ys @ [0]) (0 :: ys) |>
         List.sort compare |> List.rev |> List.hd  
@@ -60,20 +60,29 @@ module Evaluations =
     ;;
 
     let priceFull (xs : hand) =
-      let countRank n = List.filter (fun (r, _) -> r == n) xs |> List.length
-      in let ys = List.map countRank [0;1;2;3;4;5;6;7;8;9;10;11;12]
-         in let fset = List.filter (fun x -> x == 3) ys |> List.hd 
-            and fpar = List.filter (fun x -> x == 2) ys |> List.hd 
-            in 14 * (fset + 1) + fpar
+      let [x0;x1;x2;x3;x4;x5;x6] = List.split xs |> fst |> List.sort compare |> List.rev
+      in let fset =
+           if x0 == x1 && x0 == x2 then x0 else
+             if x1 == x2 && x2 == x3 then x1 else
+               if x2 == x3 && x2 == x4 then x2 else
+                 if x3 == x4 && x3 == x5 then x3 else x4
+         and fpar =
+           if x0 == x1 && x1 != x2 then x0 else
+             if x1 == x2 && x2 != x3 then x1 else
+               if x2 == x3 && x2 != x4 then x2 else
+                 if x3 == x4 && x3 != x5 then x3 else
+                   if x4 == x5 && x5 != x6 then x4 else x5
+         in 14 * (fset + 1) + fpar
     ;;
 
     let priceCaree (xs : hand) =
-      let countRank n = List.filter (fun (r, _) -> r == n) xs |> List.length
+      let [x0;x1;x2;x3;x4;x5;x6] = List.split xs |> fst |> List.sort compare
       in let n =
-           List.map countRank [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
-             List.filter (fun x -> x == 4) |> List.hd
-         in let k = List.filter (fun (r,_) -> r != n) xs |> priceHigh
-            in 14 * (n + 1) + k
+           if x0 == x1 && x0 == x2 && x0 == x3 then x0 else
+             if x1 == x2 && x1 == x3 && x1 == x4 then x1 else
+               if x2 == x3 && x2 == x4 && x2 = x5 then x2 else x3
+            in let k = List.filter (fun (r,_) -> r != n) xs |> priceHigh
+               in 14 * (n + 1) + k
     ;;
 
     let priceFlushStr8 (xs : hand) = min (priceFlush xs) (priceStr8 xs) ;;

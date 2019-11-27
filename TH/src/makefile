@@ -12,7 +12,7 @@ suite.test: $(CMNO) test_suite.ml
 	ocamlfind ocamlc -open Treatment -open Bat -open Shuffle -open Dealing \
 	        -open Decisions -open Evaluations \
 		-o suite.test -package oUnit -linkpkg \
-		decisions.cmo treatment.cmo bat.cmo shuffle.cmo dealing.cmo \
+		evaluations.cmo decisions.cmo treatment.cmo bat.cmo shuffle.cmo dealing.cmo \
 	test_suite.ml
 
 # -open Shuffle -c $(PATH)/shuffle.cmo

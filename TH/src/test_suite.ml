@@ -3,6 +3,7 @@ open Shuffle ;;
 open Dealing ;;
 open Treatment ;;
 open Decisions ;;
+open Evaluations ;;
 open OUnit2 ;;
 
 let rank = fun n (r, s) -> s == n ;;
@@ -39,34 +40,57 @@ let t5_dealing test_ctxt = g cs 10 ;;
 
 (* test of decisions module *)
 let t1_decisions test_ctxt =
-  assert_equal true (isFlush    [(1,0); (3,0); (3,1); (5,0); (8,2); (10,0); (12,0)])
+  assert_bool "Flush"  (isFlush    [(1,0); (3,0); (3,1); (5,0); (8,2); (10,0); (12,0)])
 ;;
 let t2_decisions test_ctxt =
-  assert_equal true (isStraight [(1,0); (3,0); (3,1); (5,0); (2,2); (4,3); (12,0)])
+  assert_bool "Str8"   (isStraight [(1,0); (3,0); (3,1); (5,0); (2,2); (4,3); (12,0)])
 ;;
 let t3_decisions test_ctxt =
-  assert_equal true (isCaree    [(1,0); (3,0); (1,1); (5,0); (1,2); (10,0); (1,3)])
+  assert_bool "Caree"  (isCaree    [(1,0); (3,0); (1,1); (5,0); (1,2); (10,0); (1,3)])
 ;;
 let t4_decisions test_ctxt =
-  assert_equal true (isFull     [(1,0); (5,0); (3,1); (5,2); (2,2); (5,3); (1,3)])
+  assert_bool "Full"   (isFull     [(1,0); (5,0); (3,1); (5,2); (2,2); (5,3); (1,3)])
 ;;
 let t5_decisions test_ctxt =
-  assert_equal true (isSet      [(1,3); (3,0); (1,1); (5,2); (3,2); (10,0); (3,3)])
+  assert_bool "Set "   (isSet      [(1,3); (3,0); (1,1); (5,2); (3,2); (10,0); (3,3)])
 ;;
 let t6_decisions test_ctxt =
-  assert_equal true (isDupal    [(1,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
+  assert_bool "Dupal"  (isDupal    [(1,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
 ;;
 let t7_decisions test_ctxt =
-  assert_equal true (isPair     [(8,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
+  assert_bool "Pair"   (isPair     [(8,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
 ;;
 let t8_decisions test_ctxt =
-  assert_equal true (isColor    [(3,1); (5,2); (1,2); (7,3); (9,2)])
+  assert_bool "Color"  (isColor    [(3,1); (5,2); (1,2); (7,3); (9,2)])
 ;;
 let t9_decisions test_ctxt =
-  assert_equal true (isWet      [(3,1); (5,2); (1,2); (5,3); (9,3)])
+  assert_bool "Wet"    (isWet      [(3,1); (5,2); (1,2); (5,3); (9,3)])
 ;;
 
 (* test of evaluation module *)
+let t1_evaluations test_ctxt =
+  assert_equal 3  (priceFlushStr8  [(1,0); (3,0); (3,1); (2,0); (8,2); (12,0); (0,0)])
+;;
+let t2_evaluations test_ctxt =
+  assert_equal 10 (priceFlushStr8  [(10,0); (8,0); (6,0); (9,0); (8,2); (12,0); (7,0)])
+;;
+let t3_evaluations test_ctxt =
+  assert_equal 124 (priceCaree  [(7,0); (8,0); (7,1); (9,0); (7,2); (12,2); (7,3)])
+;;
+let t4_evaluations test_ctxt =
+  assert_equal 66 (priceCaree  [(3,0); (8,0); (3,1); (9,0); (3,2); (10,2); (3,3)])
+;;
+let t5_evaluations test_ctxt =
+  assert_equal 63 (priceFull  [(3,0); (7,0); (3,1); (9,0); (3,2); (10,2); (7,3)])
+;;
+let t6_evaluations test_ctxt =
+  assert_equal 54 (priceFull  [(2,0); (12,0); (2,1); (9,0); (2,2); (12,2); (7,3)])  
+;;
+let t7_evaluations test_ctxt =
+  assert_equal 100 100
+;;
+
+
 
 let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testShuffleClubs  uniq" >:: t2_shuffle
@@ -86,6 +110,12 @@ let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testDecisions     Pair" >:: t7_decisions
                       ; "testDecisions    Color" >:: t8_decisions
                       ; "testDecisions      Wet" >:: t9_decisions
+                      ; "testEvaluations FluStr" >:: t1_evaluations
+                      ; "testEvaluations FluStr" >:: t2_evaluations
+                      ; "testEvaluations  Caree" >:: t3_evaluations
+                      ; "testEvaluations  Caree" >:: t4_evaluations
+                      ; "testEvaluations  Caree" >:: t5_evaluations
+                      ; "testEvaluations  Caree" >:: t6_evaluations
                       ]
 
 ;;

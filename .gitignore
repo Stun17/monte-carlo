@@ -8,3 +8,5 @@ docs/
 temp/
 _build/
 *.native
+oUnit*
+*.test
