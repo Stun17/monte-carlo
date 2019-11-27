@@ -5,24 +5,23 @@ ORG3 = evaluations.mli evaluations.ml	# module for combinations ranking
 ORG4 = arbitrage.mli arbitrage.ml	# module for prizing the winner
 ORG5 = treatment.mli treatment.ml       # module with hash store for results
 ORG6 = dealing.mli dealing.ml           # module for dealing deck
-CMN0 = bat.cmo shuffle.cmo treatment.cmo dealing.cmo \
+CMN  = bat.cmo shuffle.cmo treatment.cmo dealing.cmo \
        decisions.cmo evaluations.cmo arbitrage.cmo main.ml 
+CMT  = bat.cmo treatment.cmo shuffle.cmo dealing.cmo \
+       decisions.cmo evaluations.cmo arbitrage.cmo 
 
-suite.test: $(CMNO) test_suite.ml 
+
+test.out:  $(CMT) test_suite.ml
 	ocamlfind ocamlc -open Treatment -open Bat -open Shuffle -open Dealing \
-	        -open Decisions -open Evaluations \
-		-o suite.test -package oUnit -linkpkg \
-		evaluations.cmo decisions.cmo treatment.cmo bat.cmo shuffle.cmo dealing.cmo \
-	test_suite.ml
+	-open Decisions -open Evaluations -open Bat -package oUnit -linkpkg \
+	-o $@ $^
 
-# -open Shuffle -c $(PATH)/shuffle.cmo
-a.out: $(CMN0)
+a.out: $(CMN)
 	@echo "start with a.out"
 	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage \
         -open Treatment $^
 	mv a.out ../
 	@echo "done with a.out" 
-
 
 bat.cmo : $(ORG0) 
 	ocamlc -c $^
@@ -48,3 +47,4 @@ arbitrage.cmo: $(ORG4) bat.cmo decisions.cmo treatment.cmo
 clean:
 	@rm *.cm[io] 
 	@rm oUnit*
+

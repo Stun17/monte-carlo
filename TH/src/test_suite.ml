@@ -96,14 +96,25 @@ let t9_evaluations test_ctxt =
   assert_equal 1077 (priceSet  [(2,0); (6,3); (3,1); (2,1); (9,2); (11,2); (2,3)])
 ;;
 let ta_evaluations test_ctxt =
-  assert_equal 100 100
+  assert_equal 3053 (priceDupal  [(2,0); (9,3); (3,1); (10,1); (9,2); (11,2); (2,3)]) 
 ;;
 let tb_evaluations test_ctxt =
-  assert_equal 100 100
+  assert_equal 3052 (priceDupal  [(2,0); (9,3); (3,1); (10,1); (9,2); (7,2); (2,3)]) 
+;;
+let tc_evaluations test_ctxt =
+  assert_equal 32315 (pricePair   [(1,0); (9,3); (3,1); (10,1); (9,2); (7,2); (2,3)]) 
+;;
+let td_evaluations test_ctxt =
+  assert_equal 31915 (pricePair   [(1,0); (9,3); (3,1); (8,1); (9,2); (7,2); (2,3)]) 
+;;
+let te_evaluations test_ctxt =
+  assert_equal 9 (priceHigh   [(1,0); (0,3); (3,1); (8,1); (9,2); (7,2); (2,3)]) 
+;;
+let tf_evaluations test_ctxt =
+  assert_equal 10 (priceHigh   [(1,0); (10,3); (3,1); (8,1); (9,2); (7,2); (2,3)]) 
 ;;
 
-
-
+(* common tests *)
 let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testShuffleClubs  uniq" >:: t2_shuffle
                       ; "testShuffleDiams  uniq" >:: t3_shuffle
@@ -124,13 +135,20 @@ let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testDecisions      Wet" >:: t9_decisions
                       ; "testEvaluations FluStr" >:: t1_evaluations
                       ; "testEvaluations FluStr" >:: t2_evaluations
-                      ; "testEvaluations  Caree" >:: t3_evaluations
-                      ; "testEvaluations  Caree" >:: t4_evaluations
-                      ; "testEvaluations   Full" >:: t5_evaluations
-                      ; "testEvaluations   Full" >:: t6_evaluations
+                      ; "testEvaluations Caree1" >:: t3_evaluations
+                      ; "testEvaluations Caree2" >:: t4_evaluations
+                      ; "testEvaluations  Full1" >:: t5_evaluations
+                      ; "testEvaluations  Full2" >:: t6_evaluations
                       ; "testEvaluations   Str8" >:: t7_evaluations
-                      ; "testEvaluations    Set" >:: t8_evaluations
-                      ; "testEvaluations    Set" >:: t9_evaluations
+                      ; "testEvaluations   Set1" >:: t8_evaluations
+                      ; "testEvaluations   Set2" >:: t9_evaluations
+                      ; "testEvaluations Dupal1" >:: ta_evaluations
+                      ; "testEvaluations Dupal2" >:: tb_evaluations
+                      ; "testEvaluations  Pair1" >:: tc_evaluations
+                      ; "testEvaluations  Pair2" >:: td_evaluations
+                      ; "testEvaluations  High1" >:: te_evaluations
+                      ; "testEvaluations  High2" >:: tf_evaluations
+
                       ]
 
 ;;
