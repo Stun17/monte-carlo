@@ -48,4 +48,4 @@ Treatment.init_hash () ;;               (* prepare hash-table for data *)
       )
 ;;
 
-Treatment.extract () ;;                 (* to put results out *)
+Treatment.extract_all () ;;                 (* to put results out *)

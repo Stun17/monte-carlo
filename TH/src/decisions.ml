@@ -46,23 +46,19 @@ struct
 
   let isStraight cs =
     (4 < List.length cs) &&
-    (List.split cs |> fst |> List.sort compare |>
-       fun xs ->
-       match xs with
-       | [m0;m1;m2;m3;m4;m5;m6] ->
-             ( m4 - m0 == 4 && m4 - m1 == 3 && m4 - m2 == 2 && m4 - m3 == 1 )
-          || ( m5 - m1 == 4 && m5 - m2 == 3 && m5 - m3 == 2 && m5 - m4 == 1 )
-          || ( m6 - m2 == 4 && m6 - m3 == 3 && m6 - m4 == 2 && m6 - m5 == 1 )
-          || ( m6 == 12 && m3 == 3 && m2 == 2 && m1 == 1 && m0 == 0 ) (* wheel str8 *)
-       | [m0;m1;m2;m3;m4;m5] ->
-             ( m5 - m1 == 4 && m5 - m2 == 3 && m5 - m3 == 2 && m5 - m4 == 1 )
-          || ( m4 - m0 == 4 && m4 - m1 == 3 && m4 - m2 == 2 && m4 - m3 == 1 )
-          || ( m5 == 12 && m3 == 3 && m2 == 2 && m1 == 1 && m0 == 0 ) (* wheel str8 *)           
-       | [m0;m1;m2;m3;m4] ->
-             ( m4 - m0 == 4 && m4 - m1 == 3 && m4 - m2 == 2 && m4 - m3 == 1 )
-          || ( m4 == 12 && m3 == 3 && m2 == 2 && m1 == 1 && m0 == 0 ) (* wheel str8 *)
-       | _ -> false
-    )
+      (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
+         fun [x2;x3;x4;x5;x6;x7;x8;x9;xt;xj;xq;xk;xa] ->
+         (x2 > 0 && x3 > 0 && x4 > 0 && x5 > 0 && xa > 0) ||         
+         (x2 > 0 && x3 > 0 && x4 > 0 && x5 > 0 && x6 > 0) ||
+         (x3 > 0 && x4 > 0 && x5 > 0 && x6 > 0 && x7 > 0) ||
+         (x4 > 0 && x5 > 0 && x6 > 0 && x7 > 0 && x8 > 0) ||
+         (x5 > 0 && x6 > 0 && x7 > 0 && x8 > 0 && x9 > 0) ||
+         (x6 > 0 && x7 > 0 && x8 > 0 && x9 > 0 && xt > 0) ||
+         (x7 > 0 && x8 > 0 && x9 > 0 && xt > 0 && xj > 0) ||
+         (x8 > 0 && x9 > 0 && xt > 0 && xj > 0 && xq > 0) ||
+         (x9 > 0 && xt > 0 && xj > 0 && xq > 0 && xk > 0) ||
+         (xt > 0 && xj > 0 && xq > 0 && xk > 0 && xa > 0) 
+      )
   ;;
 
   let isFlush cs =
@@ -72,23 +68,23 @@ struct
           List.exists (fun x -> x > 4)
       )
   ;;
-      
+
   let isFull cs =
     (4 < List.length cs) && isSet cs && isPair cs
   ;;
-    
-  let isCaree cs = 
+
+  let isCaree cs =
     (3 < List.length cs) &&
       (List.map (countRank cs) [0;1;2;3;4;5;6;7;8;9;10;11;12] |>
          List.exists (fun x -> x == 4))
   ;;
 
-  let isFlushStr8 cs = 
+  let isFlushStr8 cs =
       isFlush cs && isStraight cs &&
       (
         let pfunc n = (List.filter (fun (_, s) -> s == n) cs) |> isStraight
         in (List.map pfunc [0;1;2;3]) |> List.exists (fun x -> x == true)
       )
   ;;
-    
-end 
+
+end

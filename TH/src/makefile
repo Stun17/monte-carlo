@@ -1,16 +1,19 @@
-ORG0 = bat.mli bat.ml			              # my own batteries for 'take' 'drop' '--' 
-ORG1 = shuffle.mli shuffle.ml		        # module for shuffling the deck
-ORG2 = decisions.mli decisions.ml	      # module for combinations detection
-ORG3 = evaluations.mli evaluations.ml	  # module for combinations ranking
-ORG4 = arbitrage.mli arbitrage.ml	      # module for prizing the winner
+ORG0 = bat.mli bat.ml			# my own batteries for 'take' 'drop' '--' 
+ORG1 = shuffle.mli shuffle.ml		# module for shuffling the deck
+ORG2 = decisions.mli decisions.ml	# module for combinations detection
+ORG3 = evaluations.mli evaluations.ml	# module for combinations ranking
+ORG4 = arbitrage.mli arbitrage.ml	# module for prizing the winner
 ORG5 = treatment.mli treatment.ml       # module with hash store for results
 ORG6 = dealing.mli dealing.ml           # module for dealing deck
 CMN0 = bat.cmo shuffle.cmo treatment.cmo dealing.cmo \
        decisions.cmo evaluations.cmo arbitrage.cmo main.ml 
 
-test_shuffle: shuffle.cmo bat.cmo
-	ocamlfind ocamlc -open Bat -open Shuffle -o shuffle.test -package oUnit -linkpkg \
-		shuffle.cmo bat.cmo test_shuffle.ml
+suite.test: $(CMNO) test_suite.ml 
+	ocamlfind ocamlc -open Treatment -open Bat -open Shuffle -open Dealing \
+	        -open Decisions -open Evaluations \
+		-o suite.test -package oUnit -linkpkg \
+		decisions.cmo treatment.cmo bat.cmo shuffle.cmo dealing.cmo \
+	test_suite.ml
 
 # -open Shuffle -c $(PATH)/shuffle.cmo
 a.out: $(CMN0)
@@ -44,3 +47,4 @@ arbitrage.cmo: $(ORG4) bat.cmo decisions.cmo treatment.cmo
 
 clean:
 	@rm *.cm[io] 
+	@rm oUnit*

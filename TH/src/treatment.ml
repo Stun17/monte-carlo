@@ -40,7 +40,7 @@ module Treatment =
         in Hashtbl.replace my_hash (k, r1, r2, 0) (m + q, n) 
     ;;
       
-    let extract =
+    let extract_all =
       fun _ ->
       List.iter (fun k ->
           List.iter (fun s ->
