@@ -18,8 +18,8 @@ test.out:  $(CMT) test_suite.ml
 
 a.out: $(CMN)
 	@echo "start with a.out"
-	ocamlc -open Bat -open Shuffle -open Decisions -open Evaluations -open Arbitrage \
-        -open Treatment $^
+	ocamlc -o $@ -open Bat -open Shuffle -open Decisions \
+	-open Evaluations -open Arbitrage -open Treatment $^
 	mv a.out ../
 	@echo "done with a.out" 
 

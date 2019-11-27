@@ -27,31 +27,31 @@ module Dealing =
       in
       (* to put pockets into hash table *)
       List.iter (fun [ (r1, s1) ; (r2, s2) ] -> Treatment.insert_deal (n, r1, s1, r2, s2))
-                   ( Bat.take n [ [ p11 ; p12 ]
-                                ; [ p21 ; p22 ]
-                                ; [ p31 ; p32 ]
-                                ; [ p41 ; p42 ]
-                                ; [ p51 ; p52 ]
-                                ; [ p61 ; p62 ]
-                                ; [ p71 ; p72 ]
-                                ; [ p81 ; p82 ]
-                                ; [ p91 ; p92 ]
-                                ; [ p01 ; p02 ]
+                   ( Bat.take n [ List.sort compare [ p11 ; p12 ] |> List.rev
+                                ; List.sort compare [ p21 ; p22 ] |> List.rev
+                                ; List.sort compare [ p31 ; p32 ] |> List.rev
+                                ; List.sort compare [ p41 ; p42 ] |> List.rev
+                                ; List.sort compare [ p51 ; p52 ] |> List.rev
+                                ; List.sort compare [ p61 ; p62 ] |> List.rev
+                                ; List.sort compare [ p71 ; p72 ] |> List.rev
+                                ; List.sort compare [ p81 ; p82 ] |> List.rev
+                                ; List.sort compare [ p91 ; p92 ] |> List.rev
+                                ; List.sort compare [ p01 ; p02 ] |> List.rev
                                 ]
                    ) |>
         (* to form the hands *)
         fun _ ->
-                        Bat.take n [ [ p11 ; p12   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p21 ; p22   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p31 ; p32   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p41 ; p42   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p51 ; p52   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p61 ; p62   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p71 ; p72   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p81 ; p82   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p91 ; p92   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                                   ; [ p01 ; p02   ; b1 ; b2 ; b3 ; b4 ; b5 ]
-                               ]
+        Bat.take n [ (List.sort compare [ p11 ; p12 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p21 ; p22 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p31 ; p32 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p41 ; p42 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p51 ; p52 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p61 ; p62 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p71 ; p72 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p81 ; p82 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p91 ; p92 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ; (List.sort compare [ p01 ; p02 ] |> List.rev) @ [ b1 ; b2 ; b3 ; b4 ; b5 ]
+                   ]
     ;;
 
   end

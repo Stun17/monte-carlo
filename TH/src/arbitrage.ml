@@ -30,10 +30,10 @@ struct
   let rwinners =
     fun n ws ->
     let (w1, _, _) = List.hd ws
-    in let winlist = List.filter (fun (t, _, _) -> t = w1) ws
-       in let winprice = n / (List.length winlist)
+    in let winlist = List.filter (fun (t, _, _) -> t == w1) ws
+       in let pot = n / (List.length winlist)
           in List.iter (fun (_, (r1, s1), (r2, s2)) ->
-             Treatment.insert_win (n, r1, s1, r2, s2, winprice)
+             Treatment.insert_win (n, r1, s1, r2, s2, pot)
            ) winlist
   ;;
 
