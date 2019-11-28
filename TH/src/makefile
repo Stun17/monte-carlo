@@ -32,8 +32,8 @@ shuffle.cmo: $(ORG1) bat.cmo
 decisions.cmo : $(ORG2) bat.cmo
 	ocamlc -c -open Bat $^
 
-evaluations.cmo : $(ORG3) bat.cmo
-	ocamlc -c -open Bat $^
+evaluations.cmo : $(ORG3) 
+	ocamlc -c $^
 
 treatment.cmo : $(ORG5) 
 	ocamlc -c $^

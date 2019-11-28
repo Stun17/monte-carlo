@@ -1,5 +1,3 @@
-open Bat ;;
-  
 module Evaluations =
   struct
 
