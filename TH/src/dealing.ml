@@ -18,7 +18,7 @@ module Dealing =
       (* test to quaranty succesfull pattern matching *)
       if 28 > List.length deck then raise BadDeck else
         (* to form pockets *)
-        (* because ocaml PM works only with just few items you have to treat by 5 elems *)
+        (* because ocaml PM works only with just few items we have to treat by 5 elems only *)
       let [ p11 ; p21 ; p31 ; p41 ; p51 ]     = Bat.take  5 deck 
       and [ p61 ; p71 ; p81 ; p91 ; p01 ]     = Bat.drop  5 deck |> Bat.take 5
       and [ p12 ; p22 ; p32 ; p42 ; p52 ]     = Bat.drop 10 deck |> Bat.take 5

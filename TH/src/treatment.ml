@@ -1,8 +1,10 @@
 open Printf ;;
 
-(*  to create, insert and extract results from/to hash-table
-    key of this hash is (rank1, rank2, suited 1 / unsuited 0) tuple 
+(*
+    to create, insert and extract results from/to hash-table
+    key of this hash is (table_size, rank1, rank2, suited 1 / unsuited 0) tuple 
  *)
+  
 module Treatment =
   struct
 
@@ -16,28 +18,28 @@ module Treatment =
                       if r1 >= r2
                       then Hashtbl.add my_hash (k, r1, r2, s) (0, 0)
                       else ()
-                    ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
-                ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
-            ) [0;1]
-        ) [2;3;4;5;6;7;8;9;10]
+                    ) [12;11;10;9;8;7;6;5;4;3;2;1;0] (* the first card *)
+                ) [12;11;10;9;8;7;6;5;4;3;2;1;0]     (* the second card *)
+            ) [0;1]             (* suit / unsuit *)
+        ) [2;3;4;5;6;7;8;9;10]  (* talbe sizes *)
     ;;
 
     let insert_deal (k, r1, s1, r2, s2) =
-      if s1 == s2
+      if s1 == s2               (* suited *)
       then 
         let (m, n) = Hashtbl.find my_hash (k, r1, r2, 1)
         in Hashtbl.replace my_hash (k, r1, r2, 1) (m - 1, n + 1)
-      else 
+      else                      (* unsuited *)
         let (m, n) = Hashtbl.find my_hash (k, r1, r2, 0)
         in Hashtbl.replace my_hash (k, r1, r2, 0) (m - 1, n + 1)
     ;;
       
     let insert_win (k, r1, s1, r2, s2, q) =
-    if s1 = s2
+    if s1 = s2                  (* suited *)
       then
         let (m, n) = Hashtbl.find my_hash (k, r1, r2, 1)
         in Hashtbl.replace my_hash (k, r1, r2, 1) (m + q, n)
-      else
+      else                      (* unsuited *)
         let (m, n) = Hashtbl.find my_hash (k, r1, r2, 0)
         in Hashtbl.replace my_hash (k, r1, r2, 0) (m + q, n) 
     ;;
@@ -65,10 +67,10 @@ module Treatment =
                         in let rez = (float_of_int m) /. (float_of_int n) 
                            in  printf "%2i %s%s%s %6.1f\n" k c1 c2 c3 rez
                       else ()
-                    ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
-                ) [12;11;10;9;8;7;6;5;4;3;2;1;0]
-            ) [0;1]
-        ) [2;3;4;5;6;7;8;9;10]
+                    ) [12;11;10;9;8;7;6;5;4;3;2;1;0] (* the first card *)
+                ) [12;11;10;9;8;7;6;5;4;3;2;1;0]     (* the second card *)
+            ) [0;1]             (* suited / unsuited *)
+        ) [2;3;4;5;6;7;8;9;10]  (*  table sizes *)
     ;;
                     
   end

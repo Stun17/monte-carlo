@@ -29,26 +29,26 @@ struct
   (* to arbitrate among equal combinations *)
   let rwinners =
     fun n ws ->
-    let (w1, _, _) = List.hd ws
-    in let winlist = List.filter (fun (t, _, _) -> t == w1) ws
-       in let pot = n / (List.length winlist)
-          in List.iter (fun (_, (r1, s1), (r2, s2)) ->
+    let (w1, _, _) = List.hd ws (* obtain high price for the combi *)
+    in let winlist = List.filter (fun (t, _, _) -> t == w1) ws (* choose equial hands *)
+       in let pot = n / (List.length winlist)                  (* calc the prize for each win hand *)
+          in List.iter (fun (_, (r1, s1), (r2, s2)) ->         (* insert results into hash *)
              Treatment.insert_win (n, r1, s1, r2, s2, pot)
            ) winlist
   ;;
 
   (* to evaluate combination if it exists or go ahead if it is not exists *)
   let work css predicat combi continuation =
-    let xs = List.map predicat css
-    and k = List.length css
+    let xs = List.map predicat css              (* is there combi among all hands ? *)
+    and k = List.length css                     (* to obtain pot size = num of gamers = table_size *)
     in if (List.exists (fun x -> x == true) xs) (* the combination exists *)
        then List.map2 (                         (* traverse list of hands and evaluate each of them *)
                 fun x ((c1::c2::cs) as ts) ->     
                 if x
-                then (evaluate_hand ts combi, c1, c2)
-                else (0                     , c1, c2)
+                then (evaluate_hand ts combi, c1, c2) (* obtain rate for each hand with combo *)
+                else (0                     , c1, c2) (* rate = 0 if no combo in the hand *)
               ) xs css |>
-              List.sort compare |> List.rev |> rwinners k
+              List.sort compare |> List.rev |> rwinners k (* call proc to store results *)
        else continuation css                    (* goto the next combination *)
   ;;
 

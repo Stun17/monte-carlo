@@ -17,18 +17,18 @@ exception BadParams ;;
 if 2 != Array.length Sys.argv
 then
   (
-    print_endline "usage: a.out #numOfHands (> 0) #numOfPlayers (2 .. 10)" ;
+    print_endline "usage: a.out #numOfHands (> 0) " ;
     raise BadParams
   )
 else () ;;
     
 let numOfHands =
-  int_of_string (Sys.argv.(1)) ;; (* get number of hands fm script command line params   *)
+  int_of_string (Sys.argv.(1)) ;;       (* get number of hands fm script command line params *)
 
 if numOfHands < 0 
 then
   (
-    print_endline "usage: a.out #numOfHands (> 0) #numOfPlayers (2 .. 10)" ;
+    print_endline "usage: a.out #numOfHands (> 0) " ;
     raise BadParams
   )
 else () ;;
@@ -48,4 +48,4 @@ Treatment.init_hash () ;;               (* prepare hash-table for data *)
       )
 ;;
 
-Treatment.extract_all () ;;                 (* to put results out *)
+Treatment.extract_all () ;;             (* to put results out *)

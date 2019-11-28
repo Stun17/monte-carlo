@@ -3,6 +3,14 @@ open Bat ;;
 module Evaluations =
   struct
 
+    (* 
+       important! prices for different combinations never-ever compaired
+       only prices just for the same combination compaired 
+       so - it doesnt matter how low or how high price comparing with another combination
+       pls - take it into account
+       but in just the same combination win hand will always have the higher price
+    *)
+    
     type hand = (int * int) list ;; (* list of pairs rank/suit *)
 
       
