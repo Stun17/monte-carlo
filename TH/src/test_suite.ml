@@ -26,10 +26,10 @@ Treatment.init_hash () ;;
   
 let f cs n =
   assert_equal false
-               (
-                 List.filter (fun (r, s) -> s == n) cs |>
-                   List.split |> fst |> not_unique
-               )
+ (
+   List.filter (fun (r, s) -> s == n) cs |>
+     List.split |> fst |> not_unique
+ )
 ;;
 
 let t1_shuffle test_ctxt = f cs 0 ;;
@@ -54,62 +54,80 @@ let t5_dealing test_ctxt = g cs 10 ;;
 (* test of Decisions module *)
   
 let t1_decisions test_ctxt =
-  assert_bool "Flush"  (isFlush [(1,0); (3,0); (3,1); (5,0); (8,2); (10,0); (12,0)])
+  assert_bool "Flush" (isFlush [(1,0); (3,0); (3,1); (5,0); (8,2); (10,0); (12,0)])
 ;;
 let t1a_decisions test_ctxt =
-  assert_bool "n1Flush"  (not (isFlush [(1,0); (3,0); (3,1); (5,2); (8,2); (10,0); (12,0)]))
+  assert_bool "notFlush" (not (isFlush [(1,0); (3,0); (3,1); (5,2); (8,2); (10,0); (12,0)]))
 ;;  
 let t2_decisions test_ctxt =
-  assert_bool "Str8"   (isStraight [(1,0); (3,0); (3,1); (5,0); (2,2); (4,3); (12,0)])
+  assert_bool "1Str8" (isStraight [(1,0); (3,0); (3,1); (5,0); (2,2); (4,3); (12,0)])
 ;;
 let t2a_decisions test_ctxt =
-  assert_bool "Str8"   (not (isStraight [(1,0); (3,0); (3,1); (6,1); (2,2); (4,3); (12,0)]))
+  assert_bool "not1Str8" (not (isStraight [(1,0); (3,0); (3,1); (6,1); (2,2); (4,3); (12,0)]))
 ;;  
 let t2b_decisions test_ctxt =
-  assert_bool "Str8"   (not (isStraight [(1,0); (3,3); (3,1); (6,0); (2,2); (4,3); (12,0)]))
+  assert_bool "not2Str8" (not (isStraight [(1,0); (3,3); (3,1); (6,0); (2,2); (4,3); (12,0)]))
 ;;
 let t2c_decisions test_ctxt =
-  assert_bool "Str8"   (isStraight [(1,0); (3,0); (3,1); (0,3); (2,2); (4,3); (12,0)])
+  assert_bool "2Str8" (isStraight [(1,0); (3,0); (3,1); (0,3); (2,2); (4,3); (12,0)])
 ;;  
+let t2d_decisions test_ctxt =
+  assert_bool "not3Str8" (not (isStraight [(1,0); (7,0); (8,1); (0,3); (2,2); (6,23); (12,0)]))
+;;
 let t3_decisions test_ctxt =
-  assert_bool "Caree"  (isCaree [(1,0); (3,0); (1,1); (5,0); (1,2); (10,0); (1,3)])
+  assert_bool "Caree" (isCaree [(1,0); (3,0); (1,1); (5,0); (1,2); (10,0); (1,3)])
+;;
+let t3a_decisions test_ctxt =
+  assert_bool "notCaree" (not (isCaree [(1,0); (3,0); (1,1); (5,0); (1,2); (10,2); (3,3)]))
 ;;
 let t4_decisions test_ctxt =
-  assert_bool "Full"   (isFull [(1,0); (5,0); (3,1); (5,2); (2,2); (5,3); (1,3)])
+  assert_bool "Full" (isFull [(1,0); (5,0); (3,1); (5,2); (2,2); (5,3); (1,3)])
 ;;
+let t4a_decisions test_ctxt =
+  assert_bool "notFull" (not (isFull [(3,0); (5,0); (3,1); (5,2); (2,2); (2,3); (1,3)]))
+;;  
 let t5_decisions test_ctxt =
-  assert_bool "Set "   (isSet [(1,3); (3,0); (1,1); (5,2); (3,2); (10,0); (3,3)])
+  assert_bool "Set " (isSet [(1,3); (3,0); (1,1); (5,2); (3,2); (10,0); (3,3)])
+;;
+let t5a_decisions test_ctxt =
+  assert_bool "notSet " (not (isSet [(1,3); (3,0); (1,1); (5,2); (3,2); (5,0); (11,2)]))
 ;;
 let t6_decisions test_ctxt =
-  assert_bool "Dupal"  (isDupal [(1,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
+  assert_bool "Dupal" (isDupal [(1,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
 ;;
 let t6a_decisions test_ctxt =
-  assert_bool "Dupal"  (not (isDupal [(1,0); (5,0); (3,1); (5,2); (11,2); (7,3); (9,3)]))
+  assert_bool "notDupal" (not (isDupal [(1,0); (5,0); (3,1); (5,2); (11,2); (7,3); (9,3)]))
 ;;
 let t7_decisions test_ctxt =
-  assert_bool "Pair"   (isPair [(8,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
+  assert_bool "Pair" (isPair [(8,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
 ;;
 let t7a_decisions test_ctxt =
-  assert_bool "Pair"   (not (isPair [(8,0); (11,0); (3,1); (5,2); (1,2); (7,3); (9,3)]))
+  assert_bool "notPair" (not (isPair [(8,0); (11,0); (3,1); (5,2); (1,2); (7,3); (9,3)]))
 ;;
 let t8_decisions test_ctxt =
-  assert_bool "Color"  (isColor [(3,1); (5,2); (1,2); (7,3); (9,2)])
+  assert_bool "Color" (isColor [(3,1); (5,2); (1,2); (7,3); (9,2)])
 ;;
 let t9_decisions test_ctxt =
-  assert_bool "Wet"    (isWet [(3,1); (5,2); (1,2); (5,3); (9,3)])
+  assert_bool "Wet" (isWet [(3,1); (5,2); (1,2); (5,3); (9,3)])
+;;
+let t8a_decisions test_ctxt =
+  assert_bool "notColor" (not (isColor [(3,1); (5,1); (1,2); (7,3); (9,2)]))
+;;
+let t9a_decisions test_ctxt =
+  assert_bool "notWet" (not (isWet [(3,1); (5,2); (1,2); (11,3); (9,3)]))
 ;;
 
 
 (* test of Evaluation module *)
   
 let t0_evaluations test_ctxt =
-  assert_equal 5  (priceFlushStr8 [(1,0); (3,0); (3,1); (2,0); (5,0); (12,0); (4,0)])
+  assert_equal 5 (priceFlushStr8 [(1,0); (3,0); (3,1); (2,0); (5,0); (12,0); (4,0)])
 ;;  
 let t0a_evaluations test_ctxt =
-  assert_equal 5  (priceFlushStr8 [(1,0); (3,0); (6,1); (2,0); (5,0); (12,0); (4,0)])
+  assert_equal 5 (priceFlushStr8 [(1,0); (3,0); (6,1); (2,0); (5,0); (12,0); (4,0)])
 ;;  
 let t1_evaluations test_ctxt =
-  assert_equal 3  (priceFlushStr8 [(1,0); (3,0); (3,1); (2,0); (8,2); (12,0); (0,0)])
+  assert_equal 3 (priceFlushStr8 [(1,0); (3,0); (3,1); (2,0); (8,2); (12,0); (0,0)])
 ;;
 let t2_evaluations test_ctxt =
   assert_equal 10 (priceFlushStr8 [(10,0); (8,0); (6,0); (9,0); (8,2); (12,0); (7,0)])
@@ -173,15 +191,21 @@ let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testDecisions   n1Str8" >:: t2a_decisions
                       ; "testDecisions   n2Str8" >:: t2b_decisions                       
                       ; "testDecisions    2Str8" >:: t2c_decisions                       
+                      ; "testDecisions   n3Str8" >:: t2d_decisions
                       ; "testDecisions    Caree" >:: t3_decisions
+                      ; "testDecisions   nCaree" >:: t3a_decisions                      
                       ; "testDecisions     Full" >:: t4_decisions
+                      ; "testDecisions    nFull" >:: t4a_decisions
                       ; "testDecisions      Set" >:: t5_decisions
+                      ; "testDecisions     nSet" >:: t5a_decisions                      
                       ; "testDecisions    Dupal" >:: t6_decisions
                       ; "testDecisions   nDupal" >:: t6a_decisions
                       ; "testDecisions     Pair" >:: t7_decisions
                       ; "testDecisions    nPair" >:: t7a_decisions
                       ; "testDecisions    Color" >:: t8_decisions
                       ; "testDecisions      Wet" >:: t9_decisions
+                      ; "testDecisions   nColor" >:: t8a_decisions
+                      ; "testDecisions     nWet" >:: t9a_decisions
 
                       ; "testEvaluations 0FlStr" >:: t0_evaluations
                       ; "testEvaluations aFlStr" >:: t0a_evaluations                      

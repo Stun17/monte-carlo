@@ -1,19 +1,21 @@
 this program will evaluate equity of different pockets in poker Texas Holdem
 
 algorithm is the next:
+     - all players start with stack = 0 (and they can stake making the stack be negative)
      - on preflop all players stake 1 chip into the pot 
      - no further trading take place
      - after river all players go to showdown
-     - winning hand add pot to the stack
-     - if pot splitted the sum is splitted too
-in the end program put out results:
-format : [table_size] [pocket_card1 pocket_card2 suit/unsuit] [rate]
+     - winning hand adds pot to its stack
+     - if pot splitted then the sum is splitted too
+     
+at the end program put out results in format :
 
-all pockets are evaluated by formula : pocket_stack / num_of_hands_pocket_presented
-neutral pocket is the pocket with rate just 0.0
-if rate > 0.0 then this pocket has positive equity
-if rate < 0.0 then this pocket has negative equity
+   [table_size] [pocket_card1 pocket_card2 suit/unsuit] [equity]
 
+all pockets are evaluated by formula :
+
+    equity = final_pocket_stack / num_of_hands_pocket_presented
+    
 -------------------------------------------------------------------------------------
 
 to compile from the sources you need to install 'ocaml' compiler on your computer
