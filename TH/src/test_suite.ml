@@ -5,8 +5,9 @@ open Decisions ;;
 open Evaluations ;;
 open OUnit2 ;;
 
-(* auxilary functions *)
-let rank = fun n (r, s) -> s == n ;;
+  
+(* auxilary function *)
+  
 let not_unique =
   fun xs ->
     List.sort compare xs |>
@@ -14,14 +15,21 @@ let not_unique =
     List.exists (fun f -> f == true)
 ;;
 
-(* creating environment *)
+  
+(*  environment *)
+  
 let cs = shuffle () ;;
 Treatment.init_hash () ;;
 
-
-(* test of shuffling module  *)
+  
+(* test of Shuffling module  *)
+  
 let f cs n =
-  assert_equal false ( List.filter (rank n) cs |> List.split |> fst |> not_unique )
+  assert_equal false
+               (
+                 List.filter (fun (r, s) -> s == n) cs |>
+                   List.split |> fst |> not_unique
+               )
 ;;
 
 let t1_shuffle test_ctxt = f cs 0 ;;
@@ -30,7 +38,8 @@ let t3_shuffle test_ctxt = f cs 2 ;;
 let t4_shuffle test_ctxt = f cs 3 ;;
 
 
-(*  test of dealing module  *)
+(*  test of Dealing module  *)
+  
 let g ps n =
   assert_equal n (dealing n ps |>  List.length)
 ;;
@@ -42,43 +51,57 @@ let t4_dealing test_ctxt = g cs  8 ;;
 let t5_dealing test_ctxt = g cs 10 ;;
 
 
-(* test of decisions module *)
+(* test of Decisions module *)
+  
 let t1_decisions test_ctxt =
-  assert_bool "Flush"  (isFlush    [(1,0); (3,0); (3,1); (5,0); (8,2); (10,0); (12,0)])
+  assert_bool "Flush"  (isFlush [(1,0); (3,0); (3,1); (5,0); (8,2); (10,0); (12,0)])
 ;;
+let t1a_decisions test_ctxt =
+  assert_bool "n1Flush"  (not (isFlush [(1,0); (3,0); (3,1); (5,2); (8,2); (10,0); (12,0)]))
+;;  
 let t2_decisions test_ctxt =
   assert_bool "Str8"   (isStraight [(1,0); (3,0); (3,1); (5,0); (2,2); (4,3); (12,0)])
 ;;
+let t2a_decisions test_ctxt =
+  assert_bool "Str8"   (not (isStraight [(1,0); (3,0); (3,1); (6,1); (2,2); (4,3); (12,0)]))
+;;  
+let t2b_decisions test_ctxt =
+  assert_bool "Str8"   (not (isStraight [(1,0); (3,3); (3,1); (6,0); (2,2); (4,3); (12,0)]))
+;;
+let t2c_decisions test_ctxt =
+  assert_bool "Str8"   (isStraight [(1,0); (3,0); (3,1); (0,3); (2,2); (4,3); (12,0)])
+;;  
 let t3_decisions test_ctxt =
-  assert_bool "Caree"  (isCaree    [(1,0); (3,0); (1,1); (5,0); (1,2); (10,0); (1,3)])
+  assert_bool "Caree"  (isCaree [(1,0); (3,0); (1,1); (5,0); (1,2); (10,0); (1,3)])
 ;;
 let t4_decisions test_ctxt =
-  assert_bool "Full"   (isFull     [(1,0); (5,0); (3,1); (5,2); (2,2); (5,3); (1,3)])
+  assert_bool "Full"   (isFull [(1,0); (5,0); (3,1); (5,2); (2,2); (5,3); (1,3)])
 ;;
 let t5_decisions test_ctxt =
-  assert_bool "Set "   (isSet      [(1,3); (3,0); (1,1); (5,2); (3,2); (10,0); (3,3)])
+  assert_bool "Set "   (isSet [(1,3); (3,0); (1,1); (5,2); (3,2); (10,0); (3,3)])
 ;;
 let t6_decisions test_ctxt =
-  assert_bool "Dupal"  (isDupal    [(1,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
+  assert_bool "Dupal"  (isDupal [(1,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
 ;;
 let t6a_decisions test_ctxt =
-  assert_bool "Dupal"  (not (isDupal    [(1,0); (5,0); (3,1); (5,2); (11,2); (7,3); (9,3)]))
+  assert_bool "Dupal"  (not (isDupal [(1,0); (5,0); (3,1); (5,2); (11,2); (7,3); (9,3)]))
 ;;
 let t7_decisions test_ctxt =
-  assert_bool "Pair"   (isPair     [(8,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
+  assert_bool "Pair"   (isPair [(8,0); (5,0); (3,1); (5,2); (1,2); (7,3); (9,3)])
 ;;
 let t7a_decisions test_ctxt =
-  assert_bool "Pair"   (not (isPair     [(8,0); (11,0); (3,1); (5,2); (1,2); (7,3); (9,3)]))
+  assert_bool "Pair"   (not (isPair [(8,0); (11,0); (3,1); (5,2); (1,2); (7,3); (9,3)]))
 ;;
 let t8_decisions test_ctxt =
-  assert_bool "Color"  (isColor    [(3,1); (5,2); (1,2); (7,3); (9,2)])
+  assert_bool "Color"  (isColor [(3,1); (5,2); (1,2); (7,3); (9,2)])
 ;;
 let t9_decisions test_ctxt =
-  assert_bool "Wet"    (isWet      [(3,1); (5,2); (1,2); (5,3); (9,3)])
+  assert_bool "Wet"    (isWet [(3,1); (5,2); (1,2); (5,3); (9,3)])
 ;;
 
 
-(* test of evaluation module *)
+(* test of Evaluation module *)
+  
 let t0_evaluations test_ctxt =
   assert_equal 5  (priceFlushStr8 [(1,0); (3,0); (3,1); (2,0); (5,0); (12,0); (4,0)])
 ;;  
@@ -92,43 +115,43 @@ let t2_evaluations test_ctxt =
   assert_equal 10 (priceFlushStr8 [(10,0); (8,0); (6,0); (9,0); (8,2); (12,0); (7,0)])
 ;;
 let t3_evaluations test_ctxt =
-  assert_equal 124 (priceCaree    [(7,0); (8,0); (7,1); (9,0); (7,2); (12,2); (7,3)])
+  assert_equal 124 (priceCaree [(7,0); (8,0); (7,1); (9,0); (7,2); (12,2); (7,3)])
 ;;
 let t4_evaluations test_ctxt =
-  assert_equal 66 (priceCaree     [(3,0); (8,0); (3,1); (9,0); (3,2); (10,2); (3,3)])
+  assert_equal 66 (priceCaree [(3,0); (8,0); (3,1); (9,0); (3,2); (10,2); (3,3)])
 ;;
 let t5_evaluations test_ctxt =
-  assert_equal 63 (priceFull      [(3,0); (7,0); (3,1); (9,0); (3,2); (10,2); (7,3)])
+  assert_equal 63 (priceFull [(3,0); (7,0); (3,1); (9,0); (3,2); (10,2); (7,3)])
 ;;
 let t6_evaluations test_ctxt =
-  assert_equal 54 (priceFull      [(2,0); (12,0); (2,1); (9,0); (2,2); (12,2); (7,3)])
+  assert_equal 54 (priceFull [(2,0); (12,0); (2,1); (9,0); (2,2); (12,2); (7,3)])
 ;;
 let t7_evaluations test_ctxt =
-  assert_equal 6 (priceStr8       [(2,0); (6,3); (3,1); (9,0); (4,2); (12,2); (5,3)])
+  assert_equal 6 (priceStr8 [(2,0); (6,3); (3,1); (9,0); (4,2); (12,2); (5,3)])
 ;;
 let t8_evaluations test_ctxt =
-  assert_equal 1091 (priceSet     [(2,0); (6,3); (3,1); (2,1); (9,2); (12,2); (2,3)])
+  assert_equal 1091 (priceSet [(2,0); (6,3); (3,1); (2,1); (9,2); (12,2); (2,3)])
 ;;
 let t9_evaluations test_ctxt =
-  assert_equal 1077 (priceSet     [(2,0); (6,3); (3,1); (2,1); (9,2); (11,2); (2,3)])
+  assert_equal 1077 (priceSet [(2,0); (6,3); (3,1); (2,1); (9,2); (11,2); (2,3)])
 ;;
 let ta_evaluations test_ctxt =
-  assert_equal 3053 (priceDupal   [(2,0); (9,3); (3,1); (10,1); (9,2); (11,2); (2,3)])
+  assert_equal 3053 (priceDupal [(2,0); (9,3); (3,1); (10,1); (9,2); (11,2); (2,3)])
 ;;
 let tb_evaluations test_ctxt =
-  assert_equal 3052 (priceDupal   [(2,0); (9,3); (3,1); (10,1); (9,2); (7,2); (2,3)])
+  assert_equal 3052 (priceDupal [(2,0); (9,3); (3,1); (10,1); (9,2); (7,2); (2,3)])
 ;;
 let tc_evaluations test_ctxt =
-  assert_equal 32315 (pricePair   [(1,0); (9,3); (3,1); (10,1); (9,2); (7,2); (2,3)])
+  assert_equal 32315 (pricePair [(1,0); (9,3); (3,1); (10,1); (9,2); (7,2); (2,3)])
 ;;
 let td_evaluations test_ctxt =
-  assert_equal 31915 (pricePair   [(1,0); (9,3); (3,1); (8,1); (9,2); (7,2); (2,3)])
+  assert_equal 31915 (pricePair [(1,0); (9,3); (3,1); (8,1); (9,2); (7,2); (2,3)])
 ;;
 let te_evaluations test_ctxt =
-  assert_equal 9 (priceHigh       [(1,0); (0,3); (3,1); (8,1); (9,2); (7,2); (2,3)])
+  assert_equal 9 (priceHigh [(1,0); (0,3); (3,1); (8,1); (9,2); (7,2); (2,3)])
 ;;
 let tf_evaluations test_ctxt =
-  assert_equal 10 (priceHigh      [(1,0); (10,3); (3,1); (8,1); (9,2); (7,2); (2,3)])
+  assert_equal 10 (priceHigh [(1,0); (10,3); (3,1); (8,1); (9,2); (7,2); (2,3)])
 ;;
 
 
@@ -145,7 +168,11 @@ let t0 = "suite" >::: [ "testShuffleSpades uniq" >:: t1_shuffle
                       ; "testDeal            10" >:: t5_dealing
                       
                       ; "testDecisions    Flush" >:: t1_decisions
-                      ; "testDecisions  Stright" >:: t2_decisions
+                      ; "testDecisions   nFlush" >:: t1a_decisions
+                      ; "testDecisions    1Str8" >:: t2_decisions
+                      ; "testDecisions   n1Str8" >:: t2a_decisions
+                      ; "testDecisions   n2Str8" >:: t2b_decisions                       
+                      ; "testDecisions    2Str8" >:: t2c_decisions                       
                       ; "testDecisions    Caree" >:: t3_decisions
                       ; "testDecisions     Full" >:: t4_decisions
                       ; "testDecisions      Set" >:: t5_decisions

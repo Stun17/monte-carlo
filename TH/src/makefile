@@ -15,12 +15,14 @@ test.out:  $(CMT) test_suite.ml
 	ocamlfind ocamlc -open Treatment -open Bat -open Shuffle -open Dealing \
 	-open Decisions -open Evaluations -open Bat -package oUnit -linkpkg \
 	-o $@ $^
+	mv $@ ../
+	@echo "done with test.out"
 
 a.out: $(CMN)
 	@echo "start with a.out"
 	ocamlc -o $@ -open Bat -open Shuffle -open Decisions \
 	-open Evaluations -open Arbitrage -open Treatment $^
-	mv a.out ../
+	mv $@ ../
 	@echo "done with a.out" 
 
 bat.cmo : $(ORG0) 
