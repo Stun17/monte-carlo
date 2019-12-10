@@ -64,8 +64,8 @@ module Treatment =
                           match s with
                           | 0 -> "u" | _ -> "s"
                         and (m, n) = Hashtbl.find my_hash (k, r1, r2, s)
-                        in let rez = (float_of_int m) /. (float_of_int n) 
-                           in  printf "%2i %s%s%s %6.1f\n" k c1 c2 c3 rez
+                        in let rez = (float_of_int m) /. (float_of_int n)
+                           in  printf "%2i %s%s%s %3.1f\n" k c1 c2 c3 rez
                       else ()
                     ) [12;11;10;9;8;7;6;5;4;3;2;1;0] (* the first card *)
                 ) [12;11;10;9;8;7;6;5;4;3;2;1;0]     (* the second card *)
